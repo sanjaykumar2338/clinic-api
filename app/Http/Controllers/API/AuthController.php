@@ -49,7 +49,7 @@ class AuthController extends Controller
     }
 	
 	public function check(){
-        return 'test';
+         return response()->json(['message' => 'Unauthorized.','status' => false,'data'=>[]], 401);
     }
 
     public function createSlug($title, $id = 0)
