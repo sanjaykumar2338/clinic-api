@@ -168,10 +168,15 @@ class ClinicController extends Controller
     public function list(Request $request){
         //Log::info('This is my log', ['request' => $request->all()]);
         try{
-            $limit = $request->limit ? $request->limit : 10; // Default limit is 10, but you can change it
-            $offset = $request->offset ?  $request->offset : 0;
+            $limit = $request->limit;
+            $offset = $request->offset;
 
-            $clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
+            //$clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
+            if($limit!="" && $offset!=""){
+                $clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
+            }else{
+                $clinic = Clinic::orderBy('id', 'DESC')->with('administrator')->with('doctor')->get();
+            }
 
             $response = [
                 'success'=>true,
