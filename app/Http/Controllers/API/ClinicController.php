@@ -201,6 +201,44 @@ class ClinicController extends Controller
         }
     }
 
+    public function status_update(Request $request){
+        try{
+            
+            $clinic = Clinic::find($request->id);
+            
+            if(!$clinic){
+                 $response = [
+                    'success'=>false,
+                    'message'=>'clinic not found',
+                    'data'=>[]
+                ];
+
+                return response()->json($response,401);
+            }
+
+            $clinic->status = $request->status;
+            $clinic->save();
+
+            $data = Clinic::with('administrator')->with('doctor')->where('clinic.id',$clinic->id)->first();
+            $response = [
+                'success'=>true,
+                'message'=>'clinic status updated.',
+                'data'=>$data
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=>false,
+                'message'=>$e->getMessage(),
+                'data'=>''
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
     public function index(Request $request){
         try{
             

@@ -36,4 +36,5 @@ Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:s
     Route::get('list', 'list');
     Route::get('/{id}', 'index');
     Route::post('update/{id}', 'update');
+    Route::post('status', 'status_update');
 });
