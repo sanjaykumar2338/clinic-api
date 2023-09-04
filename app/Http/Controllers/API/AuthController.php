@@ -18,8 +18,11 @@ class AuthController extends Controller
             'last_name'=>'required',
             'email'=>'required|email|unique:users,email',
             'password'=>'required',
-            'c_password'=>'required|same:password'
+            'c_password'=>'required|same:password',
+            'user_type' => 'in:other,admin,superadmin,user,doctor', // DEFAULT or SOCIAL values
         ]);
+
+        //echo "<pre>"; print_r($request->all()); die;
 
         if($validator->fails()){
             $response = [

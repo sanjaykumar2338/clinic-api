@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Clinic extends Model
 {
     use HasFactory;
-    protected $table = 'clinic';
+    protected $table = 'mcl_clinic';
 
     public function administrator(){
         return $this->hasMany(Clinicadministrator::class, 'clinic_id', 'id');
