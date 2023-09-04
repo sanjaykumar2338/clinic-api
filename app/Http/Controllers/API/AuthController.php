@@ -19,7 +19,7 @@ class AuthController extends Controller
             'email'=>'required|email|unique:users,email',
             'password'=>'required',
             'c_password'=>'required|same:password',
-            'user_type' => 'in:other,admin,superadmin,user,doctor', // DEFAULT or SOCIAL values
+            'user_type' => 'required|in:other,admin,superadmin,user,doctor', // DEFAULT or SOCIAL values
         ]);
 
         //echo "<pre>"; print_r($request->all()); die;
