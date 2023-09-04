@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
 use App\Models\Clinic;
+use App\Models\Doctor;
 use App\Models\Clinicdoctor;
 use App\Models\Clinicadministrator;
 use Auth;
@@ -20,9 +21,13 @@ class ClinicController extends Controller
             //Log::info('This is my log', ['request' => $request->all()]);
             //echo "<pre>"; print_r('test'); die;
         try{
+
             $validator = Validator::make($request->all(),[
-                'clinic_name'=>'required',
-                'insta_id'=>'required'
+                'clinic_name'=>'required|max:255',
+                'insta_id'=>'required|max:255',
+                'picture'=>'required|max:255',
+                'doctors'=>'required',
+                'administrator'=>'required'
             ]);
 
             if($validator->fails()){
@@ -89,14 +94,20 @@ class ClinicController extends Controller
         }
     }
 
-    public function update(Request $request){
-            //Log::info('This is my log', ['request' => $request->all()]);
-            //echo "<pre>"; print_r('test'); die;
+    public function update(Request $request, $id){
+        
+        //Log::info('This is my log', ['request' => $request->all()]);
+        //echo "<pre>"; print_r('test'); die;
+
         try{
             $validator = Validator::make($request->all(),[
-                'clinic_name'=>'required',
-                'insta_id'=>'required'
+                'clinic_name'=>'required|max:255',
+                'insta_id'=>'required|max:255',
+                'picture'=>'',
+                'doctors'=>'required',
+                'administrator'=>'required'
             ]);
+
 
             if($validator->fails()){
                 $response = [
@@ -107,7 +118,7 @@ class ClinicController extends Controller
                 return response()->json($response,401);
             }
 
-            $clinic_id = $request->id;
+            $clinic_id = $id;
             $clinic = Clinic::find($clinic_id);
             $clinic->clinic_name = $request->clinic_name;
             $clinic->insta_id = $request->insta_id;
@@ -246,12 +257,73 @@ class ClinicController extends Controller
             
             $response = [
                 'success'=>true,
-                'message'=>'clinic data',
+                'total'=>$doctor->count(),
+                'message'=>'clinic list',
                 'data'=>$clinic,
                 'path'=>url('/').Storage::url('uploads')
             ];
 
             return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=>false,
+                'message'=>$e->getMessage(),
+                'data'=>'',
+                'total'=>0
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
+    public function doctor_list(Request $request){
+        try{
+            
+            $doctor = Doctor::with('user')->get();
+            
+            $response = [
+                'success'=>true,
+                'total'=>$doctor->count(),
+                'message'=>'doctor list',
+                'data'=>$doctor
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=>false,
+                'total'=>$doctor->count(),
+                'message'=>$e->getMessage(),
+                'data'=>''
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
+    public function doctor(Request $request , $id){
+        try{
+            
+            $doctor = Doctor::where('id',$request->id)->with('user')->first();
+            if($doctor){
+                $response = [
+                    'success'=>true,
+                    'message'=>'doctor info',
+                    'data'=>$doctor
+                ];
+
+                return response()->json($response,200);
+            }else{
+                $response = [
+                    'success'=>true,
+                    'message'=>'no doctor found',
+                    'data'=>$doctor
+                ];
+
+                return response()->json($response,401);
+            }
         }catch(\Exceptions $e){
             
             $response = [
