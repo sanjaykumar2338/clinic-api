@@ -73,7 +73,7 @@ class ClinicController extends Controller
                 }
             }
 
-            $data = Clinic::with('administrator')->with('doctor')->where('clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
 
             $response = [
                 'success'=>true,
@@ -155,7 +155,7 @@ class ClinicController extends Controller
                 }
             }
 
-            $data = Clinic::with('administrator')->with('doctor')->where('clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
 
             $response = [
                 'success'=>true,
@@ -230,7 +230,7 @@ class ClinicController extends Controller
             $clinic->status = $request->status;
             $clinic->save();
 
-            $data = Clinic::with('administrator')->with('doctor')->where('clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
             $response = [
                 'success'=>true,
                 'message'=>'clinic status updated.',
@@ -253,7 +253,7 @@ class ClinicController extends Controller
     public function index(Request $request){
         try{
             
-            $clinic = Clinic::with('administrator')->with('doctor')->where('clinic.id',$request->id)->first();
+            $clinic = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$request->id)->first();
             
             $response = [
                 'success'=>true,
