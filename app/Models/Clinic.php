@@ -10,11 +10,11 @@ class Clinic extends Model
     use HasFactory;
     protected $table = 'mcl_clinic';
 
-    public function administrator(){
+    public function administrators(){
         return $this->hasMany(Clinicadministrator::class, 'clinic_id', 'id');
     }
 
-    public function doctor(){
+    public function doctors(){
         return $this->hasMany(Clinicdoctor::class, 'clinic_id', 'id');
     }
 }

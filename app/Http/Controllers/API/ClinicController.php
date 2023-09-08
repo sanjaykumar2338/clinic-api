@@ -27,7 +27,7 @@ class ClinicController extends Controller
                 'insta_id'=>'required|max:255',
                 'picture'=>'required|max:255',
                 'doctors'=>'required',
-                'administrator'=>'required'
+                'administrators'=>'required'
             ]);
 
             if($validator->fails()){
@@ -62,8 +62,8 @@ class ClinicController extends Controller
                 }
             }
 
-            if($clinic->id && $request->administrator){
-                foreach(json_decode($request->administrator) as $row){
+            if($clinic->id && $request->administrators){
+                foreach(json_decode($request->administrators) as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
                     $doctor->name = $row->administrator_name;
@@ -73,7 +73,7 @@ class ClinicController extends Controller
                 }
             }
 
-            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$clinic->id)->first();
 
             $response = [
                 'success'=>true,
@@ -105,7 +105,7 @@ class ClinicController extends Controller
                 'insta_id'=>'required|max:255',
                 'picture'=>'',
                 'doctors'=>'required',
-                'administrator'=>'required'
+                'administrators'=>'required'
             ]);
 
 
@@ -143,9 +143,9 @@ class ClinicController extends Controller
                 }
             }
 
-            if($clinic->id && $request->administrator){
+            if($clinic->id && $request->administrators){
                 Clinicadministrator::where('clinic_id',$clinic->id)->delete();
-                foreach(json_decode($request->administrator) as $row){
+                foreach(json_decode($request->administrators) as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
                     $doctor->name = $row->administrator_name;
@@ -155,7 +155,7 @@ class ClinicController extends Controller
                 }
             }
 
-            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$clinic->id)->first();
 
             $response = [
                 'success'=>true,
@@ -169,7 +169,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>false,
                 'message'=>$e->getMessage(),
-                'data'=>''
+                'clinic'=>''
             ];
 
             return response()->json($response,401);
@@ -184,17 +184,17 @@ class ClinicController extends Controller
 
             //$clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
             if($limit!="" && $offset!=""){
-                $clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
+                $clinic = Clinic::take($limit)->skip($offset)->with('administrators')->with('doctors')->get();
             }else{
-                $clinic = Clinic::orderBy('id', 'DESC')->with('administrator')->with('doctor')->get();
+                $clinic = Clinic::orderBy('id', 'DESC')->with('administrators')->with('doctors')->get();
             }
 
             $response = [
                 'success'=>true,
-                'message'=>'clinic all data',
-                'data'=>$clinic,
+                'message'=>'clinic list',
+                'clinic'=>$clinic,
                 'path'=>url('/').Storage::url('uploads'),
-                'total clinic'=>Clinic::count(),
+                'total_clinic'=>Clinic::count(),
                 'limit'=>$limit,
                 'offset'=>$offset
             ];
@@ -205,7 +205,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>false,
                 'message'=>$e->getMessage(),
-                'data'=>''
+                'clinic'=>''
             ];
 
             return response()->json($response,401);
@@ -221,7 +221,7 @@ class ClinicController extends Controller
                  $response = [
                     'success'=>false,
                     'message'=>'clinic not found',
-                    'data'=>[]
+                    'clinic'=>[]
                 ];
 
                 return response()->json($response,401);
@@ -230,11 +230,11 @@ class ClinicController extends Controller
             $clinic->status = $request->status;
             $clinic->save();
 
-            $data = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$clinic->id)->first();
+            $data = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$clinic->id)->first();
             $response = [
                 'success'=>true,
                 'message'=>'clinic status updated.',
-                'data'=>$data
+                'clinic'=>$data
             ];
 
             return response()->json($response,200);
@@ -243,7 +243,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>false,
                 'message'=>$e->getMessage(),
-                'data'=>''
+                'clinic'=>''
             ];
 
             return response()->json($response,401);
@@ -253,7 +253,7 @@ class ClinicController extends Controller
     public function index(Request $request){
         try{
             
-            $clinic = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$request->id)->first();
+            $clinic = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$request->id)->first();
             
             $response = [
                 'success'=>true,                
