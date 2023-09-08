@@ -258,7 +258,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>true,                
                 'message'=>'clinic list',
-                'data'=>$clinic,
+                'clinic'=>$clinic,
                 'path'=>url('/').Storage::url('uploads')
             ];
 
@@ -268,7 +268,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>false,
                 'message'=>$e->getMessage(),
-                'data'=>'',
+                'clinic'=>'',
                 'total'=>0
             ];
 
