@@ -11,6 +11,6 @@ class Doctor extends Model
     protected $table = 'v3_doctors';
 
     public function User(){
-        return $this->hasMany(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

@@ -256,8 +256,7 @@ class ClinicController extends Controller
             $clinic = Clinic::with('administrator')->with('doctor')->where('mcl_clinic.id',$request->id)->first();
             
             $response = [
-                'success'=>true,
-                'total'=>$doctor->count(),
+                'success'=>true,                
                 'message'=>'clinic list',
                 'data'=>$clinic,
                 'path'=>url('/').Storage::url('uploads')
