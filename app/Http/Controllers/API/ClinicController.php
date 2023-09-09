@@ -58,7 +58,7 @@ class ClinicController extends Controller
             $clinic->save();
 
             if($clinic->id && $request->doctors){
-                foreach(json_decode($request->doctors) as $row){
+                foreach($request->doctors as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
                     $doctor->doctor = $row->doctor;
@@ -67,7 +67,7 @@ class ClinicController extends Controller
             }
 
             if($clinic->id && $request->administrators){
-                foreach(json_decode($request->administrators) as $row){
+                foreach($request->administrators as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
                     $doctor->name = $row->name;
