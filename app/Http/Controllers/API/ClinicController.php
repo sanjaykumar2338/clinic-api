@@ -126,18 +126,18 @@ class ClinicController extends Controller
             }
 
             $response = [
-                'success'=>true,
-                'message'=>'picture uploaded successfully',
-                'picture'=>$picture
+                'success'=> true,
+                'message'=> 'picture uploaded successfully',
+                'picture'=> $picture
             ];
 
             return response()->json($response,200);
         }catch(\Exceptions $e){
             
             $response = [
-                'success'=>false,
-                'message'=>$e->getMessage(),
-                'data'=>''
+                'success'=> false,
+                'message'=> $e->getMessage(),
+                'data'=> ''
             ];
 
             return response()->json($response,401);
