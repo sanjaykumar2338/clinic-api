@@ -44,6 +44,7 @@ Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:s
     Route::get('doctor/{id}', 'doctor');
     Route::get('patients/list', 'patient_list');
     Route::get('patient/{id}', 'patient');
+    Route::post('upload_picture', 'upload_picture');
 });
 
 Route::prefix('paymentmethod')->controller(PaymentMethodController::class)->middleware('auth:sanctum')->group(function () {

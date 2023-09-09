@@ -26,7 +26,7 @@ class ClinicController extends Controller
             $validator = Validator::make($request->all(),[
                 'clinic_name'=>'required|max:255',
                 'insta_id'=>'required|max:255',
-                'picture'=>'required|max:255',
+                'picture'=>'max:255',
                 'doctors'=>'required',
                 'administrators'=>'required'
             ]);
@@ -43,7 +43,9 @@ class ClinicController extends Controller
             $clinic = new Clinic;
             $clinic->clinic_name = $request->clinic_name;
             $clinic->insta_id = $request->insta_id;
+            $clinic->picture = $request->picture;
 
+            /*
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $filename = time() . '_' . $file->getClientOriginalName();
@@ -51,6 +53,7 @@ class ClinicController extends Controller
                 $clinic->picture = $filename;
                 //return response()->json(['message' => 'File uploaded successfully', 'path' => $path]);
             }
+            */
 
             $clinic->save();
 
@@ -95,6 +98,53 @@ class ClinicController extends Controller
         }
     }
 
+    public function upload_picture(Request $request){
+            //Log::info('This is my log', ['request' => $request->all()]);
+            //echo "<pre>"; print_r('test'); die;
+        try{
+
+            $validator = Validator::make($request->all(),[               
+                'picture'=>''
+            ]);
+
+            if($validator->fails()){
+                $response = [
+                    'success'=>false,
+                    'message'=>$validator->errors()
+                ];
+
+                return response()->json($response,401);
+            }
+           
+            $picture = '';
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('uploads', $filename, 'public');
+                $picture = $path.'/'.$filename;                
+                //return response()->json(['message' => 'File uploaded successfully', 'path' => $path]);
+            }
+
+            $response = [
+                'success'=>true,
+                'message'=>'picture uploaded successfully',
+                'picture'=>
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=>false,
+                'message'=>$e->getMessage(),
+                'data'=>''
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
+
     public function update(Request $request, $id){
         
         //Log::info('This is my log', ['request' => $request->all()]);
@@ -123,7 +173,9 @@ class ClinicController extends Controller
             $clinic = Clinic::find($clinic_id);
             $clinic->clinic_name = $request->clinic_name;
             $clinic->insta_id = $request->insta_id;
-
+            $clinic->picture = $request->picture;
+            
+            /*
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $filename = time() . '_' . $file->getClientOriginalName();
@@ -131,6 +183,7 @@ class ClinicController extends Controller
                 $clinic->picture = $filename;
                 //return response()->json(['message' => 'File uploaded successfully', 'path' => $path]);
             }
+            */
 
             $clinic->save();
 
