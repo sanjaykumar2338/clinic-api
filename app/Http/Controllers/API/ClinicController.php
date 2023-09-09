@@ -128,7 +128,7 @@ class ClinicController extends Controller
             $response = [
                 'success'=>true,
                 'message'=>'picture uploaded successfully',
-                'picture'=>
+                'picture'=>$picture
             ];
 
             return response()->json($response,200);
@@ -174,7 +174,7 @@ class ClinicController extends Controller
             $clinic->clinic_name = $request->clinic_name;
             $clinic->insta_id = $request->insta_id;
             $clinic->picture = $request->picture;
-            
+
             /*
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
