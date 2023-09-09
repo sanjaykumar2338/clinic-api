@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ClinicController;
+use App\Http\Controllers\API\PaymentMethodController;
+use App\Http\Controllers\API\PaymentPurposeController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,4 +42,22 @@ Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:s
     Route::post('status', 'status_update');
     Route::get('doctors/list', 'doctor_list');
     Route::get('doctor/{id}', 'doctor');
+    Route::get('patients/list', 'patient_list');
+    Route::get('patient/{id}', 'patient');
+});
+
+Route::prefix('paymentmethod')->controller(PaymentMethodController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
+
+Route::prefix('paymentpurpose')->controller(PaymentPurposeController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
 });

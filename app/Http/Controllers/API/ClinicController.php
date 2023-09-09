@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
 use App\Models\Clinic;
+use App\Models\Patient;
 use App\Models\Doctor;
 use App\Models\Clinicdoctor;
 use App\Models\Clinicadministrator;
@@ -57,7 +58,7 @@ class ClinicController extends Controller
                 foreach(json_decode($request->doctors) as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row->doctor_name;
+                    $doctor->doctor = $row->doctor;
                     $doctor->save();
                 }
             }
@@ -66,8 +67,8 @@ class ClinicController extends Controller
                 foreach(json_decode($request->administrators) as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->name = $row->administrator_name;
-                    $doctor->email = $row->administrator_email;
+                    $doctor->name = $row->name;
+                    $doctor->email = $row->email;
                     $doctor->password = bcrypt(($row->administrator_password));
                     $doctor->save();
                 }
@@ -138,7 +139,7 @@ class ClinicController extends Controller
                 foreach(json_decode($request->doctors) as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row->doctor_name;
+                    $doctor->doctor = $row->doctor;
                     $doctor->save();
                 }
             }
@@ -148,8 +149,8 @@ class ClinicController extends Controller
                 foreach(json_decode($request->administrators) as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->name = $row->administrator_name;
-                    $doctor->email = $row->administrator_email;
+                    $doctor->name = $row->name;
+                    $doctor->email = $row->email;
                     $doctor->password = bcrypt(($row->administrator_password));
                     $doctor->save();
                 }
@@ -293,7 +294,7 @@ class ClinicController extends Controller
             
             $response = [
                 'success'=>false,
-                'total'=>$doctor->count(),
+                'total'=>0,
                 'message'=>$e->getMessage(),
                 'data'=>''
             ];
@@ -329,6 +330,65 @@ class ClinicController extends Controller
                 'success'=>false,
                 'message'=>$e->getMessage(),
                 'data'=>''
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
+    public function patient_list(Request $request){
+        try{
+            
+            $patient = Patient::with('user')->get();
+            
+            $response = [
+                'success'=>true,
+                'total'=>$patient->count(),
+                'message'=>'patient list',
+                'patient'=>$patient
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=>false,
+                'total'=>0,
+                'message'=>$e->getMessage(),
+                'patient'=>''
+            ];
+
+            return response()->json($response,401);
+        }
+    }
+
+    public function patient(Request $request , $id){
+        try{
+            
+            $patient = Patient::where('id',$request->id)->with('user')->first();
+            if($patient){
+                $response = [
+                    'success'=>true,
+                    'message'=>'patient info',
+                    'patient'=>$patient
+                ];
+
+                return response()->json($response,200);
+            }else{
+                $response = [
+                    'success'=>true,
+                    'message'=>'no patient found',
+                    'patient'=>$patient
+                ];
+
+                return response()->json($response,401);
+            }
+        }catch(\Exceptions $e){
+
+            $response = [
+                'success'=>false,
+                'message'=>$e->getMessage(),
+                'patient'=>''
             ];
 
             return response()->json($response,401);
