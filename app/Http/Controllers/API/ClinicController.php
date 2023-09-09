@@ -121,14 +121,15 @@ class ClinicController extends Controller
                 $file = $request->file('picture');
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('uploads', $filename, 'public');
-                $picture = $path.'/'.$filename;                
+                $picture = $filename;                
                 //return response()->json(['message' => 'File uploaded successfully', 'path' => $path]);
             }
 
+            $file = url('/').Storage::url('uploads').'/'.$picture;
             $response = [
                 'success'=> true,
                 'message'=> 'picture uploaded successfully',
-                'picture'=> $picture
+                'picture'=> $file
             ];
 
             return response()->json($response,200);
