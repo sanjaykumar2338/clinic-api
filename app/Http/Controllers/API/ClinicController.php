@@ -26,8 +26,8 @@ class ClinicController extends Controller
             $validator = Validator::make($request->all(),[
                 'clinic_name'=>'required|max:255',
                 'insta_id'=>'required|max:255',
-                'picture'=>'max:255',
-                'doctors'=>'required',
+                'picture'=>'',
+                'doctors'=>'',
                 'administrators'=>'required'
             ]);
 
@@ -156,8 +156,8 @@ class ClinicController extends Controller
                 'clinic_name'=>'required|max:255',
                 'insta_id'=>'required|max:255',
                 'picture'=>'',
-                'doctors'=>'required',
-                'administrators'=>'required'
+                'doctors'=>'',
+                'administrators'=>''
             ]);
 
 
