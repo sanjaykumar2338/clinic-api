@@ -20,7 +20,7 @@ class RevenueController extends Controller
         $resources = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->get();
         $response = [
                 'success'=>true,
-                'message'=>'revenue method list',
+                'message'=>'revenue list',
                 'revenue'=>$resources
             ];
 
@@ -37,7 +37,7 @@ class RevenueController extends Controller
 
         $response = [
                 'success'=>true,
-                'message'=>'revenue method list',
+                'message'=>'revenue list',
                 'revenue'=>$resource
             ];
 
