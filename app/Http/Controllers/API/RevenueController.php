@@ -21,7 +21,7 @@ class RevenueController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'revenue method list',
-                'paymentmethod'=>$resources
+                'revenue'=>$resources
             ];
 
         return response()->json($response,200);
