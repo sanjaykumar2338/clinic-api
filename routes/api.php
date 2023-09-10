@@ -7,6 +7,7 @@ use App\Http\Controllers\API\ClinicController;
 use App\Http\Controllers\API\PaymentMethodController;
 use App\Http\Controllers\API\PaymentPurposeController;
 use App\Http\Controllers\API\InventoryController;
+use App\Http\Controllers\API\RevenueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,14 @@ Route::prefix('paymentpurpose')->controller(PaymentPurposeController::class)->mi
 });
 
 Route::prefix('inventory')->controller(InventoryController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
+
+Route::prefix('revenue')->controller(RevenueController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{id}','show');
