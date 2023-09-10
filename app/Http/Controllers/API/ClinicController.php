@@ -87,7 +87,7 @@ class ClinicController extends Controller
                     $user->email = $row['email'];
                     $user->clinic_id = $clinic->id;
                     $user->password = bcrypt(($row['password']));
-                    $string = $input['first_name'].'-'.$input['last_name'];
+                    $string = $row['name'];
                     $user->slug = $this->createSlug($string);
                     $user->save();
                 }
@@ -258,7 +258,7 @@ class ClinicController extends Controller
                     $user->email = $row['email'];
                     $user->clinic_id = $clinic->id;
                     $user->password = bcrypt(($row['password']));
-                    $string = $input['first_name'].'-'.$input['last_name'];
+                    $string = $row['name'];
                     $user->slug = $this->createSlug($string);
                     $user->save();
                 }
