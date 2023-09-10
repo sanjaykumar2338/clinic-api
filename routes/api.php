@@ -8,6 +8,8 @@ use App\Http\Controllers\API\PaymentMethodController;
 use App\Http\Controllers\API\PaymentPurposeController;
 use App\Http\Controllers\API\InventoryController;
 use App\Http\Controllers\API\RevenueController;
+use App\Http\Controllers\API\ExpensescategoryController;
+use App\Http\Controllers\API\ExpensesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +76,22 @@ Route::prefix('inventory')->controller(InventoryController::class)->middleware('
 });
 
 Route::prefix('revenue')->controller(RevenueController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
+
+Route::prefix('expensescategory')->controller(ExpensescategoryController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
+
+Route::prefix('expenses')->controller(ExpensesController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{id}','show');
