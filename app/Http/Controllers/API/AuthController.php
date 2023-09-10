@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
+use App\Models\Clinic;
 use Auth;
 use Illuminate\Support\Str;
 
@@ -104,6 +105,7 @@ class AuthController extends Controller
 
             $success['token'] = $user->createToken('MyApp')->plainTextToken;            
             $success['user'] = $user;
+            $success['clinic'] = Clinic::find($user->clinic_id);
 
             $response = [
                 'success'=>true,

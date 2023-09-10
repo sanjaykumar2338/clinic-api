@@ -23,7 +23,8 @@ class User extends Authenticatable
         'user_type',
         'email',
         'password',
-        'slug'
+        'slug',
+        'clinic_id'
     ];
 
     /**
@@ -45,4 +46,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function clinic(){
+        return $this->hasMany(Clinic::class, 'id', 'clinic_id');
+    }
 }
