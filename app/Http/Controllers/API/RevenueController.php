@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Patient;
 use App\Models\Doctor;
+use App\Models\RevenuePatient;
 use App\Models\Clinicdoctor;
 use App\Models\Revenue;
 use App\Models\Clinicadministrator;
@@ -30,7 +31,7 @@ class RevenueController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->find($id);
+        $resource = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->with('doctor')->with('patients')->find($id);
         if (!$resource) {
             return response()->json(['success'=>false,'message' => 'revenue not found'], 404);
         }
@@ -68,12 +69,31 @@ class RevenueController extends Controller
             return response()->json($response,401);
         }
 
+        $jsonData = $request->json()->all();
+        $revenue = new Revenue;
+        $revenue->doctor = $jsonData['doctor'];
+        $revenue->price = $jsonData['price'];
+        $revenue->amount_paid = $jsonData['amount_paid'];
+        $revenue->payment_method = $jsonData['payment_method'];
+        $revenue->payment_purpose = $jsonData['payment_purpose'];
+        $revenue->comments = $jsonData['comments'];
+        $revenue->inventory = isset($jsonData['inventory']) ? $jsonData['inventory']:null;
+        $revenue->quantity = isset($jsonData['quantity']) ? $jsonData['quantity']:null;
+        $revenue->save();
 
-        $resource = Revenue::create($request->all());
+        if($revenue->id && $jsonData['patient']){
+            foreach($jsonData['patient'] as $row){
+                $doctor = new RevenuePatient;
+                $doctor->revenue = $revenue->id;
+                $doctor->patient = $row['id'];
+                $doctor->save();
+            }
+        }
+
         $response = [
                 'success'=>true,
                 'message'=>'revenue add successfully',
-                'revenue'=>$resource
+                'revenue'=>$revenue
             ];
 
         return response()->json($response,200);
@@ -106,6 +126,27 @@ class RevenueController extends Controller
             ];
 
             return response()->json($response,401);
+        }
+
+        $jsonData = $request->json()->all();
+        $revenue = Revenue::find($id);;
+        $revenue->doctor = $jsonData['doctor'];
+        $revenue->price = $jsonData['price'];
+        $revenue->amount_paid = $jsonData['amount_paid'];
+        $revenue->payment_method = $jsonData['payment_method'];
+        $revenue->comments = $jsonData['comments'];
+        $revenue->inventory = $jsonData['inventory'];
+        $revenue->quantity = $jsonData['quantity'];
+        $revenue->save();
+
+        if($revenue->id && $jsonData['patient']){            
+            RevenuePatient::where('revenue',$revenue->id)->delete();
+            foreach($jsonData['patient'] as $row){
+                $doctor = new RevenuePatient;
+                $doctor->revenue = $resource->id;
+                $doctor->patient = $row['id'];
+                $doctor->save();
+            }
         }
         
         $resource->update($request->all());

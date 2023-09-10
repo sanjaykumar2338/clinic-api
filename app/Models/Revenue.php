@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Revenue extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $guarded = [];
     protected $table = 'mcl_revenue';
 
@@ -21,5 +22,13 @@ class Revenue extends Model
 
     public function inventory(){
         return $this->hasMany(InventoryItem::class, 'id', 'inventory');
+    }
+
+    public function patients(){
+        return $this->hasMany(RevenuePatient::class, 'revenue', 'id');
+    }
+
+    public function doctor(){
+        return $this->hasOne(Doctor::class, 'id', 'doctor');
     }
 }
