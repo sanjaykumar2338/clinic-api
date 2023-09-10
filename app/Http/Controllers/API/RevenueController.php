@@ -38,7 +38,7 @@ class RevenueController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'revenue method list',
-                'paymentmethod'=>$resource
+                'revenue'=>$resource
             ];
 
         return response()->json($response,200);
@@ -81,14 +81,22 @@ class RevenueController extends Controller
 
     public function update(Request $request, $id)
     {
-        $resource = Paymentmethod::find($id);
+        $resource = Revenue::find($id);
         if (!$resource) {
-            return response()->json(['message' => 'payment method not found','success'=>false], 404);
+            return response()->json(['message' => 'revenue not found','success'=>false], 404);
         }
 
         // Update an existing resource
         $validator = Validator::make($request->all(),[
-            'name'=>'required|max:255|unique:mcl_payment_method,name,'.$id
+            'doctor'=>'required',
+            'paitent'=>'required',
+            'payment_purpose'=>'required',
+            'price'=>'required',
+            'amount_paid'=>'required',
+            'payment_method'=>'required',
+            'comments'=>'required',
+            'inventory'=>'',
+            'quantity'=>''
         ]);
 
         if($validator->fails()){
@@ -101,7 +109,7 @@ class RevenueController extends Controller
         }
         
         $resource->update($request->all());
-        return response()->json(['paymentmethod' => $resource,'success'=>true,'message'=>'payment method updated successfully']);
+        return response()->json(['revenue' => $resource,'success'=>true,'message'=>'revenue updated successfully']);
     }
 
     public function destroy($id)
