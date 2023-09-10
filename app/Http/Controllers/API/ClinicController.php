@@ -77,6 +77,20 @@ class ClinicController extends Controller
                     $doctor->password = bcrypt(($row['password']));
                     $doctor->save();
                 }
+
+                //register administrator in users table
+                foreach($jsonData['administrators'] as $row){
+                    $user = new User;
+                    $user->first_name = $row['name'];
+                    $user->last_name = $row['name'];
+                    $user->user_type = 'admin';
+                    $user->email = $row['email'];
+                    $user->clinic_id = $clinic->id;
+                    $user->password = bcrypt(($row['password']));
+                    $string = $input['first_name'].'-'.$input['last_name'];
+                    $user->slug = $this->createSlug($string);
+                    $user->save();
+                }
             }
 
             $data = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$clinic->id)->first();
@@ -98,6 +112,26 @@ class ClinicController extends Controller
 
             return response()->json($response,401);
         }
+    }
+
+    public function createSlug($title, $id = 0)
+    {
+        $slug = Str::slug($title);
+        $allSlugs = $this->getRelatedSlugs($slug, $id);
+        if (! $allSlugs->contains('slug', $slug)){
+            return $slug;
+        }
+
+        $i = 1;
+        $is_contain = true;
+        do {
+            $newSlug = $slug . '-' . $i;
+            if (!$allSlugs->contains('slug', $newSlug)) {
+                $is_contain = false;
+                return $newSlug;
+            }
+            $i++;
+        } while ($is_contain);
     }
 
     public function upload_picture(Request $request){
@@ -204,6 +238,8 @@ class ClinicController extends Controller
 
             if($clinic->id && $jsonData['administrators']){
                 Clinicadministrator::where('clinic_id',$clinic->id)->delete();
+                User::where('clinic_id',$clinic->id)->delete();
+
                 foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
@@ -211,6 +247,20 @@ class ClinicController extends Controller
                     $doctor->email = $row['email'];
                     $doctor->password = bcrypt(($row['password']));
                     $doctor->save();
+                }
+
+                //register administrator in users table
+                foreach($jsonData['administrators'] as $row){
+                    $user = new User;
+                    $user->first_name = $row['name'];
+                    $user->last_name = $row['name'];
+                    $user->user_type = 'admin';
+                    $user->email = $row['email'];
+                    $user->clinic_id = $clinic->id;
+                    $user->password = bcrypt(($row['password']));
+                    $string = $input['first_name'].'-'.$input['last_name'];
+                    $user->slug = $this->createSlug($string);
+                    $user->save();
                 }
             }
 
