@@ -17,7 +17,7 @@ class RevenueController extends Controller
     public function index()
     {
         // Fetch all revenue
-        $resources = Revenue::all();
+        $resources = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->get();
         $response = [
                 'success'=>true,
                 'message'=>'revenue method list',
@@ -30,7 +30,7 @@ class RevenueController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Revenue::find($id);
+        $resource = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->find($id);
         if (!$resource) {
             return response()->json(['success'=>false,'message' => 'revenue not found'], 404);
         }
