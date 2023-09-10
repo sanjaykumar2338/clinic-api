@@ -134,6 +134,13 @@ class ClinicController extends Controller
         } while ($is_contain);
     }
 
+    protected function getRelatedSlugs($slug, $id = 0)
+    {
+        return User::select('slug')->where('slug', 'like', $slug.'%')
+        ->where('id', '<>', $id)
+        ->get();
+    }
+
     public function upload_picture(Request $request){
             //Log::info('This is my log', ['request' => $request->all()]);
             //echo "<pre>"; print_r('test'); die;
