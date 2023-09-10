@@ -40,10 +40,12 @@ class ClinicController extends Controller
                 return response()->json($response,401);
             }
 
+            $jsonData = $request->json()->all();
+
             $clinic = new Clinic;
-            $clinic->clinic_name = $request->clinic_name;
-            $clinic->insta_id = $request->insta_id;
-            $clinic->picture = $request->picture;
+            $clinic->clinic_name = $jsonData['clinic_name'];
+            $clinic->insta_id = $jsonData['insta_id'];
+            $clinic->picture = $jsonData['picture'];
 
             /*
             if ($request->hasFile('picture')) {
@@ -57,22 +59,22 @@ class ClinicController extends Controller
 
             $clinic->save();
 
-            if($clinic->id && $request->doctors){
-                foreach($request->doctors as $row){
+            if($clinic->id && $jsonData['doctors']){
+                foreach($jsonData['doctors'] as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row->doctor;
+                    $doctor->doctor = $row['doctor'];
                     $doctor->save();
                 }
             }
 
-            if($clinic->id && $request->administrators){
-                foreach($request->administrators as $row){
+            if($clinic->id && $jsonData['administrators']){
+                foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->name = $row->name;
-                    $doctor->email = $row->email;
-                    $doctor->password = bcrypt(($row->administrator_password));
+                    $doctor->name = $jsonData['name'];
+                    $doctor->email = $jsonData['email'];
+                    $doctor->password = bcrypt(($jsonData['password']));
                     $doctor->save();
                 }
             }
@@ -170,11 +172,13 @@ class ClinicController extends Controller
                 return response()->json($response,401);
             }
 
+            $jsonData = $request->json()->all();
+
             $clinic_id = $id;
             $clinic = Clinic::find($clinic_id);
-            $clinic->clinic_name = $request->clinic_name;
-            $clinic->insta_id = $request->insta_id;
-            $clinic->picture = $request->picture;
+            $clinic->clinic_name = $jsonData['clinic_name'];
+            $clinic->insta_id = $jsonData['insta_id'];
+            $clinic->picture = $jsonData['picture'];
 
             /*
             if ($request->hasFile('picture')) {
@@ -188,24 +192,24 @@ class ClinicController extends Controller
 
             $clinic->save();
 
-            if($clinic->id && $request->doctors){
+            if($clinic->id && $jsonData['doctors']){
                 Clinicdoctor::where('clinic_id',$clinic->id)->delete();
-                foreach($request->doctors as $row){
+                foreach($jsonData['doctors'] as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row->doctor;
+                    $doctor->doctor = $row['doctor'];
                     $doctor->save();
                 }
             }
 
-            if($clinic->id && $request->administrators){
+            if($clinic->id && $jsonData['administrators']){
                 Clinicadministrator::where('clinic_id',$clinic->id)->delete();
-                foreach($request->administrators as $row){
+                foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->name = $row->name;
-                    $doctor->email = $row->email;
-                    $doctor->password = bcrypt(($row->administrator_password));
+                    $doctor->name = $row['name'];
+                    $doctor->email = $row['email'];
+                    $doctor->password = bcrypt(($row['password']));
                     $doctor->save();
                 }
             }
