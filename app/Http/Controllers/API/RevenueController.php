@@ -18,7 +18,7 @@ class RevenueController extends Controller
     public function index()
     {
         // Fetch all revenue
-        $resources = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->get();
+        $resources = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->with('doctor')->with('patients')->get();
         $response = [
                 'success'=>true,
                 'message'=>'revenue list',
