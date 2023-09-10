@@ -143,7 +143,7 @@ class RevenueController extends Controller
             RevenuePatient::where('revenue',$revenue->id)->delete();
             foreach($jsonData['patient'] as $row){
                 $doctor = new RevenuePatient;
-                $doctor->revenue = $resource->id;
+                $doctor->revenue = $revenue->id;
                 $doctor->patient = $row['id'];
                 $doctor->save();
             }
