@@ -72,9 +72,9 @@ class ClinicController extends Controller
                 foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->name = $jsonData['name'];
-                    $doctor->email = $jsonData['email'];
-                    $doctor->password = bcrypt(($jsonData['password']));
+                    $doctor->name = $row['name'];
+                    $doctor->email = $row['email'];
+                    $doctor->password = bcrypt(($row['password']));
                     $doctor->save();
                 }
             }
