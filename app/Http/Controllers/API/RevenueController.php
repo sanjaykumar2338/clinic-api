@@ -49,7 +49,7 @@ class RevenueController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'doctor'=>'required',
-            'paitent'=>'required',
+            'patient'=>'required',
             'payment_purpose'=>'required',
             'price'=>'required',
             'amount_paid'=>'required',
@@ -89,7 +89,7 @@ class RevenueController extends Controller
         // Update an existing resource
         $validator = Validator::make($request->all(),[
             'doctor'=>'required',
-            'paitent'=>'required',
+            'patient'=>'required',
             'payment_purpose'=>'required',
             'price'=>'required',
             'amount_paid'=>'required',
