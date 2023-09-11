@@ -36,7 +36,8 @@ class RevenueController extends Controller
                     $fullName = $user->first_name.' '.$user->last_name;
                 }
 
-                $item->name = $fullName;                                
+                $item->name = $fullName; 
+                $item->id = $item->patient;                             
             }
 
             $row->doctor = '';            
