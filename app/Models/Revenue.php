@@ -13,15 +13,15 @@ class Revenue extends Model
     protected $table = 'mcl_revenue';
 
     public function payment_purpose(){
-        return $this->hasMany(Paymentpurpose::class, 'id', 'payment_purpose');
+        return $this->hasOne(Paymentpurpose::class, 'id', 'payment_purpose');
     }
 
     public function payment_method(){
-        return $this->hasMany(Paymentmethod::class, 'id', 'payment_method');
+        return $this->hasOne(Paymentmethod::class, 'id', 'payment_method');
     }
 
     public function inventory(){
-        return $this->hasMany(InventoryItem::class, 'id', 'inventory');
+        return $this->hasOne(InventoryItem::class, 'id', 'inventory');
     }
 
     public function patient(){
