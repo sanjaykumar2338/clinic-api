@@ -316,7 +316,7 @@ class ClinicController extends Controller
                         $fullName = $user->first_name.' '.$user->last_name;
                     }
 
-                    $val->name = $fullName;
+                    $val->doctor = $fullName;
                 }
             }
 
