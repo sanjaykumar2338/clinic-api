@@ -42,7 +42,7 @@ class RevenueController extends Controller
             $row->doctor = '';            
             $doctor = User::find($row->doctorsingle->user_id);
             if ($doctor) {
-                $row->doctor = ['name'=>$doctor->first_name.' '.$doctor->last_name,'id'=>$row->doctorsingle->id];
+                $row->doctor = ['id'=>$row->doctorsingle->id,'name'=>$doctor->first_name.' '.$doctor->last_name];
             }            
         }
 
