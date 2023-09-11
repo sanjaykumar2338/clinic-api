@@ -12,11 +12,11 @@ class Revenue extends Model
     protected $guarded = [];
     protected $table = 'mcl_revenue';
 
-    public function paymentpurpose(){
+    public function payment_purpose(){
         return $this->hasMany(Paymentpurpose::class, 'id', 'payment_purpose');
     }
 
-    public function paymentmethod(){
+    public function payment_method(){
         return $this->hasMany(Paymentmethod::class, 'id', 'payment_method');
     }
 
@@ -24,7 +24,7 @@ class Revenue extends Model
         return $this->hasMany(InventoryItem::class, 'id', 'inventory');
     }
 
-    public function patients(){
+    public function patient(){
         return $this->hasMany(RevenuePatient::class, 'revenue', 'id');
     }
 
