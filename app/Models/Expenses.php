@@ -12,12 +12,12 @@ class Expenses extends Model
     protected $guarded = [];
     protected $table = 'mcl_expenses';
 
-    public function paymentpurpose(){
-        return $this->hasMany(Paymentpurpose::class, 'id', 'payment_purpose');
+    public function payment_purpose(){
+        return $this->hasOne(Paymentpurpose::class, 'id', 'payment_purpose');
     }
 
-    public function paymentmethod(){
-        return $this->hasMany(Paymentmethod::class, 'id', 'payment_method');
+    public function payment_method(){
+        return $this->hasOne(Paymentmethod::class, 'id', 'payment_method');
     }
 
     public function category(){
