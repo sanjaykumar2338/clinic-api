@@ -15,12 +15,15 @@ use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use DB;
 
 class ClinicController extends Controller
 {
     public function add(Request $request){
-            //Log::info('This is my log', ['request' => $request->all()]);
-            //echo "<pre>"; print_r('test'); die;
+        
+        Log::info('This is my log', ['request' => $request->all()]);
+        //echo "<pre>"; print_r('test'); die;
+        
         try{
 
             $validator = Validator::make($request->all(),[
@@ -303,6 +306,18 @@ class ClinicController extends Controller
                 $clinic = Clinic::take($limit)->skip($offset)->with('administrators')->with('doctors')->get();
             }else{
                 $clinic = Clinic::orderBy('id', 'DESC')->with('administrators')->with('doctors')->get();
+            }
+
+            foreach($clinic as &$row){
+                foreach($row->doctors as $val){
+                    $user = User::find($val->doctor);
+                    $fullName =  '';
+                    if ($user) {
+                        $fullName = $user->first_name.' '.$user->last_name;
+                    }
+
+                    $val->name = $fullName;
+                }
             }
 
             $response = [
