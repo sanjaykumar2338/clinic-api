@@ -63,7 +63,7 @@ class ClinicController extends Controller
                 foreach($jsonData['doctors'] as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row['doctor'];
+                    $doctor->doctor = $row['id'];
                     $doctor->save();
                 }
             }
@@ -238,7 +238,7 @@ class ClinicController extends Controller
                 foreach($jsonData['doctors'] as $row){
                     $doctor = new Clinicdoctor;
                     $doctor->clinic_id = $clinic->id;
-                    $doctor->doctor = $row['doctor'];
+                    $doctor->doctor = $row['id'];
                     $doctor->save();
                 }
             }
