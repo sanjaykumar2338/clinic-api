@@ -27,6 +27,8 @@ class RevenueController extends Controller
             $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctor')->with('patient')->get();
         }
 
+        
+
         $patient_arr = [];
         foreach($resources as $row){
             foreach($row->patient as $item){
