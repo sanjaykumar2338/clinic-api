@@ -154,7 +154,7 @@ class RevenueController extends Controller
 
             return response()->json($response,401);
         }
-        
+
 
         $jsonData = $request->json()->all();
         $revenue = Revenue::find($id);;
@@ -177,7 +177,6 @@ class RevenueController extends Controller
             }
         }
         
-        $resource->update($request->all());
         return response()->json(['revenue' => $resource,'success'=>true,'message'=>'revenue updated successfully']);
     }
 
