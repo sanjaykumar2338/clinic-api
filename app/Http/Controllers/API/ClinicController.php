@@ -385,6 +385,17 @@ class ClinicController extends Controller
         try{
             
             $clinic = Clinic::with('administrators')->with('doctors')->where('mcl_clinic.id',$request->id)->first();
+            foreach($clinic->doctors as &$val){
+                $user = User::find($val->doctor);
+                $fullName =  '';
+                if ($user) {
+                    $fullName = $user->first_name.' '.$user->last_name;
+                }
+
+                $val->doctor = $fullName;
+            }
+            
+
             
             $response = [
                 'success'=>true,                
