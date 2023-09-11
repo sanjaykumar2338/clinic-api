@@ -24,7 +24,6 @@ class Revenue extends Model
         return $this->hasOne(InventoryItem::class, 'id', 'inventory');
     }
 
-
     public function patient(){
         return $this->hasMany(RevenuePatient::class, 'revenue', 'id');
     }

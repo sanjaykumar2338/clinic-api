@@ -27,24 +27,7 @@ class RevenueController extends Controller
             $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctor')->with('patient')->get();
         }
 
-        
 
-        $patient_arr = [];
-        foreach($resources as $row){
-            foreach($row->patient as $item){
-                $user = Patient::find($item->patient);
-                $fullName =  '';
-                if ($user) {
-                    $fullName = $user->first_name.' '.$user->last_name;
-                }
-
-
-                $item->name = $fullName;
-                //echo "<pre>"; print_r($item->patient);   
-            }
-        }
-
-        //die;
         $response = [
                 'success'=>true,
                 'message'=>'revenue list',
