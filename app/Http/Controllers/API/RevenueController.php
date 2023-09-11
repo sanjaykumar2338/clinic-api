@@ -154,6 +154,7 @@ class RevenueController extends Controller
 
             return response()->json($response,401);
         }
+        
 
         $jsonData = $request->json()->all();
         $revenue = Revenue::find($id);;
