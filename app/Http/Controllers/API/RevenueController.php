@@ -28,17 +28,10 @@ class RevenueController extends Controller
         }
 
         foreach($resources as $row){
-            foreach($row->patient as $item){
-                $user = Patient::find($item->patient);
-                $fullName =  '';
-                if ($user) {
-                    $fullName = $user->first_name.' '.$user->last_name;
-                }
-
-                $item->name = $fullName;
-                //echo "<pre>"; print_r($item->patient);   
-            }
+           echo "<pre>"; print_r($row->patient);
         }
+
+        die;
 
         $response = [
                 'success'=>true,
