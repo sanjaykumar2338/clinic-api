@@ -22,12 +22,13 @@ class RevenueController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctor')->with('patient')->get();
+            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patient')->get();
         }else{
-            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctor')->with('patient')->get();
+            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patient')->get();
         }
 
         foreach($resources as $row){
+            //echo "<pre>"; print_r($row->doctor); die;
             foreach($row->patient as $item){
                 $user = Patient::find($item->patient);
                 $fullName =  '';
@@ -35,9 +36,14 @@ class RevenueController extends Controller
                     $fullName = $user->first_name.' '.$user->last_name;
                 }
 
-                $item->name = $fullName;
-                //echo "<pre>"; print_r($item->patient);   
+                $item->name = $fullName;                                
             }
+
+            $row->doctor = '';            
+            $doctor = User::find($row->doctorsingle->user_id);
+            if ($doctor) {
+                $row->doctor = ['name'=>$doctor->first_name.' '.$doctor->last_name,'id'=>$row->doctorsingle->id];
+            }            
         }
 
         $response = [

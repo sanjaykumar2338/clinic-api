@@ -31,4 +31,8 @@ class Revenue extends Model
     public function doctor(){
         return $this->hasOne(Doctor::class, 'id', 'doctor');
     }
+
+    public function doctorsingle(){
+        return $this->hasOne(Doctor::class, 'id', 'doctor');
+    }
 }
