@@ -28,7 +28,7 @@ class RevenueController extends Controller
         }
 
         foreach($resources as $row){
-           echo "<pre>"; print_r($row->patient);
+           echo "<pre>"; print_r($row);
         }
 
         die;
