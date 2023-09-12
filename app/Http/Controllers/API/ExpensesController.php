@@ -91,6 +91,7 @@ class ExpensesController extends Controller
         $expenses->to_be_paid = $jsonData['to_be_paid'];
         $expenses->status = $jsonData['status'];
         $expenses->quantity = $jsonData['quantity'];
+        $expenses->paid = $jsonData['paid'];
         $expenses->save();
 
         $response = [
@@ -143,6 +144,7 @@ class ExpensesController extends Controller
         $expenses->to_be_paid = $jsonData['to_be_paid'];
         $expenses->status = $jsonData['status'];
         $expenses->quantity = $jsonData['quantity'];
+        $expenses->paid = $jsonData['paid'];
         $expenses->save();
 
         return response()->json(['expenses' => $expenses,'success'=>true,'message'=>'expenses updated successfully']);
