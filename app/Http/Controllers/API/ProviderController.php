@@ -6,16 +6,16 @@ use App\Models\Paymentpurpose;
 use App\Models\Provider;
 use Validator;
 
-class PaymentPurposeController extends Controller
+class ProviderController extends Controller
 {
     public function index()
     {
         // Fetch all resources
-        $resources = Paymentpurpose::where('is_deleted',0)->get();
+        $resources = Provider::where('is_deleted',0)->get();
         $response = [
                 'success'=>true,
-                'message'=>'payment purpose list',
-                'paymentpurpose'=>$resources
+                'message'=>'provider list',
+                'provider'=>$resources
             ];
 
         return response()->json($response,200);
@@ -24,12 +24,12 @@ class PaymentPurposeController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Paymentpurpose::find($id);
+        $resource = Provider::find($id);
         if (!$resource) {
-            return response()->json(['success'=>false,'message' => 'payment purpose not found'], 404);
+            return response()->json(['success'=>false,'message' => 'provider not found'], 404);
         }
 
-        return response()->json(['success'=>true,'paymentpurpose' => $resource]);
+        return response()->json(['success'=>true,'provider' => $resource]);
     }
 
     public function store(Request $request)
@@ -49,11 +49,11 @@ class PaymentPurposeController extends Controller
         }
 
 
-        $resource = Paymentpurpose::create($request->all());
+        $resource = Provider::create($request->all());
         $response = [
                 'success'=>true,
-                'message'=>'payment purpose add successfully',
-                'paymentpurpose'=>$resource
+                'message'=>'provider add successfully',
+                'provider'=>$resource
             ];
 
         return response()->json($response,200);
@@ -61,9 +61,9 @@ class PaymentPurposeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $resource = Paymentpurpose::find($id);
+        $resource = Provider::find($id);
         if (!$resource) {
-            return response()->json(['message' => 'payment purpose not found','success'=>false], 404);
+            return response()->json(['message' => 'provider not found','success'=>false], 404);
         }
 
         // Update an existing resource
@@ -81,17 +81,17 @@ class PaymentPurposeController extends Controller
         }
         
         $resource->update($request->all());
-        return response()->json(['paymentpurpose' => $resource,'success'=>true,'message'=>'payment purpose updated successfully']);
+        return response()->json(['provider' => $resource,'success'=>true,'message'=>'provider updated successfully']);
     }
 
     public function destroy($id)
     {
         // Delete a resource
-        $resource = Paymentpurpose::find($id);
+        $resource = Provider::find($id);
         if (!$resource) {
-            return response()->json(['message' => 'payment purpose  not found','success'=>false], 404);
+            return response()->json(['message' => 'provider not found','success'=>false], 404);
         }
         $resource->update(['is_deleted'=>1]);
-        return response()->json(['message' => 'payment purpose deleted','success'=>true]);
+        return response()->json(['message' => 'provider deleted','success'=>true]);
     }
 }
