@@ -24,9 +24,9 @@ class ExpensesController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_method')->with('category')->get();
+            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('provider')->with('payment_method')->with('category')->get();
         }else{
-            $resources = Expenses::with('payment_method')->with('category')->get();
+            $resources = Expenses::with('payment_method')->with('provider')->with('category')->get();
         }
         
         $response = [
@@ -41,7 +41,7 @@ class ExpensesController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Expenses::with('payment_method')->with('category')->find($id);
+        $resource = Expenses::with('payment_method')->with('category')->with('provider')->find($id);
         if (!$resource) {
             return response()->json(['success'=>false,'message' => 'expenses not found'], 404);
         }
@@ -60,6 +60,7 @@ class ExpensesController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'category'=>'required',
+            'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
             'amount'=>'required',
@@ -92,6 +93,7 @@ class ExpensesController extends Controller
         $expenses->status = $jsonData['status'];
         $expenses->quantity = $jsonData['quantity'];
         $expenses->paid = $jsonData['paid'];
+        $expenses->provider = $jsonData['provider'];
         $expenses->save();
 
         $response = [
@@ -113,6 +115,7 @@ class ExpensesController extends Controller
         // Update an existing expenses
         $validator = Validator::make($request->all(),[
             'category'=>'required',
+            'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
             'amount'=>'required',
@@ -145,6 +148,7 @@ class ExpensesController extends Controller
         $expenses->status = $jsonData['status'];
         $expenses->quantity = $jsonData['quantity'];
         $expenses->paid = $jsonData['paid'];
+        $expenses->provider = $jsonData['provider'];
         $expenses->save();
 
         return response()->json(['expenses' => $expenses,'success'=>true,'message'=>'expenses updated successfully']);

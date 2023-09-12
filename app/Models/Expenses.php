@@ -19,4 +19,8 @@ class Expenses extends Model
     public function category(){
         return $this->hasOne(Expensescategory::class, 'id', 'category');
     }
+
+    public function provider(){
+        return $this->hasOne(Provider::class, 'id', 'provider');
+    }
 }
