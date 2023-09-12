@@ -12,10 +12,6 @@ class Expenses extends Model
     protected $guarded = [];
     protected $table = 'mcl_expenses';
 
-    public function payment_purpose(){
-        return $this->hasOne(Paymentpurpose::class, 'id', 'payment_purpose');
-    }
-
     public function payment_method(){
         return $this->hasOne(Paymentmethod::class, 'id', 'payment_method');
     }

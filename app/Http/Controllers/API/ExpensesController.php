@@ -24,9 +24,9 @@ class ExpensesController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('category')->get();
+            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_method')->with('category')->get();
         }else{
-            $resources = Expenses::with('payment_purpose')->with('payment_method')->with('category')->get();
+            $resources = Expenses::with('payment_method')->with('category')->get();
         }
         
         $response = [
@@ -41,7 +41,7 @@ class ExpensesController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Expenses::with('paymentpurpose')->with('paymentmethod')->with('category')->find($id);
+        $resource = Expenses::with('payment_method')->with('category')->find($id);
         if (!$resource) {
             return response()->json(['success'=>false,'message' => 'expenses not found'], 404);
         }
