@@ -32,7 +32,7 @@ class ExpensesController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'expenses list',
-                'revenue'=>$resources
+                'expenses'=>$resources
             ];
 
         return response()->json($response,200);
@@ -49,7 +49,7 @@ class ExpensesController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'expenses list',
-                'revenue'=>$resource
+                'expenses'=>$resource
             ];
 
         return response()->json($response,200);
@@ -96,7 +96,7 @@ class ExpensesController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'expenses add successfully',
-                'revenue'=>$expenses
+                'expenses'=>$expenses
             ];
 
         return response()->json($response,200);
