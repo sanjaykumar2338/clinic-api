@@ -117,6 +117,22 @@ class ClinicController extends Controller
         }
     }
 
+    public function userexist(Request $request,$email = false){
+        $user = User::where('email',$email)->first();
+        $exist = true;
+        if(!$user){
+            $exist = false;
+        }
+
+        $response = [
+            'success'=>true,
+            'message'=>'',
+            'userexist'=>$exist
+        ];
+
+        return response()->json($response,200);
+    }
+
     public function createSlug($title, $id = 0)
     {
         $slug = Str::slug($title);
