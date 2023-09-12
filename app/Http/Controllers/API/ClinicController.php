@@ -117,7 +117,17 @@ class ClinicController extends Controller
         }
     }
 
-    public function userexist(Request $request,$email = false){
+    public function userexist(Request $request){
+        $email = $request->input('email');        
+        if(!$email){
+            $response = [
+                'success'=>false,
+                'message'=>'email parameter required'
+            ];
+            return response()->json($response,401);
+        }
+
+        $email = $request->input('email');        
         $user = User::where('email',$email)->first();
         $exist = true;
         if(!$user){
