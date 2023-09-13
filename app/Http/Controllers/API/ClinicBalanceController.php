@@ -36,8 +36,43 @@ class ClinicBalanceController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'summary data',
-                'expenses'=>$expenses,
-                'revenue'=>$revenue
+                'data'=>array('income'=>$revenue,'expenses'=>$expenses)
+            ];
+
+        return response()->json($response,200);
+    }
+
+    public function income_expenses_statement(){
+    	$revenue = Revenue::selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, SUM(price) as price")
+            ->groupBy('month')
+            ->orderByRaw('MIN(created_at)')
+            ->get();
+
+        $expenses = Expenses::selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, SUM(cost) as cost")
+            ->groupBy('month')
+            ->orderByRaw('MIN(created_at)')
+            ->get();
+        
+        $response = [
+                'success'=>true,
+                'message'=>'income expenses statement data',
+                'data'=>array('revenue'=>$revenue,'expenses'=>$expenses)
+            ];
+
+        return response()->json($response,200);
+    }
+
+    public function all_transcations(){
+    	$revenue = Revenue::get();
+        $expenses = Expenses::get();
+        
+        $mergedData = $revenue->concat($expenses);
+        $sortedData = $mergedData->sortBy('created_at');
+
+        $response = [
+                'success'=>true,
+                'message'=>'income expenses all all transcations',
+                'data'=>$sortedData
             ];
 
         return response()->json($response,200);

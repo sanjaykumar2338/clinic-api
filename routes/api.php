@@ -112,4 +112,6 @@ Route::prefix('provider')->controller(ProviderController::class)->middleware('au
 
 Route::prefix('clinicbalance')->controller(ClinicBalanceController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/summary', 'summary');   
+    Route::get('/income_expenses_statement', 'income_expenses_statement');   
+    Route::get('/all_transcations', 'all_transcations');   
 });
