@@ -11,6 +11,7 @@ use App\Http\Controllers\API\RevenueController;
 use App\Http\Controllers\API\ExpensescategoryController;
 use App\Http\Controllers\API\ExpensesController;
 use App\Http\Controllers\API\ProviderController;
+use App\Http\Controllers\API\ClinicBalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,4 +108,8 @@ Route::prefix('provider')->controller(ProviderController::class)->middleware('au
     Route::get('/{id}','show');
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
+});
+
+Route::prefix('clinicbalance')->controller(ClinicBalanceController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/summary', 'summary');   
 });
