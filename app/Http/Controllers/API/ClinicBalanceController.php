@@ -100,6 +100,8 @@ class ClinicBalanceController extends Controller
             $exp = $this->_group_by($expenses, 'category');
             $exp_arr = array();
 
+            //echo "<pre>"; print_r($exp); die;
+
             if($exp){
                 foreach($exp as $key=>$row){
                     $category = '';
@@ -110,12 +112,13 @@ class ClinicBalanceController extends Controller
                     }
 
                     $total = 0;
-                    $exp_arr = array();
+                    $inside_arr = array();
                     foreach($row as $item){
                         $total += $item->cost;
                         $month = date("F", strtotime($item->created_at));
                         $year = date("Y", strtotime($item->created_at));
-                        $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->cost,'total'=>$total);
+
+                        $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->cost);
                     }
 
                     $exp_arr[] = array('category'=>$category,'total'=>$total,'months'=>$inside_arr);
