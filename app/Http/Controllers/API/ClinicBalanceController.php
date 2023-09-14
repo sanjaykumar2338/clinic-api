@@ -116,7 +116,7 @@ class ClinicBalanceController extends Controller
                         $month = date("F", strtotime($item->created_at));
                         $year = date("Y", strtotime($item->created_at));
 
-                        $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->price);
+                        $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->cost);
                     }
 
                     $exp_arr[] = array('category'=>$category,'total'=>$total,'months'=>$inside_arr);
