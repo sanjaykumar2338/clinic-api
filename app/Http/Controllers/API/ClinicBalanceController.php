@@ -130,7 +130,7 @@ class ClinicBalanceController extends Controller
             $response = [
                     'success'=>true,
                     'message'=>'income expenses statement data',
-                    'data'=>array('revenue'=>$rev_arr,'expenses'=>$exp_arr)
+                    'data'=>array('revenue'=>$rev_arr,'expense'=>$exp_arr)
                 ];
 
             return response()->json($response,200);
