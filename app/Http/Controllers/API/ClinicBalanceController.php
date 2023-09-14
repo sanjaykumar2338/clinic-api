@@ -69,10 +69,17 @@ class ClinicBalanceController extends Controller
         $mergedData = $revenue->concat($expenses);
         $sortedData = $mergedData->sortBy('created_at');
 
+        $arr = [];
+        if($sortedData){
+            foreach($sortedData as $row){
+                $arr[] = $row;
+            }
+        }
+
         $response = [
                 'success'=>true,
                 'message'=>'income expenses all all transcations',
-                'data'=>$sortedData
+                'data'=>$arr
             ];
 
         return response()->json($response,200);
