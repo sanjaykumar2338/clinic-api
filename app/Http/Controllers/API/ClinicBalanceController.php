@@ -50,22 +50,22 @@ class ClinicBalanceController extends Controller
                 $startDate = $request->from;
                 $endDate = $request->to;
 
-    	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, SUM(price) as price")
+    	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price")
                  ->groupBy('month','payment_purpose')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, category, SUM(cost) as cost")
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, category, cost")
                     ->groupBy('month','category')
                     ->orderByRaw('MIN(created_at)')
                     ->get();    
             }else{
-                $revenue = Revenue::selectRaw("created_at, payment_purpose, SUM(price) as price")
+                $revenue = Revenue::selectRaw("created_at, payment_purpose, price")
                  ->groupBy('created_at','payment_purpose')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
-                $expenses = Expenses::selectRaw("created_at, category, SUM(cost) as cost")
+                $expenses = Expenses::selectRaw("created_at, category, cost")
                     ->groupBy('created_at','category')
                     ->orderByRaw('MIN(created_at)')
                     ->get();  
