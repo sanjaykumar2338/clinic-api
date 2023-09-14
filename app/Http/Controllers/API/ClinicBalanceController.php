@@ -51,7 +51,7 @@ class ClinicBalanceController extends Controller
                 $endDate = $request->to;
 
     	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price")
-                 ->groupBy('month','payment_purpose')
+                 ->groupBy('month','payment_purpose','price')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
@@ -61,12 +61,12 @@ class ClinicBalanceController extends Controller
                     ->get();    
             }else{
                 $revenue = Revenue::selectRaw("created_at, payment_purpose, price")
-                 ->groupBy('created_at','payment_purpose')
+                 ->groupBy('created_at','payment_purpose','price')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
                 $expenses = Expenses::selectRaw("created_at, category, cost")
-                    ->groupBy('created_at','category')
+                    ->groupBy('created_at','category','cost')
                     ->orderByRaw('MIN(created_at)')
                     ->get();  
             }
