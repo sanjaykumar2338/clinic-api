@@ -112,10 +112,9 @@ class ClinicBalanceController extends Controller
                     $total = 0;
                     $exp_arr = array();
                     foreach($row as $item){
-                        $total += $item->cost;
+                        $total = $item->cost;
                         $month = date("F", strtotime($item->created_at));
                         $year = date("Y", strtotime($item->created_at));
-
                         $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->cost);
                     }
 
