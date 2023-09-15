@@ -16,12 +16,16 @@ use App\Models\Paymentpurpose;
 use App\Models\Expensescategory;
 use App\Models\Clinicadministrator;
 use Carbon\Carbon;
+use DB;
 
 class ClinicBalanceController extends Controller
 {
 	public function summary(Request $request){
         // Fetch all Expenses
         //echo "<pre>"; print_r($request->all()); die;
+        $startDate = '';
+        $endDate = '';
+
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
@@ -35,13 +39,44 @@ class ClinicBalanceController extends Controller
         	$revenue = Revenue::sum('price');
         }
         
+        $chart = $this->chart($startDate, $endDate);
         $response = [
                 'success'=>true,
-                'message'=>'summary data',
-                'data'=>array('income'=>$revenue,'expenses'=>$expenses)
+                'message'=>'summary & chart data',
+                'data'=>array('summary'=>array('concept'=>$revenue,'expenses'=>$expenses),'chart'=>$chart)
             ];
 
         return response()->json($response,200);
+    }
+
+    public function chart($startDate, $endDate){
+        if($startDate && $endDate){
+            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
+
+            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
+        }else{
+
+            $expenses = Expenses::select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
+            $revenue = Revenue::select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
+        }
+
+        $expenses_arr = [];
+        if($expenses){
+            foreach($expenses as $row){
+                $category = Expensescategory::find($row->category);
+                $expenses_arr[] = array('category'=>$category->name,'total'=>$row->total);
+            }
+        }
+
+        $revenue_arr = [];
+        if($revenue){
+            foreach($revenue as $row){
+                $paymentpurpose = Paymentpurpose::find($row->payment_purpose);
+                $revenue_arr[] = array('concept'=>$paymentpurpose->name,'total'=>$row->total);
+            }
+        }
+
+        return array('concept'=>$revenue_arr,'expense'=>$expenses_arr);
     }
 
     public function income_expenses_statement(Request $request){
