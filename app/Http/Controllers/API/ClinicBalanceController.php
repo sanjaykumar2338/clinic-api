@@ -50,13 +50,13 @@ class ClinicBalanceController extends Controller
                 $startDate = $request->from;
                 $endDate = $request->to;
 
-    	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price")
-                 ->groupBy('month','payment_purpose','price')
+    	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price,created_at")
+                 ->groupBy('month','payment_purpose','price','created_at')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, category, cost")
-                    ->groupBy('month','category')
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, category, cost, created_at")
+                    ->groupBy('month','category','cost','created_at')
                     ->orderByRaw('MIN(created_at)')
                     ->get();    
             }else{
@@ -73,6 +73,7 @@ class ClinicBalanceController extends Controller
 
             $rev = $this->_group_by($revenue, 'payment_purpose');
             $rev_arr = array();
+            //echo "<pre>"; print_r($rev); die;
 
             if($rev){
                 foreach($rev as $key=>$row){
@@ -93,7 +94,25 @@ class ClinicBalanceController extends Controller
                         $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->price);
                     }
 
-                    $rev_arr[] = array('concept'=>$concept,'total'=>$total,'months'=>$inside_arr);
+                    $months = $this->months();
+                    $list = $this->_group_by($inside_arr,'month');
+                    //echo "<pre>"; print_r($list); die;
+
+                    $main_data = array();
+                    foreach($months as $key=>$month){
+                        if(isset($list[$month])){
+                            $t = 0;
+                            foreach($list[$month] as $row){
+                                $t += $row['amount'];
+                            }
+
+                            $main_data[] = array('month'=>$row['month'],'year'=>$row['year'],'amount'=>$t);
+                        }else{
+                            $main_data[] = array('month'=>$month,'year'=>date('Y'),'amount'=>0);
+                        }
+                    }
+
+                    $rev_arr[] = array('concept'=>$concept,'total'=>$total,'months'=>$main_data);
                 }
             }
 
@@ -121,7 +140,25 @@ class ClinicBalanceController extends Controller
                         $inside_arr[] = array('month'=>$month,'year'=>$year,'amount'=>$item->cost);
                     }
 
-                    $exp_arr[] = array('category'=>$category,'total'=>$total,'months'=>$inside_arr);
+                    $months = $this->months();
+                    $list = $this->_group_by($inside_arr,'month');
+                    //echo "<pre>"; print_r($list); die;
+
+                    $main_data = array();
+                    foreach($months as $key=>$month){
+                        if(isset($list[$month])){
+                            $t = 0;
+                            foreach($list[$month] as $row){
+                                $t += $row['amount'];
+                            }
+
+                            $main_data[] = array('month'=>$row['month'],'year'=>$row['year'],'amount'=>$t);
+                        }else{
+                            $main_data[] = array('month'=>$month,'year'=>date('Y'),'amount'=>0);
+                        }
+                    }
+
+                    $exp_arr[] = array('category'=>$category,'total'=>$total,'months'=>$main_data);
                 }
             }
             
@@ -138,7 +175,21 @@ class ClinicBalanceController extends Controller
             return response()->json($response,200);
     }
 
-    function _group_by($array, $key) {
+    public function months(){
+        $months = [];
+        for ($i = 1; $i <= 12; $i++) {
+            // Create a DateTime object for the current month and format it as 'F' to get the full month name
+            $date = \DateTime::createFromFormat('!m', $i);
+            $monthName = $date->format('F');
+            
+            // Add the month name to the array
+            $months[] = $monthName;
+        }
+
+        return $months;
+    }
+
+    public function _group_by($array, $key) {
         $return = array();
         foreach($array as $val) {
             $return[$val[$key]][] = $val;
