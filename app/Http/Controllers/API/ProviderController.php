@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Paymentpurpose;
 use App\Models\Provider;
 use Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ProviderController extends Controller
 {
@@ -15,7 +16,8 @@ class ProviderController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'provider list',
-                'provider'=>$resources
+                'provider'=>$resources,
+                'image_path'=>url('/').Storage::url('images')
             ];
 
         return response()->json($response,200);
@@ -48,12 +50,26 @@ class ProviderController extends Controller
             return response()->json($response,401);
         }
 
+        $filename = '';
+        if($request->image){
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+            $storageLocation = 'public/images';
+            $filename = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
+            $imagePath = "$storageLocation/$filename";
+        }
 
-        $resource = Provider::create($request->all());
+        $request->image = $filename;
+        $provider = new Provider;
+        $provider->name = $request->name;
+        $provider->image = $filename;
+        $provider->save();
+
         $response = [
                 'success'=>true,
                 'message'=>'provider add successfully',
-                'provider'=>$resource
+                'provider'=>$provider,
+                'image_path'=>url('/').Storage::url('images')
             ];
 
         return response()->json($response,200);
@@ -79,9 +95,22 @@ class ProviderController extends Controller
 
             return response()->json($response,401);
         }
+
+        $filename = $resource->image;
+        if($request->image){
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+            $storageLocation = 'public/images';
+            $filename = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
+            $imagePath = "$storageLocation/$filename";
+        }
         
-        $resource->update($request->all());
-        return response()->json(['provider' => $resource,'success'=>true,'message'=>'provider updated successfully']);
+        $provider = Provider::find($id);
+        $provider->name = $request->name;
+        $provider->image = $filename;
+        $provider->save();
+        
+        return response()->json(['provider' => $resource,'success'=>true,'message'=>'provider updated successfully','image_path'=>url('/').Storage::url('images')]);
     }
 
     public function destroy($id)

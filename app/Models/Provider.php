@@ -11,6 +11,7 @@ class Provider extends Model
     protected $table = 'mcl_provider';
     protected $fillable = [
         'name',
+        'image',
         'is_deleted'
     ];
 }
