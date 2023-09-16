@@ -118,5 +118,6 @@ Route::prefix('clinicbalance')->controller(ClinicBalanceController::class)->midd
 });
 
 Route::prefix('patientbalance')->controller(PatientBalanceController::class)->middleware('auth:sanctum')->group(function () {
-    Route::get('/', 'index');   
+    Route::get('/', 'index');
+    Route::get('/balance/{id}', 'balance');   
 });
