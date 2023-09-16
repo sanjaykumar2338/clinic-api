@@ -12,6 +12,7 @@ use App\Http\Controllers\API\ExpensescategoryController;
 use App\Http\Controllers\API\ExpensesController;
 use App\Http\Controllers\API\ProviderController;
 use App\Http\Controllers\API\ClinicBalanceController;
+use App\Http\Controllers\API\PatientBalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,4 +115,8 @@ Route::prefix('clinicbalance')->controller(ClinicBalanceController::class)->midd
     Route::get('/summary', 'summary');   
     Route::get('/income_expenses_statement', 'income_expenses_statement');   
     Route::get('/all_transcations', 'all_transcations');   
+});
+
+Route::prefix('patientbalance')->controller(PatientBalanceController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');   
 });

@@ -107,6 +107,7 @@ class RevenueController extends Controller
         $revenue->comments = $jsonData['comments'];
         $revenue->inventory = isset($jsonData['inventory']) ? $jsonData['inventory']:null;
         $revenue->quantity = isset($jsonData['quantity']) ? $jsonData['quantity']:null;
+        $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
 
         if($revenue->id && $jsonData['patient']){
@@ -166,6 +167,7 @@ class RevenueController extends Controller
         $revenue->comments = $jsonData['comments'];
         $revenue->inventory = $jsonData['inventory'];
         $revenue->quantity = $jsonData['quantity'];
+        $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
 
         if($revenue->id && $jsonData['patient']){            

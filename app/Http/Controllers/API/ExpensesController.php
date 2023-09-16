@@ -94,6 +94,7 @@ class ExpensesController extends Controller
         $expenses->quantity = $jsonData['quantity'];
         $expenses->paid = $jsonData['paid'];
         $expenses->provider = $jsonData['provider'];
+        $expenses->clinic_id = $request->user()->clinic_id;
         $expenses->save();
 
         $response = [
@@ -149,6 +150,7 @@ class ExpensesController extends Controller
         $expenses->quantity = $jsonData['quantity'];
         $expenses->paid = $jsonData['paid'];
         $expenses->provider = $jsonData['provider'];
+        $expenses->clinic_id = $request->user()->clinic_id;
         $expenses->save();
 
         return response()->json(['expenses' => $expenses,'success'=>true,'message'=>'expenses updated successfully']);
