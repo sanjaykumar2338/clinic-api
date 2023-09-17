@@ -12,12 +12,12 @@ class ProviderController extends Controller
     public function index()
     {
         // Fetch all resources
-        $resources = Provider::where('is_deleted',0)->get();
+        $url = url('/').Storage::url('images').'/';
+        $resources = Provider::selectRaw('CONCAT("$url", image) as product_name,id')->where('is_deleted',0)->get();
         $response = [
                 'success'=>true,
                 'message'=>'provider list',
-                'provider'=>$resources,
-                'image_path'=>url('/').Storage::url('images')
+                'provider'=>$resources
             ];
 
         return response()->json($response,200);

@@ -43,4 +43,39 @@ class PatientBalanceController extends Controller
 
 		return response()->json(['success'=>true,'message'=>'patient balance list','data' => $data]);
 	}
+
+	public function movements(Request $request, $id){
+		//echo "<pre>"; print_r($request->user()->clinic_id); die;
+		if($request->from && $request->to){
+                $startDate = $request->from;
+                $endDate = $request->to;
+
+            	$revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
+        }else{
+                $revenue = Revenue::get();
+                $expenses = Expenses::get();
+        }
+        
+        $mergedData = $revenue->concat($expenses);
+        $sortedData = $mergedData->sortBy('created_at');
+
+        $arr = [];
+        if($sortedData){
+            foreach($sortedData as $row){
+                $arr[] = $row;
+            }
+        }
+
+		$patient = Patient::with('user')->find($id);
+		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
+		$treating_physician = RevenuePatient::where('patient',$id)->join('mcl_revenue','mcl_revenue.id','=','mcl_revenue.id')->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+
+		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
+
+		//echo "<pre>"; print_r($treating_physician_name); die;
+		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','balance'=>$res);
+
+		return response()->json(['success'=>true,'message'=>'patient balance list','data' => $data]);
+	}
 }
