@@ -45,7 +45,6 @@ class PatientBalanceController extends Controller
 	}
 
 	public function movements(Request $request, $id){
-		//echo "<pre>"; print_r($request->user()->clinic_id); die;
 		if($request->from && $request->to){
                 $startDate = $request->from;
                 $endDate = $request->to;
@@ -67,15 +66,12 @@ class PatientBalanceController extends Controller
             }
         }
 
-		$patient = Patient::with('user')->find($id);
-		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
-		$treating_physician = RevenuePatient::where('patient',$id)->join('mcl_revenue','mcl_revenue.id','=','mcl_revenue.id')->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+        $response = [
+                'success'=>true,
+                'message'=>'income expenses all all transcations',
+                'data'=>$arr
+            ];
 
-		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
-
-		//echo "<pre>"; print_r($treating_physician_name); die;
-		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','balance'=>$res);
-
-		return response()->json(['success'=>true,'message'=>'patient balance list','data' => $data]);
+        return response()->json($response,200);
 	}
 }
