@@ -49,8 +49,8 @@ class PatientBalanceController extends Controller
                 $startDate = $request->from;
                 $endDate = $request->to;
 
-            	$revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
+            	$revenue = Revenue::join('mcl_revenue_patient','mcl_revenue_patient.id','=','mcl_revenue.revenue')->whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue_patient.patient',$id)->get();
+                $expenses = Expenses::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
         }else{
                 $revenue = Revenue::get();
                 $expenses = Expenses::get();
