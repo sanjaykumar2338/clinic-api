@@ -51,13 +51,13 @@ class PatientBalanceController extends Controller
                 $startDate = $request->from;
                 $endDate = $request->to;
 
-            	$revenue = Revenue::join('mcl_revenue_patient','mcl_revenue_patient.revenue','=','mcl_revenue.id')->whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue_patient.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.id','desc')->get();
+            	$revenue = Revenue::join('mcl_revenue_patient','mcl_revenue_patient.revenue','=','mcl_revenue.id')->whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue_patient.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('patient',$id)->orderBy('id','desc')->get();
+                $expenses = Expenses::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('patient',$id)->orderBy('created_at','desc')->get();
         }else{
-                $revenue = Revenue::join('mcl_revenue_patient','mcl_revenue_patient.revenue','=','mcl_revenue.id')->where('mcl_revenue_patient.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.id','desc')->get();
+                $revenue = Revenue::join('mcl_revenue_patient','mcl_revenue_patient.revenue','=','mcl_revenue.id')->where('mcl_revenue_patient.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::where('patient',$id)->orderBy('id','desc')->get();
+                $expenses = Expenses::where('patient',$id)->orderBy('created_at','desc')->get();
         }
         
         $mergedData = $revenue->concat($expenses);
@@ -72,7 +72,7 @@ class PatientBalanceController extends Controller
 
         $response = [
                 'success'=>true,
-                'message'=>'income expenses all transcations',
+                'message'=>'movements lists',
                 'data'=>$arr
             ];
 
