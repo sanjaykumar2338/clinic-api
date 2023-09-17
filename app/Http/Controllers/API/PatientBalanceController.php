@@ -7,6 +7,8 @@ use Validator;
 use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Patient;
+use App\Models\Revenue;
+use App\Models\Expenses;
 use App\Models\Doctor;
 use App\Models\Clinicdoctor;
 use App\Models\RevenuePatient;
