@@ -13,6 +13,7 @@ use App\Http\Controllers\API\ExpensesController;
 use App\Http\Controllers\API\ProviderController;
 use App\Http\Controllers\API\ClinicBalanceController;
 use App\Http\Controllers\API\PatientBalanceController;
+use App\Http\Controllers\API\MaterialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,4 +126,13 @@ Route::prefix('patientbalance')->controller(PatientBalanceController::class)->mi
     Route::get('/documentlist/{id}', 'documentlist'); 
     Route::get('/document/remove/{id}', 'document_remove');
     Route::get('/document/download/{id}', 'document_download');   
+});
+
+Route::prefix('material')->controller(MaterialController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');  
+    Route::post('/', 'store'); 
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy'); 
+    Route::put('/stock/{id}','stock'); 
 });
