@@ -121,4 +121,6 @@ Route::prefix('patientbalance')->controller(PatientBalanceController::class)->mi
     Route::get('/', 'index');
     Route::get('/balance/{id}', 'balance');   
     Route::get('/movements/{id}', 'movements');   
+    Route::post('/document/{id}', 'document');   
+    Route::get('/documentlist/{id}', 'documentlist');   
 });

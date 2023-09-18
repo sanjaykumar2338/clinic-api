@@ -13,6 +13,7 @@ use App\Models\Doctor;
 use App\Models\Clinicdoctor;
 use App\Models\RevenuePatient;
 use App\Models\Clinicadministrator;
+use App\Models\PatientDocument;
 use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -78,5 +79,74 @@ class PatientBalanceController extends Controller
             ];
 
         return response()->json($response,200);
+	}
+
+	public function document(Request $request, $id){
+		try{
+
+            $validator = Validator::make($request->all(),[               
+                'document'=> 'required|file|mimes:jpeg,png,pdf|max:2048',
+                'type'=>'required|in:Identificación oficial,Constanica SAT,Comprobante de domicilio,Póliza de seguro'
+            ]);
+
+            if($validator->fails()){
+                $response = [
+                    'success'=>false,
+                    'message'=>$validator->errors()
+                ];
+
+                return response()->json($response,401);
+            }
+           
+            $document = '';
+            if ($request->hasFile('document')) {
+                $file = $request->file('document');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('uploads', $filename, 'public');
+                $document = $filename; 
+            }
+
+            $file = url('/').Storage::url('uploads').'/'.$document;
+
+            $rec = new PatientDocument;
+            $rec->patient = $id;
+            $rec->document = $document;
+            $rec->type = $file;
+            $rec->save();
+
+            $response = [
+                'success'=> true,
+                'message'=> 'document uploaded successfully',
+                'document'=> $file
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=> false,
+                'message'=> $e->getMessage(),
+                'data'=> ''
+            ];
+
+            return response()->json($response,401);
+        }
+	}
+
+	public function documentlist(Request $request, $id){
+
+		$patient = Patient::with('user')->find($id);
+		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
+		$treating_physician = RevenuePatient::where('patient',$id)->join('mcl_revenue','mcl_revenue.id','=','mcl_revenue.id')->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+
+		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
+
+		
+		$url = url('/').Storage::url('uploads').'/';
+        $records = PatientDocument::selectRaw('CONCAT(?, document) as document,id,patient,created_at,type', [$url])->orderBy('created_at','desc')->get();
+
+		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','documents'=>$records);
+
+		return response()->json(['success'=>true,'message'=>'patient document list','data' => $data]);
 	}
 }
