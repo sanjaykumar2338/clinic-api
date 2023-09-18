@@ -164,9 +164,7 @@ class PatientBalanceController extends Controller
 
 	public function document_download(Request $request, $id){
         $record = PatientDocument::find($id);
-		$url = url('/').Storage::url('uploads').'/'.$record->document;
-
-        // Check if the file exists
+        $url = storage_path('app/public/uploads/' . $record->document);
         if (file_exists($url)) {
             return response()->download($url);
         } else {
