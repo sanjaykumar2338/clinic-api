@@ -111,7 +111,7 @@ class PatientBalanceController extends Controller
             $rec = new PatientDocument;
             $rec->patient = $id;
             $rec->document = $document;
-            $rec->type = $file;
+            $rec->type = $request->type;
             $rec->save();
 
             $response = [
@@ -148,5 +148,33 @@ class PatientBalanceController extends Controller
 		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','documents'=>$records);
 
 		return response()->json(['success'=>true,'message'=>'patient document list','data' => $data]);
+	}
+
+	public function document_remove(Request $request, $id){
+
+        $record = PatientDocument::find($id);
+        $documentPath = url('/').Storage::url('uploads').'/'.$record->document;
+        if (file_exists($documentPath)) {
+        	unlink($documentPath);
+    	}
+
+		$record->delete();
+		return response()->json(['success'=>true,'message'=>'patient document deleted successfully']);
+	}
+
+	public function document_download(Request $request, $id){
+
+        $record = PatientDocument::find($id);
+       
+		$disk = 'public/uploads';
+
+        $filePath = Storage::disk($disk)->path($record->document);
+
+        // Check if the file exists
+        if (file_exists($filePath)) {
+            return response()->download($filePath);
+        } else {
+            return response()->json(['message' => 'File not found'], 404);
+        }
 	}
 }

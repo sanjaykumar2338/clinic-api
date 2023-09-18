@@ -122,5 +122,7 @@ Route::prefix('patientbalance')->controller(PatientBalanceController::class)->mi
     Route::get('/balance/{id}', 'balance');   
     Route::get('/movements/{id}', 'movements');   
     Route::post('/document/{id}', 'document');   
-    Route::get('/documentlist/{id}', 'documentlist');   
+    Route::get('/documentlist/{id}', 'documentlist'); 
+    Route::get('/document/remove/{id}', 'document_remove');
+    Route::get('/document/download/{id}', 'document_download');   
 });
