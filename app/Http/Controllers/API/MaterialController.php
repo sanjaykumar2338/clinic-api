@@ -194,4 +194,8 @@ class MaterialController extends Controller
 
         return response()->json($response,200);
     }
+
+    public function file_import(Request $request){
+        echo "<pre>"; print_r($request->all()); 
+    }
 }
