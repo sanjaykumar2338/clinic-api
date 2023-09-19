@@ -24,9 +24,19 @@ class ExpensesController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('provider')->with('payment_method')->with('category')->with('patient')->orderBy('created_at','desc')->get();
+            $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('provider')->with('payment_method')->with('category')->with('patientsingle')->orderBy('created_at','desc')->get();
         }else{
-            $resources = Expenses::with('payment_method')->with('provider')->with('category')->orderBy('created_at','desc')->get();
+            $resources = Expenses::with('payment_method')->with('provider')->with('category')->with('patientsingle')->orderBy('created_at','desc')->get();
+        }
+
+        foreach($resources as $row){      
+            $user = Patient::find($row->patient);
+            $fullName =  '';
+            if ($user) {
+                $fullName = $user->first_name.' '.$user->last_name;
+            }
+            
+            $row->patient = ['id'=>$row->patient,'name'=>$fullName];            
         }
         
         $response = [
