@@ -18,6 +18,8 @@ class MaterialController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
+            $endDate = Carbon::parse($endDate)->addDay(); 
+            
             $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->get();
         }else{
             $material = Material::where('is_deleted',0)->get();

@@ -29,6 +29,7 @@ class ClinicBalanceController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
+            $endDate = Carbon::parse($endDate)->addDay(); 
 
             $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->sum('cost');
 
@@ -51,6 +52,7 @@ class ClinicBalanceController extends Controller
 
     public function chart($startDate, $endDate){
         if($startDate && $endDate){
+            $endDate = Carbon::parse($endDate)->addDay(); 
             $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
 
             $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
@@ -84,8 +86,9 @@ class ClinicBalanceController extends Controller
          if($request->from && $request->to){
                 $startDate = $request->from;
                 $endDate = $request->to;
+                $endDate = Carbon::parse($endDate)->addDay(); 
 
-    	       $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price,created_at")
+    	        $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price,created_at")
                  ->groupBy('month','payment_purpose','price','created_at')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
@@ -237,7 +240,8 @@ class ClinicBalanceController extends Controller
         if($request->from && $request->to){
                 $startDate = $request->from;
                 $endDate = $request->to;
-
+                $endDate = Carbon::parse($endDate)->addDay(); 
+                
             	$revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
                 $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
         }else{
