@@ -105,11 +105,13 @@ class RevenueController extends Controller
         $revenue->payment_method = $jsonData['payment_method'];
         $revenue->payment_purpose = $jsonData['payment_purpose'];
         $revenue->comments = $jsonData['comments'];
+        $revenue->patient = $jsonData['patient'];
         $revenue->inventory = isset($jsonData['inventory']) ? $jsonData['inventory']:null;
         $revenue->quantity = isset($jsonData['quantity']) ? $jsonData['quantity']:null;
         $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
 
+        /*
         if($revenue->id && $jsonData['patient']){
             foreach($jsonData['patient'] as $row){
                 $doctor = new RevenuePatient;
@@ -118,6 +120,7 @@ class RevenueController extends Controller
                 $doctor->save();
             }
         }
+        */
 
         $response = [
                 'success'=>true,
