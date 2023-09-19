@@ -13,7 +13,7 @@ class ProviderController extends Controller
     {
         // Fetch all resources
         $url = url('/').Storage::url('images').'/';
-        $resources = Provider::selectRaw('CONCAT(?, image) as image,id', [$url])->where('is_deleted',0)->orderBy('created_at','desc')->get();
+        $resources = Provider::selectRaw('CONCAT(?, image) as image,id,name', [$url])->where('is_deleted',0)->orderBy('created_at','desc')->get();
         $response = [
                 'success'=>true,
                 'message'=>'provider list',
