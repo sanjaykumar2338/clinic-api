@@ -137,7 +137,7 @@ class PatientBalanceController extends Controller
 
 		$patient = Patient::with('user')->find($id);
 		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
-		$treating_physician = RevenuePatient::where('patient',$id)->join('mcl_revenue','mcl_revenue.id','=','mcl_revenue.id')->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
 
 		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
 
