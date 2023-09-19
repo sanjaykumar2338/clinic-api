@@ -24,6 +24,8 @@ class ExpensesController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
+            $endDate = Carbon::parse($endDate)->addDay(); 
+            
             $resources = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('provider')->with('payment_method')->with('category')->with('patientsingle')->orderBy('created_at','desc')->get();
         }else{
             $resources = Expenses::with('payment_method')->with('provider')->with('category')->with('patientsingle')->orderBy('created_at','desc')->get();
