@@ -24,7 +24,7 @@ class Revenue extends Model
         return $this->hasOne(InventoryItem::class, 'id', 'inventory');
     }
 
-    public function doctorsingle(){
+    public function patientsingle(){
         return $this->hasOne(Patient::class, 'id', 'patient');
     }
 

@@ -22,9 +22,9 @@ class RevenueController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->get();
+            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->get();
         }else{
-            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->get();
+            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->get();
         }
 
         foreach($resources as $row){      
@@ -33,7 +33,7 @@ class RevenueController extends Controller
             if ($user) {
                 $fullName = $user->first_name.' '.$user->last_name;
             }
-
+            
             $row->patient = ['id'=>$row->patient,'name'=>$fullName]; 
 
             $row->doctor = '';            
