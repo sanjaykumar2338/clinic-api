@@ -34,11 +34,11 @@ class PatientBalanceController extends Controller
 
 	public function balance(Request $request, $id){
 		//echo "<pre>"; print_r($request->user()->clinic_id); die;
-		$res = RevenuePatient::join('mcl_revenue','mcl_revenue.id','=','mcl_revenue_patient.revenue')->join('v3_patients','v3_patients.id','=','mcl_revenue_patient.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue_patient.patient',$id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as patient, mcl_revenue_patient.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid,mcl_revenue.price - mcl_revenue.amount_paid as pending,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as treating_physician,mcl_revenue_patient.updated_at as last_update')->orderBy('mcl_revenue_patient.id','desc')->get();
+		$res = Revenue::join('v3_patients','v3_patients.id','=','mcl_revenue.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as name, mcl_revenue.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid_amount,mcl_revenue.price - mcl_revenue.amount_paid as pending_amount,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as doctor,mcl_revenue.patient')->orderBy('mcl_revenue.created_at','desc')->get();
 
 		$patient = Patient::with('user')->find($id);
 		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
-		$treating_physician = RevenuePatient::where('patient',$id)->join('mcl_revenue','mcl_revenue.id','=','mcl_revenue.id')->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
 
 		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
 
