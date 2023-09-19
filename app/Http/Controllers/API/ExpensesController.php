@@ -1,4 +1,4 @@
-<?php
+azzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz<?php
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -60,6 +60,7 @@ class ExpensesController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'category'=>'required',
+            'patient'=>'required',
             'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
@@ -84,6 +85,7 @@ class ExpensesController extends Controller
         $jsonData = $request->json()->all();
         $expenses = new Expenses;
         $expenses->category = $jsonData['category'];
+        $expenses->patient = $jsonData['patient'];
         $expenses->cost = $jsonData['cost'];
         $expenses->amount = $jsonData['amount'];
         $expenses->payment_method = $jsonData['payment_method'];
@@ -116,6 +118,7 @@ class ExpensesController extends Controller
         // Update an existing expenses
         $validator = Validator::make($request->all(),[
             'category'=>'required',
+            'patient'=>'required',
             'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
@@ -140,6 +143,7 @@ class ExpensesController extends Controller
         $jsonData = $request->json()->all();
         $revenue = Expenses::find($id);;
         $expenses->category = $jsonData['category'];
+        $expenses->patient = $jsonData['patient'];
         $expenses->cost = $jsonData['cost'];
         $expenses->amount = $jsonData['amount'];
         $expenses->payment_method = $jsonData['payment_method'];
