@@ -33,6 +33,7 @@ class RevenueController extends Controller
             if ($user) {
                 $fullName = $user->first_name.' '.$user->last_name;
             }
+            
             $row->patient = ['id'=>$row->patient,'name'=>$fullName]; 
 
             $row->doctor = '';            

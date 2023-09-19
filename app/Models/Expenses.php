@@ -24,7 +24,7 @@ class Expenses extends Model
         return $this->hasOne(Provider::class, 'id', 'provider');
     }
 
-    public function patient(){
+    public function patients(){
         return $this->hasOne(Patient::class, 'id', 'patient');
     }
 }
