@@ -33,7 +33,7 @@ class RevenueController extends Controller
             if ($user) {
                 $fullName = $user->first_name.' '.$user->last_name;
             }
-            $row->patient = ['id'=>$item->patient,'name'=>$fullName];
+            $row->patient = ['id'=>$row->patient,'name'=>$fullName];
 
             if ($doctor) {
                 $row->doctor = ['id'=>$row->doctorsingle->id,'name'=>$doctor->first_name.' '.$doctor->last_name];
