@@ -27,8 +27,18 @@ class RevenueController extends Controller
             $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patient')->get();
         }
 
-        foreach($resources as $row){
-            
+        foreach($resources as $row){      
+            $user = Patient::find($row->patient);
+            $fullName =  '';
+            if ($user) {
+                $fullName = $user->first_name.' '.$user->last_name;
+            }
+            $row->patient = ['id'=>$item->patient,'name'=>$fullName];
+
+            if ($doctor) {
+                $row->doctor = ['id'=>$row->doctorsingle->id,'name'=>$doctor->first_name.' '.$doctor->last_name];
+            }     
+
             $row->doctor = '';            
             $doctor = User::find($row->doctorsingle->user_id);
             if ($doctor) {
