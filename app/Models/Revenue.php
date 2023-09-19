@@ -25,7 +25,7 @@ class Revenue extends Model
     }
 
     public function patient(){
-        return $this->hasMany(RevenuePatient::class, 'revenue', 'id');
+        return $this->hasOne(Patient::class, 'id', 'patient');
     }
 
     public function doctor(){

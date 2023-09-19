@@ -59,7 +59,7 @@ class RevenueController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->with('doctor')->with('patients')->find($id);
+        $resource = Revenue::with('paymentpurpose')->with('paymentmethod')->with('inventory')->with('doctor')->with('patient')->find($id);
         if (!$resource) {
             return response()->json(['success'=>false,'message' => 'revenue not found'], 404);
         }
