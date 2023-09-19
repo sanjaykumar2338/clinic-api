@@ -22,9 +22,9 @@ class RevenueController extends Controller
         if($request->from && $request->to){
             $startDate = $request->from;
             $endDate = $request->to;
-            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->get();
+            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->orderBy('created_at','desc')->get();
         }else{
-            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->get();
+            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->orderBy('created_at','desc')->get();
         }
 
         foreach($resources as $row){      
