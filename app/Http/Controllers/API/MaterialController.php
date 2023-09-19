@@ -19,7 +19,7 @@ class MaterialController extends Controller
             $startDate = $request->from;
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
-            
+
             $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->get();
         }else{
             $material = Material::where('is_deleted',0)->get();
@@ -198,6 +198,80 @@ class MaterialController extends Controller
     }
 
     public function file_import(Request $request){
-        echo "<pre>"; print_r($request->all()); 
+
+        $validator = Validator::make($request->all(),[
+            'file' => 'required|file|mimes:csv,txt'
+        ]);
+
+        if($validator->fails()){
+            $response = [
+                'success'=>false,
+                'message'=>$validator->errors()
+            ];
+
+            return response()->json($response,401);
+        }
+
+        $csvData = [];
+        $csvFile = fopen($request->file,"r");
+        while (($row = fgetcsv($csvFile)) !== false) {
+            $csvData[] = $row;
+        }
+
+        fclose($csvFile);
+        print_r($csvData); die;
+        //echo "<pre>"; print_r($request->all()); 
+
+        if(empty($csvData) || count($csvData)==1){
+            $response = [
+                'success'=>false,
+                'message'=>'File empty!'
+            ];
+
+            return response()->json($response,401);
+        }
+
+        foreach($csvData as $row){
+            $material = Material::where('code',$row[0])->first();
+            if($material){
+                $material->code = $row[0];
+                $material->description = $row[1];
+                $material->description_center = $row[2];
+                $material->batch = $row[3];
+                $material->warehouse = $row[4];
+                $material->material_type = $row[5];
+                $material->location = $row[6];
+                $material->available_stock = $row[7];
+                $material->unit_of_measure = $row[8];
+                $material->entry_date_warehouse = $row[9];
+                $material->expiry_date = $row[10];
+                $material->cost = $row[11];
+                $material->public_price = $row[12];
+                @$material->save();
+            }else{
+                $material = new Material;
+                $material->code = $row[0];
+                $material->description = $row[1];
+                $material->description_center = $row[2];
+                $material->batch = $row[3];
+                $material->warehouse = $row[4];
+                $material->material_type = $row[5];
+                $material->location = $row[6];
+                $material->available_stock = $row[7];
+                $material->unit_of_measure = $row[8];
+                $material->entry_date_warehouse = $row[9];
+                $material->expiry_date = $row[10];
+                $material->cost = $row[11];
+                $material->public_price = $row[12];
+                @$material->save();
+            }
+        }
+
+        $response = [
+            'success'=>true,
+            'message'=>'File Imported successfully!'
+        ];
+
+        return response()->json($response,200);
     }
 }
