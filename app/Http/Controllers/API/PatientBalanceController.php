@@ -26,7 +26,7 @@ class PatientBalanceController extends Controller
 
 	public function index(Request $request){
 		//echo "<pre>"; print_r($request->user()->clinic_id); die;
-		$res = RevenuePatient::join('v3_patients','v3_patients.id','=','mcl_revenue.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as name, mcl_revenue.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid_amount,mcl_revenue.price - mcl_revenue.amount_paid as pending_amount,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as doctor,mcl_revenue.patient')->orderBy('mcl_revenue_patient.id','desc')->get();
+		$res = Revenue::join('v3_patients','v3_patients.id','=','mcl_revenue.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as name, mcl_revenue.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid_amount,mcl_revenue.price - mcl_revenue.amount_paid as pending_amount,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as doctor,mcl_revenue.patient')->orderBy('mcl_revenue_patient.id','desc')->get();
 
 		//echo "<pre>"; print_r($res); die;
 		return response()->json(['success'=>true,'message'=>'patient balance list','patientbalance' => $res]);
