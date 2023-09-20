@@ -171,7 +171,7 @@ class ClinicController extends Controller
         ->get();
     }
 
-    
+
 
     public function upload_picture(Request $request){
         //Log::info('This is my log', ['request' => $request->all()]);
@@ -346,6 +346,10 @@ class ClinicController extends Controller
                     }
 
                     $val->doctor = $fullName;
+                }
+
+                foreach($row->administrators as $val){
+                    $val->password = '';
                 }
             }
 
