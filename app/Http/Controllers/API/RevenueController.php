@@ -24,9 +24,9 @@ class RevenueController extends Controller
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
             
-            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->orderBy('created_at','desc')->get();
+            $resources = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->where('clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
         }else{
-            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->orderBy('created_at','desc')->get();
+            $resources = Revenue::with('payment_purpose')->with('payment_method')->with('inventory')->with('doctorsingle')->with('patientsingle')->where('clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
         }
 
         foreach($resources as $row){      
@@ -183,7 +183,7 @@ class RevenueController extends Controller
             }
         }
         */
-        
+
         return response()->json(['revenue' => $resource,'success'=>true,'message'=>'revenue updated successfully']);
     }
 
