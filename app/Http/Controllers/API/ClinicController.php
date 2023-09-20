@@ -173,6 +173,7 @@ class ClinicController extends Controller
     public function import(Request $request){
         echo 'here';
     }
+    
 
     public function upload_picture(Request $request){
             //Log::info('This is my log', ['request' => $request->all()]);

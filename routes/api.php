@@ -44,6 +44,7 @@ Route::controller(AuthController::class)->group(function(){
 	Route::get('check','check')->name('check');
 });
 
+
 Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:sanctum')->group(function () {
     Route::post('add', 'add');
     Route::get('list', 'list');
