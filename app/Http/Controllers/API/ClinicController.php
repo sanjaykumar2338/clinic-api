@@ -10,6 +10,7 @@ use App\Models\Clinic;
 use App\Models\Patient;
 use App\Models\Doctor;
 use App\Models\Clinicdoctor;
+use App\Models\Material;
 use App\Models\Clinicadministrator;
 use Auth;
 use Illuminate\Support\Str;
