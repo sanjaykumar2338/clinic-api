@@ -57,8 +57,6 @@ Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:s
     Route::get('patient/{id}', 'patient');
     Route::post('upload_picture', 'upload_picture');
     Route::get('userexist', 'userexist');
-    Route::post('importmaterial', 'importmaterial'); 
-    Route::post('importgeneral', 'importgeneral'); 
 });
 
 Route::prefix('paymentmethod')->controller(PaymentMethodController::class)->middleware('auth:sanctum')->group(function () {
@@ -140,6 +138,8 @@ Route::prefix('material')->controller(MaterialController::class)->middleware('au
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy'); 
     Route::put('/stock/{id}','stock'); 
+    Route::post('importmaterial', 'importmaterial'); 
+    Route::post('importgeneral', 'importgeneral'); 
 });
 
 Route::prefix('billing_details')->controller(BillingDetailsController::class)->middleware('auth:sanctum')->group(function () {
