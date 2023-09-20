@@ -109,7 +109,7 @@ class AuthController extends Controller
 
             $clinic = Clinic::find($user->clinic_id);
             if($clinic){
-                $clinic->picture = $clinic->picture ? url('/').Storage::url('uploads').'/'.$clinic->picture : '';
+                $clinic->picture = $clinic->picture ? $clinic->picture : '';
             }
 
             $success['clinic'] = $clinic;
