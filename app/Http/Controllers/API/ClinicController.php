@@ -171,7 +171,82 @@ class ClinicController extends Controller
     }
 
     public function import(Request $request){
-        echo 'here';
+        $validator = Validator::make($request->all(),[
+            'file' => ''
+        ]);
+
+        if($validator->fails()){
+            $response = [
+                'success'=>false,
+                'message'=>$validator->errors()
+            ];
+
+            return response()->json($response,401);
+        }
+
+        $csvData = [];
+        $csvFile = fopen($request->file,"r");
+        while (($row = fgetcsv($csvFile)) !== false) {
+            $csvData[] = $row;
+        }
+
+        fclose($csvFile);
+        print_r($csvData); die;
+        //echo "<pre>"; print_r($request->all()); 
+
+        if(empty($csvData) || count($csvData)==1){
+            $response = [
+                'success'=>false,
+                'message'=>'File empty!'
+            ];
+
+            return response()->json($response,401);
+        }
+
+        foreach($csvData as $row){
+            $material = Material::where('code',$row[0])->first();
+            if($material){
+                $material->code = $row[0];
+                $material->description = $row[1];
+                $material->description_center = $row[2];
+                $material->batch = $row[3];
+                $material->warehouse = $row[4];
+                $material->material_type = $row[5];
+                $material->location = $row[6];
+                $material->available_stock = $row[7];
+                $material->unit_of_measure = $row[8];
+                $material->entry_date_warehouse = $row[9];
+                $material->expiry_date = $row[10];
+                $material->cost = $row[11];
+                $material->public_price = $row[12];
+                $material->stock_type = 'material';
+                @$material->save();
+            }else{
+                $material = new Material;
+                $material->code = $row[0];
+                $material->description = $row[1];
+                $material->description_center = $row[2];
+                $material->batch = $row[3];
+                $material->warehouse = $row[4];
+                $material->material_type = $row[5];
+                $material->location = $row[6];
+                $material->available_stock = $row[7];
+                $material->unit_of_measure = $row[8];
+                $material->entry_date_warehouse = $row[9];
+                $material->expiry_date = $row[10];
+                $material->cost = $row[11];
+                $material->public_price = $row[12];
+                $material->stock_type = 'material';
+                @$material->save();
+            }
+        }
+
+        $response = [
+            'success'=>true,
+            'message'=>'File Imported successfully!'
+        ];
+
+        return response()->json($response,200);
     }
     
 
