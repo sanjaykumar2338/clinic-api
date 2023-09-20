@@ -10,7 +10,7 @@ use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-class MaterialController extends Controller
+class GeneralWarehouseController extends Controller
 {
     public function index(Request $request)
     {
@@ -20,14 +20,14 @@ class MaterialController extends Controller
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
 
-            $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('stock_type','material')->get();
+            $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('stock_type','general')->get();
         }else{
-            $material = Material::where('is_deleted',0)->where('stock_type','material')->get();
+            $material = Material::where('is_deleted',0)->where('stock_type','general')->get();
         }
             
         $response = [
                 'success'=>true,
-                'message'=>'material list',
+                'message'=>'general warehouse list',
                 'material'=>$material
             ];
 
@@ -39,7 +39,7 @@ class MaterialController extends Controller
         // Fetch a single resource by ID
         $material = Material::find($id);
         if (!$material) {
-            return response()->json(['success'=>false,'message' => 'material not found'], 404);
+            return response()->json(['success'=>false,'message' => 'general warehouse not found'], 404);
         }
 
         return response()->json(['success'=>true,'material' => $material]);
@@ -61,8 +61,9 @@ class MaterialController extends Controller
             'entry_date_warehouse'=>'required|date',
             'expiry_date'=>'required|date',
             'cost'=>'required|numeric',
-            'stock_type'=>'required|in:material',
-            'public_price'=>'required|numeric'
+            'stock_type'=>'required|in:general',
+            'public_price'=>'required|numeric',
+            'stock_type'=>'required'
         ]);
 
         if($validator->fails()){
@@ -93,7 +94,7 @@ class MaterialController extends Controller
 
         $response = [
                 'success'=>true,
-                'message'=>'material add successfully',
+                'message'=>'general warehouse add successfully',
                 'material'=>$material
             ];
 
@@ -104,7 +105,7 @@ class MaterialController extends Controller
     {
         $material = Material::find($id);
         if (!$material) {
-            return response()->json(['success'=>false,'message' => 'material not found'], 404);
+            return response()->json(['success'=>false,'message' => 'general warehouse not found'], 404);
         }
 
         $validator = Validator::make($request->all(),[
@@ -121,7 +122,7 @@ class MaterialController extends Controller
             'expiry_date'=>'required|date',
             'cost'=>'required|numeric',
             'public_price'=>'required|numeric',
-            'stock_type'=>'required|in:material'
+            'stock_type'=>'required|in:general',
         ]);
 
         if($validator->fails()){
@@ -151,7 +152,7 @@ class MaterialController extends Controller
 
         $response = [
                 'success'=>true,
-                'message'=>'material update successfully',
+                'message'=>'general warehouse update successfully',
                 'material'=>$material
             ];
 
@@ -163,17 +164,17 @@ class MaterialController extends Controller
         // Delete a resource
         $material = Material::find($id);
         if (!$material) {
-            return response()->json(['message' => 'material not found','success'=>false], 404);
+            return response()->json(['message' => 'general warehouse not found','success'=>false], 404);
         }
         $material->update(['is_deleted'=>1]);
-        return response()->json(['message' => 'material deleted','success'=>true]);
+        return response()->json(['message' => 'general warehouse deleted','success'=>true]);
     }
 
     public function stock(Request $request, $id)
     {
         $material = Material::find($id);
         if (!$material) {
-            return response()->json(['success'=>false,'message' => 'material not found'], 404);
+            return response()->json(['success'=>false,'message' => 'general warehouse not found'], 404);
         }
 
         $validator = Validator::make($request->all(),[
@@ -194,7 +195,7 @@ class MaterialController extends Controller
 
         $response = [
                 'success'=>true,
-                'message'=>'stock update successfully',
+                'message'=>'general warehouse update successfully',
                 'material'=>$material
             ];
 
@@ -251,7 +252,7 @@ class MaterialController extends Controller
                 $material->expiry_date = $row[10];
                 $material->cost = $row[11];
                 $material->public_price = $row[12];
-                $material->stock_type = 'material';
+                $material->stock_type = 'general';
                 @$material->save();
             }else{
                 $material = new Material;
@@ -268,7 +269,7 @@ class MaterialController extends Controller
                 $material->expiry_date = $row[10];
                 $material->cost = $row[11];
                 $material->public_price = $row[12];
-                $material->stock_type = 'material';
+                $material->stock_type = 'general';
                 @$material->save();
             }
         }
