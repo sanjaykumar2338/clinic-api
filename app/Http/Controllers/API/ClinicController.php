@@ -206,6 +206,7 @@ class ClinicController extends Controller
                 return response()->json($response,200);
             }
 
+            array_shift($csvData);
             foreach($csvData as $row){
                 $material = Material::where('code',$row[0])->first();
                 if($material){
@@ -297,6 +298,7 @@ class ClinicController extends Controller
                 return response()->json($response,200);
             }
 
+            array_shift($csvData);
             foreach($csvData as $row){
                 $material = Material::where('code',$row[0])->first();
                 if($material){
