@@ -424,9 +424,6 @@ class ClinicController extends Controller
                 $val->doctor = $fullName;
             }
             
-
-            $clinic->picture = $clinic->picture ? url('/').Storage::url('uploads').'/'.$clinic->picture : '';
-            
             $response = [
                 'success'=>true,                
                 'message'=>'clinic list',
