@@ -171,7 +171,7 @@ class ClinicController extends Controller
         ->get();
     }
 
-    
+
 
     public function upload_picture(Request $request){
         //Log::info('This is my log', ['request' => $request->all()]);
@@ -425,6 +425,7 @@ class ClinicController extends Controller
             }
             
 
+            $clinic->picture = $clinic->picture ? url('/').Storage::url('uploads').'/'.$clinic->picture : '';
             
             $response = [
                 'success'=>true,                
