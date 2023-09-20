@@ -14,6 +14,7 @@ use App\Http\Controllers\API\ProviderController;
 use App\Http\Controllers\API\ClinicBalanceController;
 use App\Http\Controllers\API\PatientBalanceController;
 use App\Http\Controllers\API\MaterialController;
+use App\Http\Controllers\API\BillingDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,4 +137,12 @@ Route::prefix('material')->controller(MaterialController::class)->middleware('au
     Route::delete('/{id}','destroy'); 
     Route::put('/stock/{id}','stock'); 
     Route::post('/file_import', 'file_import'); 
+});
+
+Route::prefix('billing_details')->controller(BillingDetailsController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
 });
