@@ -137,7 +137,7 @@ Route::prefix('material')->controller(MaterialController::class)->middleware('au
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy'); 
     Route::put('/stock/{id}','stock'); 
-    Route::post('/file_import', 'file_import'); 
+    Route::post('/import', 'import'); 
 });
 
 Route::prefix('billing_details')->controller(BillingDetailsController::class)->middleware('auth:sanctum')->group(function () {
@@ -155,5 +155,4 @@ Route::prefix('general_warehouse')->controller(GeneralWarehouseController::class
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy'); 
     Route::put('/stock/{id}','stock'); 
-    Route::post('/file_import', 'file_import'); 
 });

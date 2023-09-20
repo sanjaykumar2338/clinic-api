@@ -201,7 +201,7 @@ class MaterialController extends Controller
         return response()->json($response,200);
     }
 
-    public function file_import(Request $request){
+    public function import(Request $request){
 
         $validator = Validator::make($request->all(),[
             'file' => 'required|file|mimes:csv,txt'
