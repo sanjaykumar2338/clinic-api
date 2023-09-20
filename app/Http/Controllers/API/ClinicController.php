@@ -171,88 +171,54 @@ class ClinicController extends Controller
     }
 
     public function import(Request $request){
-        $validator = Validator::make($request->all(),[
-            'file' => ''
-        ]);
+        try{
 
-        if($validator->fails()){
-            $response = [
-                'success'=>false,
-                'message'=>$validator->errors()
-            ];
+            $validator = Validator::make($request->all(),[               
+                'file'=>''
+            ]);
 
-            return response()->json($response,401);
-        }
+            if($validator->fails()){
+                $response = [
+                    'success'=>false,
+                    'message'=>$validator->errors()
+                ];
 
-        $csvData = [];
-        $csvFile = fopen($request->file,"r");
-        while (($row = fgetcsv($csvFile)) !== false) {
-            $csvData[] = $row;
-        }
-
-        fclose($csvFile);
-        print_r($csvData); die;
-        //echo "<pre>"; print_r($request->all()); 
-
-        if(empty($csvData) || count($csvData)==1){
-            $response = [
-                'success'=>false,
-                'message'=>'File empty!'
-            ];
-
-            return response()->json($response,401);
-        }
-
-        foreach($csvData as $row){
-            $material = Material::where('code',$row[0])->first();
-            if($material){
-                $material->code = $row[0];
-                $material->description = $row[1];
-                $material->description_center = $row[2];
-                $material->batch = $row[3];
-                $material->warehouse = $row[4];
-                $material->material_type = $row[5];
-                $material->location = $row[6];
-                $material->available_stock = $row[7];
-                $material->unit_of_measure = $row[8];
-                $material->entry_date_warehouse = $row[9];
-                $material->expiry_date = $row[10];
-                $material->cost = $row[11];
-                $material->public_price = $row[12];
-                $material->stock_type = 'material';
-                @$material->save();
-            }else{
-                $material = new Material;
-                $material->code = $row[0];
-                $material->description = $row[1];
-                $material->description_center = $row[2];
-                $material->batch = $row[3];
-                $material->warehouse = $row[4];
-                $material->material_type = $row[5];
-                $material->location = $row[6];
-                $material->available_stock = $row[7];
-                $material->unit_of_measure = $row[8];
-                $material->entry_date_warehouse = $row[9];
-                $material->expiry_date = $row[10];
-                $material->cost = $row[11];
-                $material->public_price = $row[12];
-                $material->stock_type = 'material';
-                @$material->save();
+                return response()->json($response,401);
             }
+           
+            $picture = '';
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('uploads', $filename, 'public');
+                $picture = $filename;                
+                //return response()->json(['message' => 'File uploaded successfully', 'path' => $path]);
+            }
+
+            $file = url('/').Storage::url('uploads').'/'.$picture;
+            $response = [
+                'success'=> true,
+                'message'=> 'file uploaded successfully',
+                'picture'=> $file
+            ];
+
+            return response()->json($response,200);
+        }catch(\Exceptions $e){
+            
+            $response = [
+                'success'=> false,
+                'message'=> $e->getMessage(),
+                'data'=> ''
+            ];
+
+            return response()->json($response,401);
         }
-
-        $response = [
-            'success'=>true,
-            'message'=>'File Imported successfully!'
-        ];
-
-        return response()->json($response,200);
     }
-    
+
 
     public function upload_picture(Request $request){
-            //Log::info('This is my log', ['request' => $request->all()]);
-            //echo "<pre>"; print_r('test'); die;
+        //Log::info('This is my log', ['request' => $request->all()]);
+        //echo "<pre>"; print_r('test'); die;
         try{
 
             $validator = Validator::make($request->all(),[               
