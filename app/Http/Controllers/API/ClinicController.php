@@ -216,12 +216,12 @@ class ClinicController extends Controller
                     $material->warehouse = $row[4];
                     $material->material_type = $row[5];
                     $material->location = $row[6];
-                    $material->available_stock = $row[7];
-                    $material->unit_of_measure = $row[8];
-                    $material->entry_date_warehouse = $row[9];
-                    $material->expiry_date = $row[10];
-                    $material->cost = $row[11];
-                    $material->public_price = $row[12];
+                    $material->available_stock = @$row[7];
+                    $material->unit_of_measure = @$row[8];
+                    $material->entry_date_warehouse = @$row[9];
+                    $material->expiry_date = @$row[10];
+                    $material->cost = @$row[11];
+                    $material->public_price = @$row[12];
                     $material->stock_type = 'material';
                     @$material->save();
                 }else{
@@ -233,12 +233,12 @@ class ClinicController extends Controller
                     $material->warehouse = $row[4];
                     $material->material_type = $row[5];
                     $material->location = $row[6];
-                    $material->available_stock = $row[7];
-                    $material->unit_of_measure = $row[8];
-                    $material->entry_date_warehouse = $row[9];
-                    $material->expiry_date = $row[10];
-                    $material->cost = $row[11];
-                    $material->public_price = $row[12];
+                    $material->available_stock = @$row[7];
+                    $material->unit_of_measure = @$row[8];
+                    $material->entry_date_warehouse = @$row[9];
+                    $material->expiry_date = @$row[10];
+                    $material->cost = @$row[11];
+                    $material->public_price = @$row[12];
                     $material->stock_type = 'material';
                     @$material->save();
                 }
