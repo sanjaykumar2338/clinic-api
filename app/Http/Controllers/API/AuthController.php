@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Clinic;
 use Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
