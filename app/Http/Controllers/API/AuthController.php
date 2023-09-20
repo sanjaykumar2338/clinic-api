@@ -105,7 +105,13 @@ class AuthController extends Controller
 
             $success['token'] = $user->createToken('MyApp')->plainTextToken;            
             $success['user'] = $user;
-            $success['clinic'] = Clinic::find($user->clinic_id);
+
+            $clinic = Clinic::find($user->clinic_id);
+            if($clinic){
+                $clinic->picture = $clinic->picture ? url('/').Storage::url('uploads').'/'.$clinic->picture : '';
+            }
+
+            $success['clinic'] = $clinic;
 
             $response = [
                 'success'=>true,
