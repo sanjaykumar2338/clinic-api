@@ -171,7 +171,7 @@ class ClinicController extends Controller
         ->get();
     }
 
-    public function import(Request $request){
+    public function importmaterial(Request $request){
         try{
 
             $validator = Validator::make($request->all(),[               
