@@ -223,7 +223,7 @@ class MaterialController extends Controller
         }
 
         fclose($csvFile);
-        print_r($csvData); die;
+        //print_r($csvData); die;
         //echo "<pre>"; print_r($request->all()); 
 
         if(empty($csvData) || count($csvData)==1){
