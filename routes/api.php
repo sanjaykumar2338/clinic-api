@@ -58,6 +58,7 @@ Route::prefix('clinic')->controller(ClinicController::class)->middleware('auth:s
     Route::post('upload_picture', 'upload_picture');
     Route::get('userexist', 'userexist');
     Route::post('import', 'import'); 
+    Route::post('importgeneral', 'importgeneral'); 
 });
 
 Route::prefix('paymentmethod')->controller(PaymentMethodController::class)->middleware('auth:sanctum')->group(function () {
