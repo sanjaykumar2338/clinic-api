@@ -204,7 +204,7 @@ class MaterialController extends Controller
     public function import(Request $request){
 
         $validator = Validator::make($request->all(),[
-            'file' => 'required|file|mimes:csv,txt'
+            'file' => ''
         ]);
 
         if($validator->fails()){
