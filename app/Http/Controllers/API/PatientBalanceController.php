@@ -43,7 +43,13 @@ class PatientBalanceController extends Controller
 		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
 
 		//echo "<pre>"; print_r($treating_physician_name); die;
-		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','balance'=>$res);
+        $medical_record_number_res = \DB::table('v3_doctor_patient')->where('patient_id',$id)->first();
+        $medical_record_number = '';
+        if($medical_record_number_res){
+            $medical_record_number = $medical_record_number_res->expedient_id;
+        }
+
+		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>$medical_record_number,'balance'=>$res);
 
 		return response()->json(['success'=>true,'message'=>'patient balance list','data' => $data]);
 	}
@@ -145,7 +151,13 @@ class PatientBalanceController extends Controller
 		$url = url('/').Storage::url('uploads').'/';
         $records = PatientDocument::selectRaw('CONCAT(?, document) as document,id,patient,created_at,type', [$url])->orderBy('created_at','desc')->get();
 
-		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>'','documents'=>$records);
+        $medical_record_number_res = \DB::table('v3_doctor_patient')->where('patient_id',$id)->first();
+        $medical_record_number = '';
+        if($medical_record_number_res){
+            $medical_record_number = $medical_record_number_res->expedient_id;
+        }
+
+		$data = array('patient_name'=>$patient_name,'treating_physician'=>$treating_physician_name,'medical_record_number'=>$medical_record_number,'documents'=>$records);
 
 		return response()->json(['success'=>true,'message'=>'patient document list','data' => $data]);
 	}
