@@ -168,9 +168,11 @@ class RevenueController extends Controller
         $revenue->comments = $jsonData['comments'];
         $revenue->inventory = $jsonData['inventory'];
         $revenue->quantity = $jsonData['quantity'];
+        $revenue->patient = $jsonData['patient'];
         $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
 
+        /*
         if($revenue->id && $jsonData['patient']){            
             RevenuePatient::where('revenue',$revenue->id)->delete();
             foreach($jsonData['patient'] as $row){
@@ -180,6 +182,7 @@ class RevenueController extends Controller
                 $doctor->save();
             }
         }
+        */
         
         return response()->json(['revenue' => $resource,'success'=>true,'message'=>'revenue updated successfully']);
     }
