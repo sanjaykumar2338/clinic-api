@@ -20,9 +20,9 @@ class GeneralWarehouseController extends Controller
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
 
-            $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('stock_type','general')->get();
+            $material = Material::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('stock_type','general')->where('clinic_id',$request->user()->clinic_id)->get();
         }else{
-            $material = Material::where('is_deleted',0)->where('stock_type','general')->get();
+            $material = Material::where('is_deleted',0)->where('stock_type','general')->where('clinic_id',$request->user()->clinic_id)->get();
         }
             
         $response = [
@@ -90,6 +90,7 @@ class GeneralWarehouseController extends Controller
         $material->cost = $request->cost;
         $material->public_price = $request->public_price;
         $material->stock_type = $request->stock_type;
+        $material->clinic_id = $request->user()->clinic_id;
         $material->save();
 
         $response = [
@@ -148,6 +149,7 @@ class GeneralWarehouseController extends Controller
         $material->cost = $request->cost;
         $material->public_price = $request->public_price;
         $material->stock_type = $request->stock_type;
+        $material->clinic_id = $request->user()->clinic_id;
         $material->save();
 
         $response = [
@@ -253,6 +255,7 @@ class GeneralWarehouseController extends Controller
                 $material->cost = $row[11];
                 $material->public_price = $row[12];
                 $material->stock_type = 'general';
+                $material->clinic_id = $request->user()->clinic_id;
                 @$material->save();
             }else{
                 $material = new Material;
@@ -270,6 +273,7 @@ class GeneralWarehouseController extends Controller
                 $material->cost = $row[11];
                 $material->public_price = $row[12];
                 $material->stock_type = 'general';
+                $material->clinic_id = $request->user()->clinic_id;
                 @$material->save();
             }
         }
