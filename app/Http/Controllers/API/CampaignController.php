@@ -82,27 +82,27 @@ class CampaignController extends Controller
         $campaign->final_image_url = $request->final_image_url;
         $campaign->clinic_id = $request->user()->clinic_id;
 
-        if ($request->hasFile('header_image')) {
+        if ($request->header_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->header_image));
             $storageLocation = 'public/campaign';
             $header_image = uniqid() . '.png'; // You can use any file format you prefer
-            Storage::put("$storageLocation/$filename", $imageData);
+            Storage::put("$storageLocation/$header_image", $imageData);
             $campaign->header_image = $header_image;
         }
 
-        if ($request->hasFile('main_image')) {
+        if ($request->main_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->main_image));
             $storageLocation = 'public/campaign';
             $main_image = uniqid() . '.png'; // You can use any file format you prefer
-            Storage::put("$storageLocation/$filename", $imageData);
+            Storage::put("$storageLocation/$main_image", $imageData);
             $campaign->main_image = $main_image;
         }
 
-        if ($request->hasFile('final_image')) {
+        if ($request->final_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->final_image));
             $storageLocation = 'public/campaign';
             $final_image = uniqid() . '.png'; // You can use any file format you prefer
-            Storage::put("$storageLocation/$filename", $imageData);
+            Storage::put("$storageLocation/$final_image", $imageData);
             $campaign->final_image = $final_image;
         }
 
@@ -156,7 +156,7 @@ class CampaignController extends Controller
         $campaign->final_image_url = $request->final_image_url;
         $campaign->clinic_id = $request->user()->clinic_id;
 
-        if ($request->hasFile('header_image')) {
+        if ($request->header_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->header_image));
             $storageLocation = 'public/campaign';
             $header_image = uniqid() . '.png'; // You can use any file format you prefer
@@ -164,7 +164,7 @@ class CampaignController extends Controller
             $campaign->header_image = $header_image;
         }
 
-        if ($request->hasFile('main_image')) {
+        if ($request->main_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->main_image));
             $storageLocation = 'public/campaign';
             $main_image = uniqid() . '.png'; // You can use any file format you prefer
@@ -172,7 +172,7 @@ class CampaignController extends Controller
             $campaign->main_image = $main_image;
         }
 
-        if ($request->hasFile('final_image')) {
+        if ($request->final_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->final_image));
             $storageLocation = 'public/campaign';
             $final_image = uniqid() . '.png'; // You can use any file format you prefer
