@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Paymentpurpose;
 use App\Models\Provider;
 use App\Models\Campaign;
+use App\Models\Campaignstatistics;
 use Validator;
 use DB;
 use Carbon\Carbon;
@@ -31,6 +32,17 @@ class CampaignController extends Controller
                 'message'=>'campaign list',
                 'campaign'=>$campaign,
                 'path'=>$file
+            ];
+
+        return response()->json($response,200);
+    }
+
+    public function statistics(Request $request){
+        $statistics = Campaignstatistics::with('campaign')->orderBy('created_at','desc')->get();
+        $response = [
+                'success'=>true,
+                'message'=>'campaign statistics list',
+                'statistics'=>$statistics
             ];
 
         return response()->json($response,200);

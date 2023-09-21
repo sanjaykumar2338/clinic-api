@@ -166,4 +166,5 @@ Route::prefix('campaign')->controller(CampaignController::class)->middleware('au
     Route::get('/{id}','show');
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
+    Route::get('/statistics/list','statistics');
 });
