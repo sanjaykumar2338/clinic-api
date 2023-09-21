@@ -16,6 +16,7 @@ use App\Http\Controllers\API\PatientBalanceController;
 use App\Http\Controllers\API\MaterialController;
 use App\Http\Controllers\API\BillingDetailsController;
 use App\Http\Controllers\API\GeneralWarehouseController;
+use App\Http\Controllers\API\CampaignController;
 
 /*
 |--------------------------------------------------------------------------
