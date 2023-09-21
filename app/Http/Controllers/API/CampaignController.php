@@ -110,7 +110,7 @@ class CampaignController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'campaign add successfully',
-                'material'=>$campaign
+                'campaign'=>$campaign
             ];
 
         return response()->json($response,200);
