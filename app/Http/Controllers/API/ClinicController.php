@@ -284,7 +284,11 @@ class ClinicController extends Controller
                     $doctor->clinic_id = $clinic->id;
                     $doctor->name = $row['name'];
                     $doctor->email = $row['email'];
-                    $doctor->password = bcrypt(($row['password']));
+
+                    if($row['password']){
+                        $doctor->password = bcrypt(($row['password']));
+                    }
+
                     $doctor->save();
                 }
 
@@ -296,7 +300,11 @@ class ClinicController extends Controller
                     $user->user_type = 'admin';
                     $user->email = $row['email'];
                     $user->clinic_id = $clinic->id;
-                    $user->password = bcrypt(($row['password']));
+                    
+                    if($row['password']){
+                        $user->password = bcrypt(($row['password']));
+                    }
+
                     $string = $row['name'];
                     $user->slug = $this->createSlug($string);
                     $user->save();
