@@ -82,27 +82,27 @@ class CampaignController extends Controller
         $campaign->final_image_url = $request->final_image_url;
         $campaign->clinic_id = $request->user()->clinic_id;
 
-        $header_image = '';
         if ($request->hasFile('header_image')) {
-            $file = $request->file('header_image');
-            $header_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->header_image));
+            $storageLocation = 'public/campaign';
+            $header_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->header_image = $header_image;
         }
 
-        $main_image = '';
         if ($request->hasFile('main_image')) {
-            $file = $request->file('main_image');
-            $main_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->main_image));
+            $storageLocation = 'public/campaign';
+            $main_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->main_image = $main_image;
         }
 
-        $final_image = '';
         if ($request->hasFile('final_image')) {
-            $file = $request->file('final_image');
-            $final_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->final_image));
+            $storageLocation = 'public/campaign';
+            $final_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->final_image = $final_image;
         }
 
@@ -157,27 +157,28 @@ class CampaignController extends Controller
         $campaign->clinic_id = $request->user()->clinic_id;
 
         if ($request->hasFile('header_image')) {
-            $file = $request->file('header_image');
-            $header_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->header_image));
+            $storageLocation = 'public/campaign';
+            $header_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->header_image = $header_image;
         }
 
         if ($request->hasFile('main_image')) {
-            $file = $request->file('main_image');
-            $main_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->main_image));
+            $storageLocation = 'public/campaign';
+            $main_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->main_image = $main_image;
         }
 
         if ($request->hasFile('final_image')) {
-            $file = $request->file('final_image');
-            $final_image = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('uploads/campaign', $filename, 'public');
+            $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->final_image));
+            $storageLocation = 'public/campaign';
+            $final_image = uniqid() . '.png'; // You can use any file format you prefer
+            Storage::put("$storageLocation/$filename", $imageData);
             $campaign->final_image = $final_image;
         }
-
-
 
         $campaign->save();
         $response = [
