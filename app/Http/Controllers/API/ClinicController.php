@@ -285,7 +285,7 @@ class ClinicController extends Controller
                     $doctor->name = $row['name'];
                     $doctor->email = $row['email'];
 
-                    if($row['password']){
+                    if($row['password'] && $row['password']!=""){
                         $doctor->password = bcrypt(($row['password']));
                     }
 
@@ -301,7 +301,7 @@ class ClinicController extends Controller
                     $user->email = $row['email'];
                     $user->clinic_id = $clinic->id;
                     
-                    if($row['password']){
+                    if($row['password'] && $row['password']!=""){
                         $user->password = bcrypt(($row['password']));
                     }
 
