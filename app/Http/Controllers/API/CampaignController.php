@@ -22,13 +22,15 @@ class CampaignController extends Controller
 
             $campaign = Campaign::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
         }else{
-            $campaign = Material::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
+            $campaign = Campaign::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
         }
             
+        $file = url('/').Storage::url('campaign');
         $response = [
                 'success'=>true,
                 'message'=>'campaign list',
-                'campaign'=>$campaign
+                'campaign'=>$campaign,
+                'path'=>$file
             ];
 
         return response()->json($response,200);
@@ -42,7 +44,8 @@ class CampaignController extends Controller
             return response()->json(['success'=>false,'message' => 'campaign not found'], 404);
         }
 
-        return response()->json(['success'=>true,'campaign' => $campaign]);
+        $file = url('/').Storage::url('campaign');
+        return response()->json(['success'=>true,'campaign' => $campaign,'path'=>$file]);
     }
 
     public function store(Request $request)
@@ -106,11 +109,13 @@ class CampaignController extends Controller
             $campaign->final_image = $final_image;
         }
 
+        $file = url('/').Storage::url('campaign');
         $campaign->save();
         $response = [
                 'success'=>true,
                 'message'=>'campaign add successfully',
-                'campaign'=>$campaign
+                'campaign'=>$campaign,
+                'path'=>$file
             ];
 
         return response()->json($response,200);
