@@ -158,3 +158,11 @@ Route::prefix('general_warehouse')->controller(GeneralWarehouseController::class
     Route::delete('/{id}','destroy'); 
     Route::put('/stock/{id}','stock'); 
 });
+
+Route::prefix('campaign')->controller(CampaignController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');  
+    Route::post('/', 'store'); 
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
