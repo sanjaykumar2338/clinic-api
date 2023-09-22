@@ -228,7 +228,7 @@ class CampaignController extends Controller
     }
 
     public function specialist(Request $request){        
-        $specialty = Specialist::all();
+        $specialty = Specialist::join('v3_doctor_services','v3_doctor_services.v3_speciality_id','=','v3_specialities.id')->join('v3_doctors','v3_doctors.id','=','v3_doctor_services.v3_doctor_id')->join('users','users.id','=','v3_doctors.user_id')->select('v3_specialities.*','v3_doctors.id as doctor_id')->get();
         return response()->json(['message' => 'specialist list','success'=>true,'specialty'=>$specialty]);   
     }
 
@@ -265,7 +265,7 @@ class CampaignController extends Controller
                 $from = $request->appointment_from;
                 $to = $request->appointment_to;
                
-                $query->whereBetween('appointments.created_at',[Carbon::parse($from)->format('Y-m-d 00:00:00'),Carbon::parse($to)->format('Y-m-d 23:59:59')]);
+                $query->whereBetween('appointments.appointment_date',[Carbon::parse($from)->format('Y-m-d 00:00:00'),Carbon::parse($to)->format('Y-m-d 23:59:59')]);
             }
 
             if($request->age_from  && $request->age_to){
@@ -280,7 +280,15 @@ class CampaignController extends Controller
             }
 
             if($request->services){
-                $query->whereBetween('v3_appointments.service_id',$request->services);
+                $query->join('v3_appointments','v3_appointments.patient_id','=','v3_patients.id')->where('v3_appointments.service_id',$request->services);
+
+                if($request->specialty){
+                    $query->join('v3_doctor_services','v3_doctor_services.id','=','v3_appointments.service_id')->where('v3_doctor_services.v3_speciality_id',$request->specialty);
+                }
+
+                if($request->specialist){
+                    $query->join('v3_doctor_services as t','t.id','=','v3_appointments.service_id')->where('t.v3_doctor_id',$request->specialist);
+                }
             }
 
             $results = $query->get();
