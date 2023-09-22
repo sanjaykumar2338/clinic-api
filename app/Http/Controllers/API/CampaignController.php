@@ -279,6 +279,10 @@ class CampaignController extends Controller
                 $query->whereBetween('v3_patients.birth_date', [$minBirthdate, $maxBirthdate]);
             }
 
+            if($request->services){
+                $query->whereBetween('v3_appointments.service_id',$request->services);
+            }
+
             $results = $query->get();
 
             $response = [
