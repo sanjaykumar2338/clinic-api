@@ -6,6 +6,10 @@ use App\Models\Paymentpurpose;
 use App\Models\Provider;
 use App\Models\Campaign;
 use App\Models\Campaignstatistics;
+use App\Models\Patient;
+use App\Models\Specialty;
+use App\Models\Services;
+use App\Models\Specialist;
 use Validator;
 use DB;
 use Carbon\Carbon;
@@ -216,5 +220,87 @@ class CampaignController extends Controller
         }
         $campaign->update(['is_deleted'=>1]);
         return response()->json(['message' => 'campaign deleted','success'=>true]);
+    }
+
+    public function specialty(Request $request){        
+        $specialty = Specialty::all();
+        return response()->json(['message' => 'specialty list','success'=>true,'specialty'=>$specialty]);   
+    }
+
+    public function specialist(Request $request){        
+        $specialty = Specialist::all();
+        return response()->json(['message' => 'specialist list','success'=>true,'specialty'=>$specialty]);   
+    }
+
+    public function services(Request $request){        
+        $services = Services::all();
+        return response()->json(['message' => 'services list','success'=>true,'Services'=>$services]);   
+    }
+
+    public function send(Request $request){
+        
+        $validator = Validator::make($request->all(),[
+            'patient_with'=>'required|in:with_appointment,without_appointment',
+            'appointment_from'=>'nullable|date',
+            'appointment_to'=>'nullable|date',
+            'age_from'=>'nullable|numeric',
+            'age_to'=>'nullable|numeric'
+        ]);
+
+        if($validator->fails()){
+            $response = [
+                'success'=>false,
+                'message'=>$validator->errors()
+            ];
+
+            return response()->json($response,401);
+        }
+
+
+        if($request->patient_with=='with_appointment'){
+            $query = Patient::query();
+            $query->join('appointments','appointments.patient_id','=','v3_patients.id')->select('v3_patients.*');
+
+            if($request->appointment_from  && $request->appointment_to){
+                $from = $request->appointment_from;
+                $to = $request->appointment_to;
+               
+                $query->whereBetween('appointments.created_at',[Carbon::parse($from)->format('Y-m-d 00:00:00'),Carbon::parse($to)->format('Y-m-d 23:59:59')]);
+            }
+
+            if($request->age_from  && $request->age_to){
+
+                $minAge = $request->age_from;
+                $maxAge = $request->age_to;
+                
+                $maxBirthdate = Carbon::now()->subYears($minAge)->format('Y-m-d');
+                $minBirthdate = Carbon::now()->subYears($maxAge + 1)->format('Y-m-d');
+
+                $query->whereBetween('v3_patients.birth_date', [$minBirthdate, $maxBirthdate]);
+            }
+
+            $results = $query->get();
+
+            $response = [
+                'success'=>true,
+                'message'=>'patient list',
+                'patient'=>$results
+            ];
+
+            return response()->json($response,200);
+        }
+
+        if($request->patient_with=='without_appointment'){
+            $query = Patient::query();
+            $results = $query->get();
+
+            $response = [
+                'success'=>true,
+                'message'=>'patient list',
+                'patient'=>$results
+            ];
+
+            return response()->json($response,200);
+        }
     }
 }

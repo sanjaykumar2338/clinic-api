@@ -167,4 +167,8 @@ Route::prefix('campaign')->controller(CampaignController::class)->middleware('au
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
     Route::get('/statistics/list','statistics');
+    Route::get('/specialty/list','specialty');
+    Route::get('/services/list','services');
+    Route::get('/specialist/list','specialist');
+    Route::post('/send','send');
 });
