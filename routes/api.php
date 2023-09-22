@@ -170,5 +170,5 @@ Route::prefix('campaign')->controller(CampaignController::class)->middleware('au
     Route::get('/specialty/list','specialty');
     Route::get('/services/list','services');
     Route::get('/specialist/list','specialist');
-    Route::post('/send','send');
+    Route::post('/patients/list','send');
 });
