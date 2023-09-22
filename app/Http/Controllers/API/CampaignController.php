@@ -279,16 +279,18 @@ class CampaignController extends Controller
                 $query->whereBetween('v3_patients.birth_date', [$minBirthdate, $maxBirthdate]);
             }
 
+            $query->join('v3_appointments','v3_appointments.patient_id','=','v3_patients.id');
+
+            if($request->specialty){
+                $query->join('v3_doctor_services','v3_doctor_services.id','=','v3_appointments.service_id')->where('v3_doctor_services.v3_speciality_id',$request->specialty);
+            }
+
+            if($request->specialist){
+                $query->join('v3_doctor_services as t','t.id','=','v3_appointments.service_id')->where('t.v3_doctor_id',$request->specialist);
+            }
+
             if($request->services){
-                $query->join('v3_appointments','v3_appointments.patient_id','=','v3_patients.id')->where('v3_appointments.service_id',$request->services);
-
-                if($request->specialty){
-                    $query->join('v3_doctor_services','v3_doctor_services.id','=','v3_appointments.service_id')->where('v3_doctor_services.v3_speciality_id',$request->specialty);
-                }
-
-                if($request->specialist){
-                    $query->join('v3_doctor_services as t','t.id','=','v3_appointments.service_id')->where('t.v3_doctor_id',$request->specialist);
-                }
+                $query->where('v3_appointments.service_id',$request->services);
             }
 
             $results = $query->get();
@@ -296,6 +298,7 @@ class CampaignController extends Controller
             $response = [
                 'success'=>true,
                 'message'=>'patient list',
+                'total'=>count($results),
                 'patient'=>$results
             ];
 
