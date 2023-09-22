@@ -227,13 +227,13 @@ class CampaignController extends Controller
         return response()->json(['message' => 'specialty list','success'=>true,'specialty'=>$specialty]);   
     }
 
-    public function specialist(Request $request){        
-        $specialty = Specialist::join('v3_doctor_services','v3_doctor_services.v3_speciality_id','=','v3_specialities.id')->join('v3_doctors','v3_doctors.id','=','v3_doctor_services.v3_doctor_id')->join('users','users.id','=','v3_doctors.user_id')->select('v3_specialities.*','v3_doctors.id as doctor_id')->get();
+    public function specialist(Request $request,$id){        
+        $specialty = Specialist::join('v3_doctor_services','v3_doctor_services.v3_speciality_id','=','v3_specialities.id')->select('v3_specialities.*','v3_doctor_services.v3_service_id as service_id')->where('v3_doctor_services.v3_speciality_id',$id)->get();
         return response()->json(['message' => 'specialist list','success'=>true,'specialty'=>$specialty]);   
     }
 
-    public function services(Request $request){        
-        $services = Services::all();
+    public function services(Request $request, $id){        
+        $services = \DB::table('v3_doctor_services')->join('v3_speciality_services','v3_speciality_services.id','=','v3_doctor_services.v3_service_id')->where('v3_doctor_services.v3_service_id',$id)->get();
         return response()->json(['message' => 'services list','success'=>true,'Services'=>$services]);   
     }
 
