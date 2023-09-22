@@ -294,6 +294,19 @@ class CampaignController extends Controller
             $query = Patient::query();
             $results = $query->get();
 
+            if($request->age_from  && $request->age_to){
+
+                $minAge = $request->age_from;
+                $maxAge = $request->age_to;
+                
+                $maxBirthdate = Carbon::now()->subYears($minAge)->format('Y-m-d');
+                $minBirthdate = Carbon::now()->subYears($maxAge + 1)->format('Y-m-d');
+
+                $query->whereBetween('v3_patients.birth_date', [$minBirthdate, $maxBirthdate]);
+            }
+
+            $results = $query->get();
+
             $response = [
                 'success'=>true,
                 'message'=>'patient list',
