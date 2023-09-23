@@ -50,7 +50,7 @@ class ClinicBalanceController extends Controller
         return response()->json($response,200);
     }
 
-    public function chart($startDate, $endDate){
+    public function chart(Request $request, $startDate, $endDate){
         if($startDate && $endDate){
             $endDate = Carbon::parse($endDate)->addDay(); 
             $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('category')->get();
