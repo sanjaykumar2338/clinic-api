@@ -81,7 +81,7 @@ class RevenueController extends Controller
             'price'=>'required',
             'amount_paid'=>'required',
             'payment_method'=>'required',
-            'comments'=>'required',
+            'comments'=>'',
             'inventory'=>'',
             'quantity'=>''
         ]);
@@ -144,7 +144,7 @@ class RevenueController extends Controller
             'price'=>'required',
             'amount_paid'=>'required',
             'payment_method'=>'required',
-            'comments'=>'required',
+            'comments'=>'',
             'inventory'=>'',
             'quantity'=>''
         ]);

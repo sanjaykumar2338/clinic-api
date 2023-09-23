@@ -72,7 +72,7 @@ class ExpensesController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'category'=>'required',
-            'patient'=>'required',
+            'patient'=>'',
             'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
@@ -82,7 +82,7 @@ class ExpensesController extends Controller
             'quantity'=>'required',
             'paid'=>'required',
             'to_be_paid'=>'required',
-            'status'=>'required'
+            'status'=>''
         ]);
 
         if($validator->fails()){
@@ -130,7 +130,7 @@ class ExpensesController extends Controller
         // Update an existing expenses
         $validator = Validator::make($request->all(),[
             'category'=>'required',
-            'patient'=>'required',
+            'patient'=>'',
             'provider'=>'required',
             'cost'=>'required',
             'payment_purpose'=>'required',
@@ -140,7 +140,7 @@ class ExpensesController extends Controller
             'quantity'=>'required',
             'paid'=>'required',
             'to_be_paid'=>'required',
-            'status'=>'required'
+            'status'=>''
         ]);
 
         if($validator->fails()){

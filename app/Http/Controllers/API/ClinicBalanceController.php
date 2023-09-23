@@ -31,9 +31,9 @@ class ClinicBalanceController extends Controller
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
 
-            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->sum('cost');
+            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->sum('cost');
 
-            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->sum('price');
+            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->sum('price');
         }else{
 
         	$expenses = Expenses::sum('cost');
@@ -53,13 +53,13 @@ class ClinicBalanceController extends Controller
     public function chart($startDate, $endDate){
         if($startDate && $endDate){
             $endDate = Carbon::parse($endDate)->addDay(); 
-            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
+            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('category')->get();
 
-            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
+            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('payment_purpose')->get();
         }else{
 
-            $expenses = Expenses::select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
-            $revenue = Revenue::select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
+            $expenses = Expenses::select('category', DB::raw('sum(cost) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('category')->get();
+            $revenue = Revenue::select('payment_purpose', DB::raw('sum(price) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('payment_purpose')->get();
         }
 
         $expenses_arr = [];
@@ -90,20 +90,24 @@ class ClinicBalanceController extends Controller
 
     	        $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, payment_purpose, price,created_at")
                  ->groupBy('month','payment_purpose','price','created_at')
+                 ->where('clinic_id',$request->user()->clinic_id)
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
                 $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->selectRaw("DATE_FORMAT(created_at, '%b-%y') as month, category, cost, created_at")
                     ->groupBy('month','category','cost','created_at')
+                    ->where('clinic_id',$request->user()->clinic_id)
                     ->orderByRaw('MIN(created_at)')
                     ->get();    
             }else{
                 $revenue = Revenue::selectRaw("created_at, payment_purpose, price")
+                ->where('clinic_id',$request->user()->clinic_id)
                  ->groupBy('created_at','payment_purpose','price')
                 ->orderByRaw('MIN(created_at)')
                 ->get();
 
                 $expenses = Expenses::selectRaw("created_at, category, cost")
+                    ->where('clinic_id',$request->user()->clinic_id)
                     ->groupBy('created_at','category','cost')
                     ->orderByRaw('MIN(created_at)')
                     ->get();  
@@ -242,11 +246,11 @@ class ClinicBalanceController extends Controller
                 $endDate = $request->to;
                 $endDate = Carbon::parse($endDate)->addDay(); 
                 
-            	$revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->get();
+            	$revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->get();
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->get();
         }else{
-                $revenue = Revenue::get();
-                $expenses = Expenses::get();
+                $revenue = Revenue::where('clinic_id',$request->user()->clinic_id)->get();
+                $expenses = Expenses::where('clinic_id',$request->user()->clinic_id)->get();
         }
         
         $mergedData = $revenue->concat($expenses);
