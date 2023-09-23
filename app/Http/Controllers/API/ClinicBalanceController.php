@@ -50,16 +50,16 @@ class ClinicBalanceController extends Controller
         return response()->json($response,200);
     }
 
-    public function chart(Request $request, $startDate, $endDate){
+    public function chart($startDate, $endDate){
         if($startDate && $endDate){
             $endDate = Carbon::parse($endDate)->addDay(); 
-            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('category')->get();
+            $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
 
-            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('payment_purpose')->get();
+            $revenue = Revenue::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
         }else{
 
-            $expenses = Expenses::select('category', DB::raw('sum(cost) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('category')->get();
-            $revenue = Revenue::select('payment_purpose', DB::raw('sum(price) as total'))->where('clinic_id',$request->user()->clinic_id)->groupBy('payment_purpose')->get();
+            $expenses = Expenses::select('category', DB::raw('sum(cost) as total'))->groupBy('category')->get();
+            $revenue = Revenue::select('payment_purpose', DB::raw('sum(price) as total'))->groupBy('payment_purpose')->get();
         }
 
         $expenses_arr = [];
