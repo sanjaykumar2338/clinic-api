@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class ProviderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Fetch all resources
         $url = url('/').Storage::url('images').'/';
-        $resources = Provider::selectRaw('CONCAT(?, image) as image,id,name', [$url])->where('is_deleted',0)->orderBy('created_at','desc')->get();
+        $resources = Provider::selectRaw('CONCAT(?, image) as image,id,name', [$url])->where('clinic_id',$request->user()->clinic_id)->where('is_deleted',0)->orderBy('created_at','desc')->get();
         $response = [
                 'success'=>true,
                 'message'=>'provider list',
@@ -63,6 +63,7 @@ class ProviderController extends Controller
         $provider = new Provider;
         $provider->name = $request->name;
         $provider->image = $filename;
+        $provider->clinic_id = $request->user()->clinic_id;
         $provider->save();
 
         $response = [
@@ -108,6 +109,7 @@ class ProviderController extends Controller
         $provider = Provider::find($id);
         $provider->name = $request->name;
         $provider->image = $filename;
+        $provider->clinic_id = $request->user()->clinic_id;
         $provider->save();
         
         return response()->json(['provider' => $resource,'success'=>true,'message'=>'provider updated successfully','image_path'=>url('/').Storage::url('images')]);

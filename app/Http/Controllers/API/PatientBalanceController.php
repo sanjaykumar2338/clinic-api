@@ -34,11 +34,11 @@ class PatientBalanceController extends Controller
 
 	public function balance(Request $request, $id){
 		//echo "<pre>"; print_r($request->user()->clinic_id); die;
-		$res = Revenue::join('v3_patients','v3_patients.id','=','mcl_revenue.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as name, mcl_revenue.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid_amount,mcl_revenue.price - mcl_revenue.amount_paid as pending_amount,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as doctor,mcl_revenue.patient')->orderBy('mcl_revenue.created_at','desc')->get();
+		$res = Revenue::join('v3_patients','v3_patients.id','=','mcl_revenue.patient')->join('users','users.id','=','v3_patients.user_id')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->selectRaw('CONCAT(users.first_name, " ", users.last_name) as name, mcl_revenue.id, mcl_revenue.price as total_amount,mcl_revenue.amount_paid as paid_amount,mcl_revenue.price - mcl_revenue.amount_paid as pending_amount,CONCAT(doctor_data.first_name, " ", doctor_data.last_name) as doctor,mcl_revenue.patient')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('mcl_revenue.created_at','desc')->get();
 
 		$patient = Patient::with('user')->find($id);
 		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
-		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->first();
 
 		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
 
@@ -59,13 +59,13 @@ class PatientBalanceController extends Controller
                 $startDate = $request->from;
                 $endDate = $request->to;
 
-            	$revenue = Revenue::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.created_at','desc')->get();
+            	$revenue = Revenue::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('patient',$id)->orderBy('created_at','desc')->get();
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->where('patient',$id)->orderBy('created_at','desc')->get();
         }else{
-                $revenue = Revenue::where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->orderBy('mcl_revenue.created_at','desc')->get();
+                $revenue = Revenue::where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::where('patient',$id)->orderBy('created_at','desc')->get();
+                $expenses = Expenses::where('patient',$id)->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
         }
         
         $mergedData = $revenue->concat($expenses);
@@ -143,7 +143,7 @@ class PatientBalanceController extends Controller
 
 		$patient = Patient::with('user')->find($id);
 		$patient_name = $patient->user ? $patient->first_name.' '.$patient->last_name : '';
-		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->orderBy('created_at','desc')->first();
+		$treating_physician = Revenue::where('patient',$id)->select('doctor_data.*')->join('v3_doctors','v3_doctors.id','=','mcl_revenue.doctor')->join('users as doctor_data','doctor_data.id','=','v3_doctors.user_id')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->first();
 
 		$treating_physician_name = $treating_physician ? $treating_physician->first_name.' '.$treating_physician->last_name:'';
 

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Paymentpurpose;
 use App\Models\Provider;
 use App\Models\Material;
+use Illuminate\Validation\Rule;
 use Validator;
 use DB;
 use Carbon\Carbon;
@@ -49,7 +50,9 @@ class GeneralWarehouseController extends Controller
     {
         // Create a new resource
         $validator = Validator::make($request->all(),[
-            'code'=>'required|unique:mcl_material',
+            'code'=>['required',Rule::unique('mcl_material')->where(function ($query) {
+                    return $query->where('stock_type', 'general');
+                })],
             'description'=>'required',
             'description_center'=>'required',
             'batch'=>'required',

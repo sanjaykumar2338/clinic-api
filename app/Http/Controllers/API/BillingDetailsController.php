@@ -20,9 +20,9 @@ class BillingDetailsController extends Controller
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
 
-            $resources = BillingDetails::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->get();
+            $resources = BillingDetails::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->where('is_deleted',0)->get();
         }else{
-            $resources = BillingDetails::where('is_deleted',0)->get();
+            $resources = BillingDetails::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
         }
             
         $response = [
@@ -77,6 +77,7 @@ class BillingDetailsController extends Controller
         $resource->email_2 = $request->email_2;
         $resource->email_3 = $request->email_3;
         $resource->postal_code = $request->postal_code;
+        $resource->clinic_id = $request->user()->clinic_id;
         $resource->save();
 
         $response = [
@@ -123,6 +124,7 @@ class BillingDetailsController extends Controller
         $resource->email_2 = $request->email_2;
         $resource->email_3 = $request->email_3;
         $resource->postal_code = $request->postal_code;
+        $resource->clinic_id = $request->user()->clinic_id;
         $resource->save();
 
         $response = [
