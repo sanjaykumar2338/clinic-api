@@ -104,7 +104,7 @@ class ExpensesController extends Controller
         $expenses->payment_purpose = $jsonData['payment_purpose'];
         $expenses->comments = $jsonData['comments'];
         $expenses->to_be_paid = $jsonData['to_be_paid'];
-        $expenses->status = $jsonData['status'];
+        //$expenses->status = '';//$jsonData['status'];
         $expenses->quantity = $jsonData['quantity'];
         $expenses->paid = $jsonData['paid'];
         $expenses->provider = $jsonData['provider'];
