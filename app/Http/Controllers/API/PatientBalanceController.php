@@ -61,11 +61,11 @@ class PatientBalanceController extends Controller
 
             	$revenue = Revenue::whereBetween('mcl_revenue.created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->where('patient',$id)->orderBy('created_at','desc')->get();
+                $expenses = Expenses::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('clinic_id',$request->user()->clinic_id)->where('patient',$id)->orderBy('created_at','desc')->get();
         }else{
                 $revenue = Revenue::where('mcl_revenue.patient',$id)->select('mcl_revenue.*')->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('mcl_revenue.created_at','desc')->get();
 
-                $expenses = Expenses::where('patient',$id)->where('mcl_revenue.clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
+                $expenses = Expenses::where('patient',$id)->where('clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
         }
         
         $mergedData = $revenue->concat($expenses);
