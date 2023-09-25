@@ -183,4 +183,37 @@ class PatientBalanceController extends Controller
             return response()->json(['message' => 'File not found'], 404);
         }
 	}
+
+    public function facturacion($id){
+        $dummyData = [];
+        $statusOptions = ["paid", "pending"];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $date = date("Y-m-d", strtotime("2023-09-01 +$i days"));
+            $number = "INV" . str_pad($i, 3, "0", STR_PAD_LEFT);
+            $description = "Product " . chr(65 + ($i - 1)); // Generates A, B, C, ... for description
+            $subtotal = rand(50, 200);
+            $vat = $subtotal * 0.2;
+            $total = $subtotal + $vat;
+            $status = $statusOptions[array_rand($statusOptions)];
+
+            $dummyData[] = [
+                "date" => $date,
+                "number" => $number,
+                "description" => $description,
+                "subtotal" => number_format($subtotal, 2),
+                "vat" => number_format($vat, 2),
+                "total" => number_format($total, 2),
+                "status" => $status,
+            ];
+        }
+
+        $response = [
+                'success'=>true,
+                'message'=>'facturacion lists',
+                'data'=>$dummyData
+            ];
+
+        return response()->json($response,200);
+    }
 }
