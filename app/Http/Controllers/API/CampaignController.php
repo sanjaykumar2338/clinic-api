@@ -325,6 +325,7 @@ class CampaignController extends Controller
             $response = [
                 'success'=>true,
                 'message'=>'patient list',
+                'total'=>count($results),
                 'patient'=>$results
             ];
 
