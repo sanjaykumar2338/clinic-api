@@ -72,7 +72,7 @@ class GeneralWarehouseController extends Controller
         if($validator->fails()){
             $response = [
                 'success'=>false,
-                'message'=>$validator->errors()
+                'message'=>$validator->errors()->first()
             ];
 
             return response()->json($response,401);
