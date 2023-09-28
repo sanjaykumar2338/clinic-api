@@ -298,7 +298,13 @@ class ClinicController extends Controller
 
                     $user = User::where('email',$row['email'])->first();
                     if($user){
-                        $secure = $user->secure;
+                        
+                        if($row['password'] && $row['password']!=""){
+                            $secure = $row['password'];
+                        }else{
+                            $secure = $user->secure;
+                        }
+
                         User::where('email',$row['email'])->delete();
 
                         $user = new User;
