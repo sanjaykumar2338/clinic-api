@@ -45,6 +45,7 @@ class GeneralWarehouseController extends Controller
 
         return response()->json(['success'=>true,'material' => $material]);
     }
+    
 
     public function store(Request $request)
     {
