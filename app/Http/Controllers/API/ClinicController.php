@@ -458,7 +458,7 @@ class ClinicController extends Controller
     public function doctor_list(Request $request){
         try{
             
-            $doctor = Doctor::with('user')->get();
+            $doctor = Doctor::with('user')->join('mcl_clinic_doctor','mcl_clinic_doctor.doctor','=','v3_doctors.id')->where('mcl_clinic_doctor.doctor',$request->user()->clinic_id)->get();
             
             $response = [
                 'success'=>true,
