@@ -45,14 +45,27 @@ class GeneralWarehouseController extends Controller
 
         return response()->json(['success'=>true,'material' => $material]);
     }
-    
+
 
     public function store(Request $request)
     {
+        if($request->code){
+            $total = DB::('mcl_material')->where('stock_type', 'general')->where('clinic_id',$request->user()->clinic_id)->count();
+
+            if($total > 0){
+                $response = [
+                    'success'=>false,
+                    'message'=>'Código ya tomado'
+                ];
+            }
+
+            return response()->json($response,401);
+        }
+
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'code'=>['required',Rule::unique('mcl_material')->where(function ($query) {
-                    return $query->where('stock_type', 'general')->where('clinic_id',$request->user()->clinic_id);
+                    return $query->where('stock_type', 'general');
                 })],
             'description'=>'required',
             'description_center'=>'required',
