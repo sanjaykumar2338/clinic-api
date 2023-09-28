@@ -277,7 +277,8 @@ class ClinicController extends Controller
             }
 
             if($clinic->id && $jsonData['administrators']){
-                Clinicadministrator::where('clinic_id',$clinic->id)->delete();                
+                Clinicadministrator::where('clinic_id',$clinic->id)->delete();
+                //User::where('clinic_id',$clinic->id)->delete();
 
                 foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
@@ -297,24 +298,43 @@ class ClinicController extends Controller
 
                     $user = User::where('email',$row['email'])->first();
                     if($user){
+                        $secure = $user->secure;
+                        User::where('email',$row['email'])->delete();
+
                         $user = new User;
+                        $user->first_name = $row['name'];
+                        $user->last_name = $row['name'];
+                        $user->user_type = 'admin';
+                        $user->email = $row['email'];
+                        $user->clinic_id = $clinic->id;
+                        
+                        if($row['password'] && $row['password']!=""){
+                            $user->password = bcrypt(($row['password']));
+                        }else{
+                            $user->password = bcrypt(($secure));
+                        }
+
+                        $string = $row['name'];
+                        $user->slug = $this->createSlug($string);
+                        $user->save();
+                    }else{
+
+                        User::where('email',$row['email'])->delete();
+                        $user = new User;
+                        $user->first_name = $row['name'];
+                        $user->last_name = $row['name'];
+                        $user->user_type = 'admin';
+                        $user->email = $row['email'];
+                        $user->clinic_id = $clinic->id;
+                        
+                        if($row['password'] && $row['password']!=""){
+                            $user->password = bcrypt(($row['password']));
+                        }
+
+                        $string = $row['name'];
+                        $user->slug = $this->createSlug($string);
+                        $user->save();                        
                     }
-
-                    echo "<pre>"; print_r($user); die();
-
-                    $user->first_name = $row['name'];
-                    $user->last_name = $row['name'];
-                    $user->user_type = 'admin';
-                    $user->email = $row['email'];
-                    $user->clinic_id = $clinic->id;
-                    
-                    if($row['password'] && $row['password']!=""){
-                        $user->password = bcrypt(($row['password']));
-                    }
-
-                    $string = $row['name'];
-                    $user->slug = $this->createSlug($string);
-                    $user->save();
                 }
             }
 
