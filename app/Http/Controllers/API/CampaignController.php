@@ -157,7 +157,8 @@ class CampaignController extends Controller
             'final_image'=>'',
             'header_image_url'=>'',
             'main_image_url'=>'',
-            'final_image_url'=>''
+            'final_image_url'=>'',
+            'filters'=>''
         ]);
 
         if($validator->fails()){
@@ -178,6 +179,10 @@ class CampaignController extends Controller
         $campaign->main_image_url = $request->main_image_url;
         $campaign->final_image_url = $request->final_image_url;
         $campaign->clinic_id = $request->user()->clinic_id;
+        
+        if($request->filters){
+            $campaign->filters = serialize($request->filters);
+        }
 
         if ($request->header_image) {
             $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->header_image));
