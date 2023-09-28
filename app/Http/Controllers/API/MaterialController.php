@@ -50,7 +50,7 @@ class MaterialController extends Controller
     {
         // Create a new resource
         $validator = Validator::make($request->all(),[
-            'code'=>['required',Rule::unique('mcl_material')->where(function ($query) {
+            'code'=>['required',Rule::unique('mcl_material')->where(function ($query) use ($request) {
                     return $query->where('stock_type', 'material')->where('clinic_id',$request->user()->clinic_id);
                 })],
             'description'=>'required',
