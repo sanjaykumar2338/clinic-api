@@ -77,6 +77,7 @@ class MaterialController extends Controller
             return response()->json($response,401);
         }
 
+
         $material = new Material;
         $material->code = $request->code;
         $material->description = $request->description;
