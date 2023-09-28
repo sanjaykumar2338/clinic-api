@@ -91,6 +91,7 @@ class ClinicController extends Controller
                     $user->email = $row['email'];
                     $user->clinic_id = $clinic->id;
                     $user->password = bcrypt(($row['password']));
+                    $user->secure = $row['password'];
                     $string = $row['name'];
                     $user->slug = $this->createSlug($string);
                     $user->save();
@@ -276,8 +277,7 @@ class ClinicController extends Controller
             }
 
             if($clinic->id && $jsonData['administrators']){
-                Clinicadministrator::where('clinic_id',$clinic->id)->delete();
-                User::where('clinic_id',$clinic->id)->delete();
+                Clinicadministrator::where('clinic_id',$clinic->id)->delete();                
 
                 foreach($jsonData['administrators'] as $row){
                     $doctor = new Clinicadministrator;
@@ -294,7 +294,12 @@ class ClinicController extends Controller
 
                 //register administrator in users table
                 foreach($jsonData['administrators'] as $row){
-                    $user = new User;
+                    
+                    $user = User::where('email',$row['email'])->first();
+                    if($user_old){
+                        $user = new User;
+                    }
+
                     $user->first_name = $row['name'];
                     $user->last_name = $row['name'];
                     $user->user_type = 'admin';
