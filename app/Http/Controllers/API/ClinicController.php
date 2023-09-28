@@ -493,13 +493,20 @@ class ClinicController extends Controller
     public function doctor_list(Request $request){
         try{
             
-            $doctor = Doctor::with('user')->get();   
+            $type = $request->user()->user_type;           
+            if($type=='admin'){
+                $doctor = Doctor::with('user')->join('mcl_clinic_doctor','mcl_clinic_doctor.doctor','=','v3_doctors.id')->where('mcl_clinic_doctor.clinic_id',$request->user()->clinic_id)->get();
+            }else{
+                $doctor = Doctor::with('user')->get();   
+            }
             
             $response = [
                 'success'=>true,
                 'total'=>$doctor->count(),
                 'message'=>'doctor list',
-                'data'=>$doctor
+                'data'=>$doctor,
+                'type'=>$type,
+                'user'=>$request->user()
             ];
 
             return response()->json($response,200);
