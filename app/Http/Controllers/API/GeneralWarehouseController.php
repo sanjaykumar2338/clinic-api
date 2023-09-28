@@ -50,7 +50,7 @@ class GeneralWarehouseController extends Controller
     public function store(Request $request)
     {
         if($request->code){
-            $total = DB::('mcl_material')->where('stock_type', 'general')->where('clinic_id',$request->user()->clinic_id)->count();
+            $total = Material::where('stock_type', 'general')->where('clinic_id',$request->user()->clinic_id)->count();
 
             if($total > 0){
                 $response = [
