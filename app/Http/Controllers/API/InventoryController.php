@@ -3,6 +3,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
+use App\Models\Material;
 use Validator;
 
 class InventoryController extends Controller
@@ -38,10 +39,10 @@ class InventoryController extends Controller
     }
 
     // Read inventory items
-    public function index()
+    public function index(Request $request)
     {
         // Retrieve all inventory items
-        $items = InventoryItem::where('is_deleted',0)->get();
+        $items = Material::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->select('mcl_material.description as name','mcl_material.available_stock as quantity')->get();
 
         // Return a response with the inventory items
         return response()->json(['data' => $items,'success'=>true]);
