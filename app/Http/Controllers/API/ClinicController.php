@@ -296,7 +296,7 @@ class ClinicController extends Controller
                 foreach($jsonData['administrators'] as $row){
                     
                     $user = User::where('email',$row['email'])->first();
-                    if($user_old){
+                    if($user){
                         $user = new User;
                     }
 
