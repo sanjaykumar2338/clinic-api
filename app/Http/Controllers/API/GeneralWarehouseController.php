@@ -51,7 +51,7 @@ class GeneralWarehouseController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'code'=>['required',Rule::unique('mcl_material')->where(function ($query) {
-                    return $query->where('stock_type', 'general');
+                    return $query->where('stock_type', 'general')->where('clinic_id',$request->user()->clinic_id);
                 })],
             'description'=>'required',
             'description_center'=>'required',
