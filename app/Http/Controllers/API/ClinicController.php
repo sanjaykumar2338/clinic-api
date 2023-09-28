@@ -79,7 +79,7 @@ class ClinicController extends Controller
                         $doctor->clinic_id = $clinic->id;
                         $doctor->name = $row['name'];
                         $doctor->email = $row['email'];
-                        $doctor->password = bcrypt(($row['password']));
+                        $doctor->password = $row['password'];
                         $doctor->save();
                     }
                 }
@@ -289,6 +289,7 @@ class ClinicController extends Controller
                     $doctor->clinic_id = $clinic->id;
                     $doctor->name = $row['name'];
                     $doctor->email = $row['email'];
+                    $doctor->password = $row['password'];
 
                     if($row['password'] && $row['password']!=""){
                         $doctor->password = bcrypt(($row['password']));
@@ -474,6 +475,7 @@ class ClinicController extends Controller
                 }
 
                 $val->doctor = $fullName;
+                $val->id = $user->id;
             }
             
 
