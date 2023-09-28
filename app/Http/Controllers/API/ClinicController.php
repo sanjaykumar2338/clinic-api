@@ -294,11 +294,13 @@ class ClinicController extends Controller
 
                 //register administrator in users table
                 foreach($jsonData['administrators'] as $row){
-                    
+
                     $user = User::where('email',$row['email'])->first();
                     if($user){
                         $user = new User;
                     }
+
+                    echo "<pre>"; print_r($user); die();
 
                     $user->first_name = $row['name'];
                     $user->last_name = $row['name'];
