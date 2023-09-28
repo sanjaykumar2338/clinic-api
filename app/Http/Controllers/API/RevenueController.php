@@ -37,9 +37,13 @@ class RevenueController extends Controller
             }
 
             $row->patient = ['id'=>$row->patient,'name'=>$fullName]; 
+            $row->doctor = '';       
 
-            $row->doctor = '';            
-            $doctor = User::find($row->doctorsingle->user_id);
+            $doctor = '';
+            if($row->doctorsingle){     
+                $doctor = User::find($row->doctorsingle->user_id);
+            }
+
             if ($doctor) {
                 $row->doctor = ['id'=>$row->doctorsingle->id,'name'=>$doctor->first_name.' '.$doctor->last_name];
             }            
