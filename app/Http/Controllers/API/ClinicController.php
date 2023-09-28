@@ -307,7 +307,7 @@ class ClinicController extends Controller
                         $user->user_type = 'admin';
                         $user->email = $row['email'];
                         $user->clinic_id = $clinic->id;
-                        $user->secure = $secure
+                        $user->secure = $secure;
                         
                         if($row['password'] && $row['password']!=""){
                             $user->password = bcrypt(($row['password']));
