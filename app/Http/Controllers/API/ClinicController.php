@@ -340,9 +340,9 @@ class ClinicController extends Controller
 
             //$clinic = Clinic::take($limit)->skip($offset)->with('administrator')->with('doctor')->get();
             if($limit!="" && $offset!=""){
-                $clinic = Clinic::take($limit)->skip($offset)->with('administrators')->with('doctors')->get();
+                $clinic = Clinic::orderBy('updated_at', 'DESC')->take($limit)->skip($offset)->with('administrators')->with('doctors')->get();
             }else{
-                $clinic = Clinic::orderBy('id', 'DESC')->with('administrators')->with('doctors')->get();
+                $clinic = Clinic::orderBy('updated_at', 'DESC')->with('administrators')->with('doctors')->get();
             }
 
             foreach($clinic as &$row){
