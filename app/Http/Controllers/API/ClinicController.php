@@ -467,15 +467,17 @@ class ClinicController extends Controller
 
             //echo "<pre>"; print_r($clinic); die;
 
-            foreach($clinic->doctors as &$val){
-                $user = User::find($val->doctor);
-                $fullName =  '';
-                if ($user) {
-                    $fullName = $user->first_name.' '.$user->last_name;
-                }
+            if(!empty($clinic->doctors)){
+                foreach($clinic->doctors as &$val){
+                    $user = User::find($val->doctor);
+                    $fullName =  '';
+                    if ($user) {
+                        $fullName = $user->first_name.' '.$user->last_name;
+                    }
 
-                $val->doctor = $fullName;
-                $val->id = $user->id;
+                    $val->doctor = $fullName;
+                    $val->id = @$user->id;
+                }
             }
             
 
