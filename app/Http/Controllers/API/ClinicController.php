@@ -507,16 +507,28 @@ class ClinicController extends Controller
     public function doctor_list(Request $request){
         try{
             
-            $type = $request->user()->user_type;           
+            $type = $request->user()->user_type;    
+            $total = 0;       
             if($type=='admin'){
-                $doctor = Doctor::with('user')->join('mcl_clinic_doctor','mcl_clinic_doctor.doctor','=','v3_doctors.user_id')->where('mcl_clinic_doctor.clinic_id',$request->user()->clinic_id)->get();
+                $clinic_doctor = Clinicdoctor::where('mcl_clinic_doctor.clinic_id',$request->user()->clinic_id)->get();
+
+                $doctor = [];
+                if($clinic_doctor){
+                    foreach($clinic_doctor as $row){
+                        $doctor[] = Doctor::with('user')->where('v3_doctors.user_id',$row['doctor'])->first();
+                    }
+                }
+
+                $total = count($doctor);
+
             }else{
                 $doctor = Doctor::with('user')->get();   
+                $total = $doctor->count();
             }
             
             $response = [
                 'success'=>true,
-                'total'=>$doctor->count(),
+                'total'=>$total,
                 'message'=>'doctor list',
                 'data'=>$doctor,
                 'type'=>$type,
@@ -524,6 +536,7 @@ class ClinicController extends Controller
             ];
 
             return response()->json($response,200);
+            
         }catch(\Exceptions $e){
             
             $response = [
