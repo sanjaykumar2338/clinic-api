@@ -4,13 +4,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Paymentmethod;
 use Validator;
+use DB;
 
 class PaymentMethodController extends Controller
 {
     public function index()
     {
         // Fetch all resources
-        $resources = Paymentmethod::where('is_deleted',0)->get();
+        $resources = Paymentmethod::where('is_deleted', 0)
+            ->select(DB::raw('CONCAT(UCASE(LEFT(name, 1)), SUBSTRING(name, 2)) as name'), 'id')
+            ->get();
         $response = [
                 'success'=>true,
                 'message'=>'payment method list',
