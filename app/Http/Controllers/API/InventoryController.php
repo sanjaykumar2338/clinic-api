@@ -42,7 +42,7 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         // Retrieve all inventory items
-        $items = Material::where('is_deleted',0)->where('stock_type','general')->where('clinic_id',$request->user()->clinic_id)->select('mcl_material.description as name','mcl_material.available_stock as quantity','id')->get();
+        $items = Material::where('is_deleted',0)->where('stock_type','material')->where('clinic_id',$request->user()->clinic_id)->select('mcl_material.description as name','mcl_material.available_stock as quantity','id')->get();
 
         // Return a response with the inventory items
         return response()->json(['data' => $items,'success'=>true]);
