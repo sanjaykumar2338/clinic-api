@@ -156,6 +156,26 @@ class ClinicBalanceController extends Controller
 
                     $rev_arr[] = array('concept'=>$concept,'total'=>$total,'months'=>$main_data);
                 }
+            }else{
+                $months = $this->months();
+                $list = $this->_group_by([],'month');
+                //echo "<pre>"; print_r($list); die;
+
+                $main_data = array();
+                foreach($months as $key=>$month){
+                    if(isset($list[$month])){
+                        $t = 0;
+                        foreach($list[$month] as $row){
+                            $t += $row['amount'];
+                        }
+
+                        $main_data[] = array('month'=>$row['month'],'year'=>$row['year'],'amount'=>$t);
+                    }else{
+                        $main_data[] = array('month'=>$month,'year'=>date('Y'),'amount'=>0);
+                    }
+                }
+
+                $rev_arr[] = array('concept'=>[],'total'=>0,'months'=>$main_data);
             }
 
             $exp = $this->_group_by($expenses, 'category');
@@ -202,6 +222,26 @@ class ClinicBalanceController extends Controller
 
                     $exp_arr[] = array('category'=>$category,'total'=>$total,'months'=>$main_data);
                 }
+            }else{
+                $months = $this->months();
+                $list = $this->_group_by([],'month');
+                //echo "<pre>"; print_r($list); die;
+
+                $main_data = array();
+                foreach($months as $key=>$month){
+                    if(isset($list[$month])){
+                        $t = 0;
+                        foreach($list[$month] as $row){
+                            $t += $row['amount'];
+                        }
+
+                        $main_data[] = array('month'=>$row['month'],'year'=>$row['year'],'amount'=>$t);
+                    }else{
+                        $main_data[] = array('month'=>$month,'year'=>date('Y'),'amount'=>0);
+                    }
+                }
+
+                $exp_arr[] = array('category'=>[],'total'=>0,'months'=>$main_data);
             }
             
 
