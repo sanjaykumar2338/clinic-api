@@ -300,13 +300,15 @@ class ClinicBalanceController extends Controller
         if($sortedData){
             foreach($sortedData as $row){
 
-                if($row->payment_purpose){
+                if($row->payment_purpose && $row->type=='revenue'){
                     $payment_purpose = Paymentpurpose::find($row->payment_purpose);
                     if($payment_purpose){
                         $row->comments = $payment_purpose->name;
+                    }else{
+                        $row->comments = '';
                     }
                 }else{
-                    $row->comments = '';
+                    $row->comments = $row->payment_purpose;
                 }
 
                 $arr[] = $row;
