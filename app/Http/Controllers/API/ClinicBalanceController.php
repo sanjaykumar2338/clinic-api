@@ -299,6 +299,16 @@ class ClinicBalanceController extends Controller
         $arr = [];
         if($sortedData){
             foreach($sortedData as $row){
+
+                if($row->payment_purpose){
+                    $payment_purpose = Paymentpurpose::find($row->payment_purpose);
+                    if($payment_purpose){
+                        $row->comments = $payment_purpose->name;
+                    }
+                }else{
+                    $row->comments = '';
+                }
+
                 $arr[] = $row;
             }
         }
