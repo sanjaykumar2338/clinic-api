@@ -78,6 +78,7 @@ Route::prefix('paymentpurpose')->controller(PaymentPurposeController::class)->mi
 
 Route::prefix('inventory')->controller(InventoryController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/', 'index');
+    Route::get('/list/stock', 'list');
     Route::post('/', 'store');
     Route::get('/{id}','show');
     Route::put('/{id}','update');

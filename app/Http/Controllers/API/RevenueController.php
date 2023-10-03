@@ -11,6 +11,7 @@ use App\Models\Doctor;
 use App\Models\RevenuePatient;
 use App\Models\Clinicdoctor;
 use App\Models\Revenue;
+use App\Models\Material;
 use App\Models\Clinicadministrator;
 use Carbon\Carbon;
 
@@ -108,10 +109,18 @@ class RevenueController extends Controller
         $revenue->payment_purpose = $jsonData['payment_purpose'];
         $revenue->comments = $jsonData['comments'];
         $revenue->patient = $jsonData['patient'];
-        $revenue->inventory = isset($jsonData['inventory']) ? $jsonData['inventory']:null;
+        $revenue->inventory = isset($jsonData['inventory_id']) ? $jsonData['inventory_id']:null;
         $revenue->quantity = isset($jsonData['quantity']) ? $jsonData['quantity']:null;
         $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
+
+        if($jsonData['inventory_id']!=""){
+            $stock = Material::find($jsonData['inventory_id']);
+            if($stock){
+                $stock->available_stock = $stock->available_stock - 1;
+                $stock->save();
+            }
+        }
 
         /*
         if($revenue->id && $jsonData['patient']){
@@ -170,11 +179,19 @@ class RevenueController extends Controller
         $revenue->amount_paid = $jsonData['amount_paid'];
         $revenue->payment_method = $jsonData['payment_method'];
         $revenue->comments = $jsonData['comments'];
-        $revenue->inventory = $jsonData['inventory'];
+        $revenue->inventory = $jsonData['inventory_id'];
         $revenue->quantity = $jsonData['quantity'];
         $revenue->patient = $jsonData['patient'];
         $revenue->clinic_id = $request->user()->clinic_id;
         $revenue->save();
+
+        if($jsonData['inventory_id']!=""){
+            $stock = Material::find($jsonData['inventory_id']);
+            if($stock){
+                $stock->available_stock = $stock->available_stock - 1;
+                $stock->save();
+            }
+        }
 
         /*
         if($revenue->id && $jsonData['patient']){            

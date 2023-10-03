@@ -48,6 +48,16 @@ class InventoryController extends Controller
         return response()->json(['data' => $items,'success'=>true]);
     }
 
+    // Read inventory items
+    public function list(Request $request)
+    {
+        // Retrieve all inventory items
+        $items = Material::where('is_deleted',0)->where('available_stock','!=',0)->where('stock_type','material')->where('clinic_id',$request->user()->clinic_id)->select('mcl_material.description as name','mcl_material.available_stock as quantity','id')->get();
+
+        // Return a response with the inventory items
+        return response()->json(['data' => $items,'success'=>true]);
+    }
+
     // Update an inventory item
     public function update(Request $request, $id)
     {
