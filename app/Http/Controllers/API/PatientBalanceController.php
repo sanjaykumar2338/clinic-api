@@ -14,6 +14,7 @@ use App\Models\Clinicdoctor;
 use App\Models\RevenuePatient;
 use App\Models\Clinicadministrator;
 use App\Models\PatientDocument;
+use App\Models\Paymentpurpose;
 use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
