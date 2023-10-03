@@ -230,7 +230,7 @@ class CampaignController extends Controller
     }
 
     public function specialty(Request $request){        
-        $specialty = Specialty::all();
+        $specialty = Specialty::join('v3_specialities','v3_specialities.id','=','v3_speciality_services.v3_speciality_id')->select('v3_specialities.name','v3_specialities.id')->get();
         return response()->json(['message' => 'specialty list','success'=>true,'specialty'=>$specialty]);   
     }
 
