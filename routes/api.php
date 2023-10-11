@@ -17,6 +17,8 @@ use App\Http\Controllers\API\MaterialController;
 use App\Http\Controllers\API\BillingDetailsController;
 use App\Http\Controllers\API\GeneralWarehouseController;
 use App\Http\Controllers\API\CampaignController;
+use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -173,4 +175,25 @@ Route::prefix('campaign')->controller(CampaignController::class)->middleware('au
     Route::get('/specialist/list/{id}','specialist');
     Route::get('/services/list/{id}','services');
     Route::post('/patients/list','send');
+});
+
+Route::prefix('campaign')->controller(BookingController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');  
+    Route::post('/', 'store'); 
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+    Route::get('/statistics/list','statistics');
+    Route::get('/specialty/list','specialty');
+    Route::get('/specialist/list/{id}','specialist');
+    Route::get('/services/list/{id}','services');
+    Route::post('/patients/list','send');
+});
+
+Route::prefix('room')->controller(RoomController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
 });
