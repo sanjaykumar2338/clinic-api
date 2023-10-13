@@ -66,7 +66,7 @@ class AppointmentAvailableSlotController extends Controller {
 	        'from'=>'required',
 	        'to'=>'required',
 	        'room'=>'required',
-	        'duration'=>'required',
+	        'duration'=>'',
 	        'days'=>'required'
 	    ]);
 
