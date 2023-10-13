@@ -46,6 +46,19 @@ class AppointmentAvailableSlotController extends Controller {
         return response()->json($response,200);
 	}
 
+	public function show($id)
+    {
+        // Fetch a single resource by ID
+        $roomslots = Roomslots::find($id);
+        if (!$roomslots) {
+            return response()->json(['success'=>false,'message' => 'room slot not found'], 404);
+        }
+
+        $roomslots->days = unserialize($roomslots->days);
+
+        return response()->json(['success'=>true,'material' => $roomslots]);
+    }
+
 	public function store(Request $request){
 		// Create a new resource
 	    $validator = Validator::make($request->all(),[
