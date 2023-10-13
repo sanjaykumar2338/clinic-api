@@ -63,7 +63,8 @@ class AppointmentAvailableSlotController extends Controller {
 		// Create a new resource
 	    $validator = Validator::make($request->all(),[
 	        'doctor'=>'required',
-	        'date'=>'required',
+	        'from'=>'required',
+	        'to'=>'required',
 	        'room'=>'required',
 	        'duration'=>'required',
 	        'days'=>'required'
@@ -81,7 +82,8 @@ class AppointmentAvailableSlotController extends Controller {
 	    try{
 		    $slot = new Roomslots;
 		    $slot->doctor = $request->doctor;
-		    $slot->date = $request->date;
+		    $slot->from = $request->from;
+		    $slot->to = $request->to;
 		    $slot->room = $request->room;
 		    $slot->duration = $request->duration;
 		    $slot->days = serialize($request->days);
