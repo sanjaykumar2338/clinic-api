@@ -17,7 +17,7 @@ use App\Http\Controllers\API\MaterialController;
 use App\Http\Controllers\API\BillingDetailsController;
 use App\Http\Controllers\API\GeneralWarehouseController;
 use App\Http\Controllers\API\CampaignController;
-use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\AppointmentAvailableSlotController;
 use App\Http\Controllers\API\RoomController;
 
 /*
@@ -191,6 +191,14 @@ Route::prefix('campaign')->controller(BookingController::class)->middleware('aut
 });
 
 Route::prefix('room')->controller(RoomController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
+});
+
+Route::prefix('room_slots')->controller(AppointmentAvailableSlotController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{id}','show');
