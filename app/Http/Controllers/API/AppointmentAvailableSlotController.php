@@ -35,6 +35,8 @@ class AppointmentAvailableSlotController extends Controller {
 
         $roomslots->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
+		    $roomslot->room_name = Room::where('id', $roomslot->room)->value('name');
+		    $roomslot->doctor_name = Doctor::where('v3_doctors.id', $roomslot->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
 		});
             
         $response = [
@@ -49,14 +51,16 @@ class AppointmentAvailableSlotController extends Controller {
 	public function show($id)
     {
         // Fetch a single resource by ID
-        $roomslots = Roomslots::find($id);
-        if (!$roomslots) {
+        $roomslot = Roomslots::find($id);
+        if (!$roomslot) {
             return response()->json(['success'=>false,'message' => 'room slot not found'], 404);
         }
 
-        $roomslots->days = unserialize($roomslots->days);
+     	$roomslot->days = unserialize($roomslot->days);
+	    $roomslot->room_name = Room::where('id', $roomslot->room)->value('name');
+	    $roomslot->doctor_name = Doctor::where('v3_doctors.id', $roomslot->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
 
-        return response()->json(['success'=>true,'material' => $roomslots]);
+        return response()->json(['success'=>true,'material' => $roomslot]);
     }
 
 	public function store(Request $request){
