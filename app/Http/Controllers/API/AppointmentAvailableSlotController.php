@@ -35,10 +35,10 @@ class AppointmentAvailableSlotController extends Controller {
         }
 
         if($request->doctor){
-        	$roomslot->where('doctor', $request->doctor);
+        	$roomslots->where('doctor', $request->doctor);
         }
 
-        $roomslot->get();
+        $roomslots->get();
 
         $roomslots->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
