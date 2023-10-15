@@ -34,7 +34,7 @@ class AppointmentAvailableSlotController extends Controller {
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
 
-        if($request->doctor){
+        if($request->doctor && $request->doctor!=""){
         	$roomslots->where('doctor', $request->doctor);
         }
 
