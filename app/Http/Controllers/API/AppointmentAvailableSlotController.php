@@ -35,7 +35,7 @@ class AppointmentAvailableSlotController extends Controller {
         }
 
         if($request->doctor && $request->doctor!=""){
-        	$roomslots->where('doctor', $request->doctor);
+        	//$roomslots->where('doctor', $request->doctor);
         }
 
         $roomslots->get();
