@@ -35,12 +35,12 @@ class AppointmentAvailableSlotController extends Controller {
         }
 
         if($request->doctor && $request->doctor!=""){
-        	//$roomslots->where('doctor', $request->doctor);
+        	$roomslots->where('doctor', $request->doctor);
         }
 
-        $roomslots->get();
+        $res = $roomslots->get();
 
-        $roomslots->each(function ($roomslot) {
+        $res->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
 		    $roomslot->room_name = Room::where('id', $roomslot->room)->value('name');
 		    $roomslot->doctor_name = Doctor::where('v3_doctors.id', $roomslot->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
@@ -49,7 +49,7 @@ class AppointmentAvailableSlotController extends Controller {
         $response = [
                 'success'=>true,
                 'message'=>'slots list',
-                'slot'=>$roomslots
+                'slot'=>$res
             ];
 
         return response()->json($response,200);
