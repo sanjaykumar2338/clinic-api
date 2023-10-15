@@ -18,6 +18,7 @@ use Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 use DB;
 
 class AppointmentAvailableSlotController extends Controller {
@@ -112,4 +113,15 @@ class AppointmentAvailableSlotController extends Controller {
         	return response()->json($response,404);
 		}
 	}
+
+	public function destroy($id){
+        // Delete a resource
+        $resource = Roomslots::find($id);
+        if (!$resource) {
+            return response()->json(['message' => 'room slot not found','success'=>false], 404);
+        }
+        
+        $resource->update(['is_deleted'=>1]);
+        return response()->json(['message' => 'room slot deleted','success'=>true]);
+    }
 }
