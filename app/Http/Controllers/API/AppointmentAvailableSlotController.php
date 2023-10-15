@@ -29,10 +29,16 @@ class AppointmentAvailableSlotController extends Controller {
             $endDate = $request->to;
             $endDate = Carbon::parse($endDate)->addDay(); 
 
-            $roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
+            $roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }else{
-            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
+
+        if($request->doctor){
+        	$roomslot->where('doctor', $request->doctor);
+        }
+
+        $roomslot->get();
 
         $roomslots->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
@@ -120,7 +126,7 @@ class AppointmentAvailableSlotController extends Controller {
         if (!$resource) {
             return response()->json(['message' => 'room slot not found','success'=>false], 404);
         }
-        
+
         $resource->update(['is_deleted'=>1]);
         return response()->json(['message' => 'room slot deleted','success'=>true]);
     }
