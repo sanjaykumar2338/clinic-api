@@ -46,6 +46,7 @@ class AppointmentAvailableSlotController extends Controller {
         	$fromDate = $request->from;
             $toDate = $request->to;
             
+            /*
         	$res = $roomslots->get()->filter(function ($slot) use ($fromDate, $toDate) {
 		        // Unserialize the "days" field
 		        $days = unserialize($slot->days);
@@ -59,12 +60,28 @@ class AppointmentAvailableSlotController extends Controller {
 
 		        return false;
 		    });
+		    */
+
+		    $res = $roomslots->get();
     	}else{
     		$res = $roomslots->get();
     	}
 
         $res->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
+		    $all_slots = array();
+		    if($request->from && $request->to){
+		    	$fromDate = $request->from;
+            	$toDate = $request->to;
+			    foreach ($days as $day) {
+		            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
+		                $all_slots[] = $day;
+		            }
+		        }
+
+		        $roomslot->days = $all_slots;
+	        }
+
 		    $roomslot->room_name = Room::where('id', $roomslot->room)->value('name');
 		    $roomslot->doctor_name = Doctor::where('v3_doctors.id', $roomslot->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
 		});
