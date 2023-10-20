@@ -69,7 +69,7 @@ class AppointmentAvailableSlotController extends Controller {
 
     	$fromDate = $request->from;
     	$toDate = $request->to;
-        $res->each(function ($roomslot,$fromDate,$toDate) {
+        $res->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
 		    $all_slots = array();
 		    if($fromDate && $toDate){
