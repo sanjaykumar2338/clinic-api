@@ -36,7 +36,7 @@ class AppointmentAvailableSlotController extends Controller {
             $filteredSlots = $roomslots->filter(function ($slot) use ($fromDate, $toDate) {
 			    return collect($slot->days)->contains(function ($day) use ($fromDate, $toDate) {
 			        $dateToFilter = $day['date'] ?? null;
-			        return $dateToFilter >= $fromDate && $dateToFilter <= $toDate;
+			        return true;
 			    });
 			});
 
