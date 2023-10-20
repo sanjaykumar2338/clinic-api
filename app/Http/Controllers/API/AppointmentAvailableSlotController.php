@@ -31,13 +31,24 @@ class AppointmentAvailableSlotController extends Controller {
 
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
 
-            $roomslots = Roomslots::whereRaw("FIND_IN_SET(?, days) > 0 AND FIND_IN_SET(?, days) > 0", [$fromDate, $toDate])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
-        }else{
-            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
-        }
+            if($request->doctor && $request->doctor!=""){
+            	$data = Roomslots::->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->where('doctor', $request->doctor);
+        	}else{
+        		$data = Roomslots::->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
+        	}
 
-        if($request->doctor && $request->doctor!=""){
-        	$roomslots->where('doctor', $request->doctor);
+            $roomslots = $data->filter(function ($slot) use ($fromDate, $toDate) {
+			    return collect($slot->days)->contains(function ($day) use ($fromDate, $toDate) {
+			        $dateToFilter = $day['date'] ?? null;
+			        return $dateToFilter >= $fromDate && $dateToFilter <= $toDate;
+			    });
+			});
+        }else{
+
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
+            if($request->doctor && $request->doctor!=""){
+        		$roomslots->where('doctor', $request->doctor);
+        	}
         }
 
         $res = $roomslots->get();
