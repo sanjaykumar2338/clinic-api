@@ -25,11 +25,13 @@ class AppointmentAvailableSlotController extends Controller {
 
 	public function index(Request $request){
 		if($request->from && $request->to){
-            $startDate = $request->from;
-            $endDate = $request->to;
-            $endDate = Carbon::parse($endDate)->addDay(); 
+            $fromDate = $request->from;
+            $toDate = $request->to;
+            //$endDate = Carbon::parse($endDate)->addDay(); 
 
-            $roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
+            //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
+
+            $roomslots = Roomslots::whereRaw("FIND_IN_SET(?, days) > 0 AND FIND_IN_SET(?, days) > 0", [$fromDate, $toDate])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }else{
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
@@ -49,6 +51,7 @@ class AppointmentAvailableSlotController extends Controller {
         $response = [
                 'success'=>true,
                 'message'=>'slots list',
+                'total'=>count($res)
                 'slot'=>$res
             ];
 
