@@ -46,6 +46,19 @@ class AppointmentAvailableSlotController extends Controller {
         	$fromDate = $request->from;
             $toDate = $request->to;
             
+        	$res = $roomslots->get()->filter(function ($slot) use ($fromDate, $toDate) {
+		        // Unserialize the "days" field
+		        $days = unserialize($slot->days);
+
+		        // Check if at least one "date" in the unserialized data falls within the date range
+		        foreach ($days as $day) {
+		            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
+		                return true;
+		            }
+		        }
+
+		        return false;
+		    });
     	}else{
     		$res = $roomslots->get();
     	}
