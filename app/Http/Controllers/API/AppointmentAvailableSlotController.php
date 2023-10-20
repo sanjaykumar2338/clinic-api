@@ -30,17 +30,13 @@ class AppointmentAvailableSlotController extends Controller {
             //$endDate = Carbon::parse($endDate)->addDay(); 
 
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
-            
-            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->get();
 
-            $filteredSlots = $roomslots->filter(function ($slot) use ($fromDate, $toDate) {
-			    return collect($slot->days)->contains(function ($day) use ($fromDate, $toDate) {
-			        $dateToFilter = $day['date'] ?? null;
-			        return $dateToFilter >= $fromDate && $dateToFilter <= $toDate;
-			    });
-			});
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->where(function ($query) use ($fromDate, $toDate) {
+		    		// Filter records that contain at least one "day" matching the date range
+		    		$query->whereJsonContains('days', function ($day) use ($fromDate, $toDate) {
+		        		return $day->where('date', '>=', $fromDate)->where('date', '<=', $toDate);
+		    });
 
-			echo "<pre>"; print_r($filteredSlots); die();
         }else{
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
