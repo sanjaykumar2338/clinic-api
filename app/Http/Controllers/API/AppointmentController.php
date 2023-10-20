@@ -14,6 +14,7 @@ use App\Models\Material;
 use App\Models\Room;
 use App\Models\Roomslots;
 use App\Models\Appointment;
+use App\Models\DoctorServices;
 use App\Models\Clinicadministrator;
 use Auth;
 use Illuminate\Support\Str;
@@ -38,9 +39,15 @@ class AppointmentController extends Controller {
         $res = $appointment->get();
 
         $res->each(function ($appointment) {
-		    $appointment->slot = unserialize($appointment->slot);
-		    $appointment->room_name = Room::where('id', $appointment->room)->value('name');
-		    $appointment->doctor_name = Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
+        	$appointment->isConfirmed = true;
+		    $appointment->appointmentSlot = unserialize($appointment->slot);
+		    $appointment->room = array('id'=>$appointment->room,'name'=>Room::where('id', $appointment->room)->value('name'));
+		    $appointment->service = array('id'=>$appointment->service,'name'=>DoctorServices::where('id', $appointment->service)->value('name'));
+		    $appointment->doctor = array('id'=>$appointment->doctor,'name'=>Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
+
+		    $appointment->patient = array('id'=>$appointment->patient,'name'=>Patient::where('v3_patients.id', $appointment->patient)->join('users','users.id','=','v3_patients.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
+
+
 		});
             
         $response = [
@@ -173,9 +180,13 @@ class AppointmentController extends Controller {
             return response()->json(['success'=>false,'message' => 'appointment not found'], 404);
         }
 
-     	$appointment->slot = unserialize($appointment->slot);
-	    $appointment->room_name = Room::where('id', $appointment->room)->value('name');
-	    $appointment->doctor_name = Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
+     	$appointment->isConfirmed = true;
+	    $appointment->appointmentSlot = unserialize($appointment->slot);
+	    $appointment->room = array('id'=>$appointment->room,'name'=>Room::where('id', $appointment->room)->value('name'));
+	    $appointment->service = array('id'=>$appointment->service,'name'=>DoctorServices::where('id', $appointment->service)->value('name'));
+	    $appointment->doctor = array('id'=>$appointment->doctor,'name'=>Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
+
+	    $appointment->patient = array('id'=>$appointment->patient,'name'=>Patient::where('v3_patients.id', $appointment->patient)->join('users','users.id','=','v3_patients.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
 
         return response()->json(['success'=>true,'appointment' => $appointment]);
     }
@@ -189,5 +200,21 @@ class AppointmentController extends Controller {
 
         $appointment->update(['is_deleted'=>1]);
         return response()->json(['message' => 'appointment deleted successfully!!!','success'=>true]);
+    }
+
+    public function doctor_services(Request $request, $id){
+    	if(!$id || $id==''){
+    		return response()->json(['message' => 'doctor is required','success'=>false], 404);
+    	}
+
+    	$services = DoctorServices::where('v3_doctor_id',$id)->get();
+
+    	$response = [
+                'success'=>true,
+                'message'=>'services list',
+                'services'=>$services
+            ];
+
+        return response()->json($response,200);
     }
 }
