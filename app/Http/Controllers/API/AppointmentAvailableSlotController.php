@@ -31,13 +31,13 @@ class AppointmentAvailableSlotController extends Controller {
 
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
 
-            $roomslots = Roomslots::query();
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
             $roomslots->where(function ($query) use ($fromDate, $toDate) {
-		    		// Filter records that contain at least one "day" matching the date range
-		    		$query->whereJsonContains('days', function ($day) use ($fromDate, $toDate) {
-		        	return $day->where('date', '>=', $fromDate)->where('date', '<=', $toDate);
-		    	});
-		    }); 	
+		        $query->orWhereJsonContains('days', function ($day) use ($fromDate, $toDate) {
+		            return $day->where('date', '>=', $fromDate)
+		                ->where('date', '<=', $toDate);
+		        });
+		    });	
         }else{
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
