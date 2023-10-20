@@ -33,19 +33,7 @@ class AppointmentAvailableSlotController extends Controller {
 
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
 
-            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->filter(function ($slot) use ($fromDate, $toDate) {
-			        // Unserialize the "days" field
-			        $days = unserialize($slot->days);
-
-			        // Check if at least one "date" in the unserialized data falls within the date range
-			        foreach ($days as $day) {
-			            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
-			                return true;
-			            }
-			        }
-
-			        return false;
-			    });
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }else{
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
@@ -54,7 +42,23 @@ class AppointmentAvailableSlotController extends Controller {
         	$roomslots->where('doctor', $request->doctor);
         }
 
-        $res = $roomslots->get();
+        if($request->from && $request->to){
+        	$res = $roomslots->get()->filter(function ($slot) use ($fromDate, $toDate) {
+		        // Unserialize the "days" field
+		        $days = unserialize($slot->days);
+
+		        // Check if at least one "date" in the unserialized data falls within the date range
+		        foreach ($days as $day) {
+		            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
+		                return true;
+		            }
+		        }
+
+		        return false;
+		    });
+    	}else{
+    		$res = $roomslots->get();
+    	}
 
         $res->each(function ($roomslot) {
 		    $roomslot->days = unserialize($roomslot->days);
