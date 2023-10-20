@@ -51,7 +51,7 @@ class AppointmentAvailableSlotController extends Controller {
         $response = [
                 'success'=>true,
                 'message'=>'slots list',
-                'total'=>count($res)
+                'total'=>count($res),
                 'slot'=>$res
             ];
 
