@@ -26,12 +26,9 @@ use DB;
 class AppointmentController extends Controller {
 
 	public function index(Request $request){
-		if($request->from && $request->to){
-            $startDate = $request->from;
-            $endDate = $request->to;
-            $endDate = Carbon::parse($endDate)->addDay(); 
-
-            $appointment = Appointment::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
+		if($request->date){
+            $date = $request->date;
+            $appointment = Appointment::whereDate('date',$date)->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }else{
             $appointment = Appointment::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
@@ -41,6 +38,7 @@ class AppointmentController extends Controller {
         $res->each(function ($appointment) {
         	$appointment->isConfirmed = true;
 		    $appointment->appointmentSlot = unserialize($appointment->slot);
+		    unset($appointment->slot);
 		    $appointment->room = array('id'=>$appointment->room,'name'=>Room::where('id', $appointment->room)->value('name'));
 		    $appointment->service = array('id'=>$appointment->service,'name'=>DoctorServices::where('id', $appointment->service)->value('name'));
 		    $appointment->doctor = array('id'=>$appointment->doctor,'name'=>Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
@@ -53,7 +51,7 @@ class AppointmentController extends Controller {
         $response = [
                 'success'=>true,
                 'message'=>'appointments list',
-                'slot'=>$res
+                'appointment'=>$res
             ];
 
         return response()->json($response,200);
@@ -182,6 +180,7 @@ class AppointmentController extends Controller {
 
      	$appointment->isConfirmed = true;
 	    $appointment->appointmentSlot = unserialize($appointment->slot);
+	    unset($appointment->slot);
 	    $appointment->room = array('id'=>$appointment->room,'name'=>Room::where('id', $appointment->room)->value('name'));
 	    $appointment->service = array('id'=>$appointment->service,'name'=>DoctorServices::where('id', $appointment->service)->value('name'));
 	    $appointment->doctor = array('id'=>$appointment->doctor,'name'=>Doctor::where('v3_doctors.id', $appointment->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name'));
