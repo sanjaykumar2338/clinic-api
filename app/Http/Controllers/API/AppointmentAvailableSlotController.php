@@ -32,7 +32,7 @@ class AppointmentAvailableSlotController extends Controller {
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
 
             if($request->doctor && $request->doctor!=""){
-            	$data = Roomslots::->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->where('doctor', $request->doctor);
+            	$data = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->where('doctor', $request->doctor);
         	}else{
         		$data = Roomslots::->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         	}
