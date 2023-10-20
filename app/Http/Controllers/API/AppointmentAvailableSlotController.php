@@ -29,17 +29,23 @@ class AppointmentAvailableSlotController extends Controller {
             $toDate = $request->to;
             //$endDate = Carbon::parse($endDate)->addDay(); 
 
-            echo $fromDate, $toDate; die;
+            //echo $fromDate, $toDate; die;
 
             //$roomslots = Roomslots::whereBetween('created_at',[Carbon::parse($startDate)->format('Y-m-d 00:00:00'),Carbon::parse($endDate)->format('Y-m-d 23:59:59')])->where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
 
-            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
-            $roomslots->where(function ($query) use ($fromDate, $toDate) {
-		        $query->orWhereJsonContains('days', function ($day) use ($fromDate, $toDate) {
-		            return $day->where('date', '>=', $fromDate)
-		                ->where('date', '<=', $toDate);
-		        });
-		    });	
+            $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->filter(function ($slot) use ($fromDate, $toDate) {
+			        // Unserialize the "days" field
+			        $days = unserialize($slot->days);
+
+			        // Check if at least one "date" in the unserialized data falls within the date range
+			        foreach ($days as $day) {
+			            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
+			                return true;
+			            }
+			        }
+
+			        return false;
+			    });
         }else{
             $roomslots = Roomslots::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id);
         }
