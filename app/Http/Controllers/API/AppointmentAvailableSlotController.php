@@ -73,7 +73,7 @@ class AppointmentAvailableSlotController extends Controller {
 		    $roomslot->days = unserialize($roomslot->days);
 		    $all_slots = array();
 		    if($fromDate && $toDate){
-			    foreach ($days as $day) {
+			    foreach ($roomslot->days as $day) {
 		            if (isset($day['date']) && $day['date'] >= $fromDate && $day['date'] <= $toDate) {
 		                $all_slots[] = $day;
 		            }
