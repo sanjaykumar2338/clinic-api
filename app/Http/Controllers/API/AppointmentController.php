@@ -65,8 +65,8 @@ class AppointmentController extends Controller {
 	        'room'=>'required',
 	        'duration'=>'required',
 	        'patient'=>'required',
-	        'service'=>'required',
-	        'description'=>'required',
+	        'service'=>'',
+	        'description'=>'',
 	        'slot'=>'required',
 	    ]);
 
@@ -125,8 +125,8 @@ class AppointmentController extends Controller {
 	        'room'=>'required',
 	        'duration'=>'required',
 	        'patient'=>'required',
-	        'service'=>'required',
-	        'description'=>'required',
+	        'service'=>'',
+	        'description'=>'',
 	        'slot'=>'required',
 	    ]);
 
