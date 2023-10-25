@@ -85,12 +85,19 @@ class AppointmentAvailableSlotController extends Controller {
 		    $roomslot->room_name = Room::where('id', $roomslot->room)->value('name');
 		    $roomslot->doctor_name = Doctor::where('v3_doctors.id', $roomslot->doctor)->join('users','users.id','=','v3_doctors.user_id')->select(DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"))->value('full_name');
 		});
+
+		$newArray = array();
+		foreach($res as $row){
+			if(!empty($row->days)){
+				$newArray[] = $row;
+			}
+		}
             
         $response = [
                 'success'=>true,
                 'message'=>'slots list',
-                'total'=>count($res),
-                'slot'=>$res
+                'total'=>count($newArray),
+                'slot'=>$newArray
             ];
 
         return response()->json($response,200);
