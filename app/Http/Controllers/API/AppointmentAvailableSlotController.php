@@ -229,6 +229,7 @@ class AppointmentAvailableSlotController extends Controller {
 		    	//$main_array[] = $day;
 		    }
 		}
+		
 
 		//die;
 		//echo "<pre>"; print_r($data); 
