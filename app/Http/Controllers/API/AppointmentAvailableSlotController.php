@@ -138,6 +138,37 @@ class AppointmentAvailableSlotController extends Controller {
 	        return response()->json($response,401);
 	    }
 
+	    //echo "<pre>"; print_r($request->all()); die;
+
+	    $data = $request->all();
+
+		// Calculate the slot intervals based on the given duration
+		$duration = $data['duration']; // Change this as needed
+		$startTime = strtotime($data['days'][0]['slots'][0]['startTime']);
+		$endTime = strtotime($data['days'][0]['slots'][0]['endTime']);
+
+		$slotIntervals = [];
+		while ($startTime + $duration * 60 <= $endTime) {
+		    $endTimeSlot = $startTime + $duration * 60;
+		    $slotIntervals[] = [
+		        'startTime' => date('H:i', $startTime),
+		        'endTime' => date('H:i', $endTimeSlot)
+		    ];
+		    $startTime = $endTimeSlot;
+		}
+
+		// Update the JSON data with the calculated slots
+		foreach ($data['days'] as &$day) {
+		    foreach ($day['slots'] as &$slot) {
+		        $slot['slots'] = $slotIntervals;
+		    }
+		}
+
+		// Convert the data back to JSON
+		//$newJsonData = json_encode($data, JSON_PRETTY_PRINT);
+		//echo $newJsonData; die;
+		//echo "<pre>"; print_r($data['days']); die;
+
 	    try{
 		    $slot = new Roomslots;
 		    $slot->doctor = $request->doctor;
@@ -145,7 +176,7 @@ class AppointmentAvailableSlotController extends Controller {
 		    $slot->to = $request->to;
 		    $slot->room = $request->room;
 		    $slot->duration = $request->duration;
-		    $slot->days = serialize($request->days);
+		    $slot->days = serialize($data['days']);
 		    $slot->clinic_id = $request->user()->clinic_id;
 		    $slot->admin = $request->user()->id;
 		    $slot->save();
@@ -166,6 +197,39 @@ class AppointmentAvailableSlotController extends Controller {
 
         	return response()->json($response,404);
 		}
+	}
+
+	public function deletetime(Request $request){
+		$resource = Roomslots::find($request->id);
+		$days = unserialize($resource->days);
+		$data['days'] = $days;
+		//echo "<pre>"; print_r($days);  die;
+
+
+		$targetDay = $request->day;
+		$startTimeToDelete = $resource->starttime;
+		$endTimeToDelete = $resource->endtime;
+
+		foreach ($data['days'] as $day) {
+		    if ($day['day'] === $targetDay) {
+		       
+		    }
+		}
+
+		//die;
+		echo "<pre>"; print_r($data); 
+		die;
+
+		$resource->days = serialize($data);
+		$resource->save();
+
+		$response = [
+                'success'=>true,
+                'message'=>'slot deleted successfully',
+                'slot'=>$resource
+            ];
+
+    	return response()->json($response,200);
 	}
 
 	public function destroy($id){
