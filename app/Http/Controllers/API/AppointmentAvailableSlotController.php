@@ -207,30 +207,32 @@ class AppointmentAvailableSlotController extends Controller {
 
 
 		$targetDay = $request->day;
-		$startTimeToDelete = $resource->starttime;
-		$endTimeToDelete = $resource->endtime;
+		$startTimeToDelete = $request->starttime;
+		$endTimeToDelete = $request->endtime;
 
 		$main_array = array();
-		foreach ($data['days'] as $key=>$day) {
+		foreach ($data['days'] as $key=>&$day) {
 		    if ($day['day'] === $targetDay) {
 		       	//echo "<pre>"; print_r($day); die;
 
 		       	$newArray = [];
-		       	foreach ($day['slots'] as $slot) {
+		       	foreach ($day['slots'][0]['slotsduration'] as $slot) {
+		       		//echo $startTimeToDelete; die;
 		       		if($slot['startTime']!=$startTimeToDelete && $slot['endTime']!=$endTimeToDelete){
 		       			$newArray[] = $slot;
 		       		}
 	       		}
 
-	       		$main_array[] = $newArray;
+	       		//echo $day['day'];
+	       		$day['slots'][0]['slotsduration'] = $newArray;
 		    }else{
-		    	$main_array[] = $day;
+		    	//$main_array[] = $day;
 		    }
 		}
 
 		//die;
-		echo "<pre>"; print_r($main_array); 
-		die;
+		//echo "<pre>"; print_r($data); 
+		//die;
 
 		$resource->days = serialize($data);
 		$resource->save();
