@@ -204,7 +204,7 @@ class AppointmentAvailableSlotController extends Controller {
 
 	public function deletetime(Request $request){
 		
-		echo "<pre>"; print_r('test'); die;
+		echo "<pre>"; print_r($request->all()); die;
 
 		$resource = Roomslots::find($request->id);
 		$days = unserialize($resource->days);
