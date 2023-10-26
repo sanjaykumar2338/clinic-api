@@ -143,39 +143,34 @@ class AppointmentAvailableSlotController extends Controller {
 	    $data = $request->all();
 
 		// Calculate the slot intervals based on the given duration
-		foreach($data['days'] as &$daying){
-			//echo $daying['slots'][0]['startTime']; die;
-			$duration = $data['duration']; // Change this as needed
-			$startTime = strtotime($daying['slots'][0]['startTime']);
-			$endTime = strtotime($daying['slots'][0]['endTime']);
+		foreach ($data['days'] as &$day) {
+		    $startTime = strtotime($day['slots'][0]['startTime']);
+		    $endTime = strtotime($day['slots'][0]['endTime']);
+		    $duration = intval($data['duration']);
 
-			$slotIntervals = [];
-			while ($startTime + $duration * 60 <= $endTime) {
-			    $endTimeSlot = $startTime + $duration * 60;
-			    $slotIntervals[] = [
-			        'startTime' => date('H:i', $startTime),
-			        'endTime' => date('H:i', $endTimeSlot)
-			    ];
-			    $startTime = $endTimeSlot;
-			}
+		    // Calculate the number of slots based on duration
+		    $numSlots = floor(($endTime - $startTime) / ($duration * 60));
 
-			//echo "<pre>"; print_r($slotIntervals); die;
+		    // Ensure there are slots and the duration is greater than 0
+		    if ($numSlots > 0 && $duration > 0) {
+		        $day['slots'][0]['slotsduration'] = array();
 
-			// Update the JSON data with the calculated slots
-			//foreach ($data['days'] as &$day) {
-			//    foreach ($day['slots'] as &$slot) {
-			//        $slot['slotsduration'] = $slotIntervals;
-			//    }
-			//}
-
-			$daying['slots']['slotsduration'] = $slotIntervals;
+		        for ($i = 0; $i < $numSlots; $i++) {
+		            $slotStartTime = date('H:i', $startTime + ($i * $duration * 60));
+		            $slotEndTime = date('H:i', $startTime + (($i + 1) * $duration * 60));
+		            
+		            $day['slots'][0]['slotsduration'][] = array(
+		                'startTime' => $slotStartTime,
+		                'endTime' => $slotEndTime
+		            );
+		        }
+		    }
 		}
-
 
 		// Convert the data back to JSON
 		//$newJsonData = json_encode($data, JSON_PRETTY_PRINT);
 		//echo $newJsonData; die;
-		//echo "<pre>"; print_r($data['days']); die;
+		//echo "<pre>"; print_r($data); die;
 
 	    try{
 		    $slot = new Roomslots;
