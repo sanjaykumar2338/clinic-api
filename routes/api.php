@@ -202,5 +202,4 @@ Route::prefix('appointment')->controller(AppointmentController::class)->middlewa
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
     Route::get('/doctor/services/{id}','doctor_services');
-    Route::delete('/doctor/dddd/{id}/{day}/{starttime}/{endtime}','deletetime');
 });
