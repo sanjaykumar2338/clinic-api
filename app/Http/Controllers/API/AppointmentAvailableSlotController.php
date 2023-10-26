@@ -143,26 +143,34 @@ class AppointmentAvailableSlotController extends Controller {
 	    $data = $request->all();
 
 		// Calculate the slot intervals based on the given duration
-		$duration = $data['duration']; // Change this as needed
-		$startTime = strtotime($data['days'][0]['slots'][0]['startTime']);
-		$endTime = strtotime($data['days'][0]['slots'][0]['endTime']);
+		foreach($data['days'] as &$daying){
+			//echo $daying['slots'][0]['startTime']; die;
+			$duration = $data['duration']; // Change this as needed
+			$startTime = strtotime($daying['slots'][0]['startTime']);
+			$endTime = strtotime($daying['slots'][0]['endTime']);
 
-		$slotIntervals = [];
-		while ($startTime + $duration * 60 <= $endTime) {
-		    $endTimeSlot = $startTime + $duration * 60;
-		    $slotIntervals[] = [
-		        'startTime' => date('H:i', $startTime),
-		        'endTime' => date('H:i', $endTimeSlot)
-		    ];
-		    $startTime = $endTimeSlot;
+			$slotIntervals = [];
+			while ($startTime + $duration * 60 <= $endTime) {
+			    $endTimeSlot = $startTime + $duration * 60;
+			    $slotIntervals[] = [
+			        'startTime' => date('H:i', $startTime),
+			        'endTime' => date('H:i', $endTimeSlot)
+			    ];
+			    $startTime = $endTimeSlot;
+			}
+
+			//echo "<pre>"; print_r($slotIntervals); die;
+
+			// Update the JSON data with the calculated slots
+			//foreach ($data['days'] as &$day) {
+			//    foreach ($day['slots'] as &$slot) {
+			//        $slot['slotsduration'] = $slotIntervals;
+			//    }
+			//}
+
+			$daying['slots']['slotsduration'] = $slotIntervals;
 		}
 
-		// Update the JSON data with the calculated slots
-		foreach ($data['days'] as &$day) {
-		    foreach ($day['slots'] as &$slot) {
-		        $slot['slotsduration'] = $slotIntervals;
-		    }
-		}
 
 		// Convert the data back to JSON
 		//$newJsonData = json_encode($data, JSON_PRETTY_PRINT);
