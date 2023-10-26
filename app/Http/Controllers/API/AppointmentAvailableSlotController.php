@@ -160,7 +160,7 @@ class AppointmentAvailableSlotController extends Controller {
 		// Update the JSON data with the calculated slots
 		foreach ($data['days'] as &$day) {
 		    foreach ($day['slots'] as &$slot) {
-		        $slot['slots'] = $slotIntervals;
+		        $slot['slotsduration'] = $slotIntervals;
 		    }
 		}
 
@@ -210,14 +210,26 @@ class AppointmentAvailableSlotController extends Controller {
 		$startTimeToDelete = $resource->starttime;
 		$endTimeToDelete = $resource->endtime;
 
-		foreach ($data['days'] as $day) {
+		$main_array = array();
+		foreach ($data['days'] as $key=>$day) {
 		    if ($day['day'] === $targetDay) {
-		       
+		       	//echo "<pre>"; print_r($day); die;
+
+		       	$newArray = [];
+		       	foreach ($day['slots'] as $slot) {
+		       		if($slot['startTime']!=$startTimeToDelete && $slot['endTime']!=$endTimeToDelete){
+		       			$newArray[] = $slot;
+		       		}
+	       		}
+
+	       		$main_array[] = $newArray;
+		    }else{
+		    	$main_array[] = $day;
 		    }
 		}
 
 		//die;
-		echo "<pre>"; print_r($data); 
+		echo "<pre>"; print_r($main_array); 
 		die;
 
 		$resource->days = serialize($data);
