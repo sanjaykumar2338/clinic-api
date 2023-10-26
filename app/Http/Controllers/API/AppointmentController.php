@@ -216,4 +216,52 @@ class AppointmentController extends Controller {
 
         return response()->json($response,200);
     }
+
+    public function deletetime(Request $request){
+		$resource = Roomslots::find($request->id);
+		$days = unserialize($resource->days);
+		$data['days'] = $days;
+		//echo "<pre>"; print_r($days);  die;
+
+
+		$targetDay = $request->day;
+		$startTimeToDelete = $request->starttime;
+		$endTimeToDelete = $request->endtime;
+
+		$main_array = array();
+		foreach ($data['days'] as $key=>&$day) {
+		    if ($day['day'] === $targetDay) {
+		       	//echo "<pre>"; print_r($day); die;
+
+		       	$newArray = [];
+		       	foreach ($day['slots'][0]['slotsduration'] as $slot) {
+		       		//echo $startTimeToDelete; die;
+		       		if($slot['startTime']!=$startTimeToDelete && $slot['endTime']!=$endTimeToDelete){
+		       			$newArray[] = $slot;
+		       		}
+	       		}
+
+	       		//echo $day['day'];
+	       		$day['slots'][0]['slotsduration'] = $newArray;
+		    }else{
+		    	//$main_array[] = $day;
+		    }
+		}
+
+
+		//die;
+		//echo "<pre>"; print_r($data); 
+		//die;
+
+		$resource->days = serialize($data['days']);
+		$resource->save();
+
+		$response = [
+                'success'=>true,
+                'message'=>'slot deleted successfully',
+                'slot'=>$resource
+            ];
+
+    	return response()->json($response,200);
+	}
 }
