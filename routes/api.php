@@ -193,6 +193,7 @@ Route::prefix('room_slots')->controller(AppointmentAvailableSlotController::clas
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
     Route::delete('/delete/time/{id}/{day}/{starttime}/{endtime}','deletetime');
+    Route::delete('/delete/timing/{id}/{day}/{starttime}/{endtime}','deletetime');
 });
 
 Route::prefix('appointment')->controller(AppointmentController::class)->middleware('auth:sanctum')->group(function () {
