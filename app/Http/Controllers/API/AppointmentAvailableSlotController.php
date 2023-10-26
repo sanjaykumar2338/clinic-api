@@ -229,13 +229,13 @@ class AppointmentAvailableSlotController extends Controller {
 		    	//$main_array[] = $day;
 		    }
 		}
-		
+
 
 		//die;
 		//echo "<pre>"; print_r($data); 
 		//die;
 
-		$resource->days = serialize($data);
+		$resource->days = serialize($data['days']);
 		$resource->save();
 
 		$response = [
