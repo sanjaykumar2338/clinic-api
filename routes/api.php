@@ -195,7 +195,6 @@ Route::prefix('room_slots')->controller(AppointmentAvailableSlotController::clas
     Route::delete('/delete/time/{id}/{day}/{starttime}/{endtime}','deletetime');
 });
 
-
 Route::prefix('appointment')->controller(AppointmentController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/', 'index');
     Route::post('/', 'store');
