@@ -139,31 +139,32 @@ class AppointmentAvailableSlotController extends Controller {
 	    }
 
 	    //echo "<pre>"; print_r($request->all()); die;
-
 	    $data = $request->all();
 
 		// Calculate the slot intervals based on the given duration
-		foreach ($data['days'] as &$day) {
-		    $startTime = strtotime($day['slots'][0]['startTime']);
-		    $endTime = strtotime($day['slots'][0]['endTime']);
-		    $duration = intval($data['duration']);
+		foreach ($data['days'] as &$daying) {
+			foreach ($daying['slots'] as &$day) {
+			    $startTime = strtotime($day['startTime']);
+			    $endTime = strtotime($day['endTime']);
+			    $duration = intval($data['duration']);
 
-		    // Calculate the number of slots based on duration
-		    $numSlots = floor(($endTime - $startTime) / ($duration * 60));
+			    // Calculate the number of slots based on duration
+			    $numSlots = floor(($endTime - $startTime) / ($duration * 60));
 
-		    // Ensure there are slots and the duration is greater than 0
-		    if ($numSlots > 0 && $duration > 0) {
-		        $day['slots'][0]['slotsduration'] = array();
+			    // Ensure there are slots and the duration is greater than 0
+			    if ($numSlots > 0 && $duration > 0) {
+			        $day['slotsduration'] = array();
 
-		        for ($i = 0; $i < $numSlots; $i++) {
-		            $slotStartTime = date('H:i', $startTime + ($i * $duration * 60));
-		            $slotEndTime = date('H:i', $startTime + (($i + 1) * $duration * 60));
-		            
-		            $day['slots'][0]['slotsduration'][] = array(
-		                'startTime' => $slotStartTime,
-		                'endTime' => $slotEndTime
-		            );
-		        }
+			        for ($i = 0; $i < $numSlots; $i++) {
+			            $slotStartTime = date('H:i', $startTime + ($i * $duration * 60));
+			            $slotEndTime = date('H:i', $startTime + (($i + 1) * $duration * 60));
+			            
+			            $day['slotsduration'][] = array(
+			                'startTime' => $slotStartTime,
+			                'endTime' => $slotEndTime
+			            );
+			        }
+			    }
 		    }
 		}
 
