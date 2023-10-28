@@ -79,6 +79,25 @@ class AppointmentController extends Controller {
 	        return response()->json($response,401);
 	    }
 
+	    $clinicId = $request->user()->clinic_id;
+		$doctorId = $request->input('doctor');
+		$roomId = $request->input('room');
+		$slotData = $request->input('slot');
+
+		$isSlotAvailable = Appointment::where('clinic_id', $clinicId)
+		    ->where('doctor', $doctorId)
+		    ->where('room', $roomId)
+		    ->where(function ($query) use ($slot) {
+		        // Check for non-overlapping time slots.
+		        $query->where('slot->startTime', '<=', $slot->startTime)
+		            ->orWhere('slot->endTime', '>=', $slot->endTime);
+		    })
+		    ->doesntExist();
+
+	    if (!$isSlotAvailable) {
+	    	return response()->json(['message' => 'Slot is already taken'], 400);
+    	}
+
 	    try{
 		    $appointment = new Appointment;
 		    $appointment->clinic_id = $request->user()->clinic_id;
