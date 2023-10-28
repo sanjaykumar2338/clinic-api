@@ -83,6 +83,7 @@ class AppointmentController extends Controller {
 		$doctorId = $request->input('doctor');
 		$roomId = $request->input('room');
 		$slotData = $request->input('slot');
+		echo "<pre>"; print_r($slotData); die;
 
 		$isSlotAvailable = Appointment::where('clinic_id', $clinicId)
 		    ->where('doctor', $doctorId)
