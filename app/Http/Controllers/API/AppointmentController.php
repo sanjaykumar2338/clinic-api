@@ -89,8 +89,8 @@ class AppointmentController extends Controller {
 		    ->where('room', $roomId)
 		    ->where(function ($query) use ($slotData) {
 		        // Check for non-overlapping time slots.
-		        $query->where('slot->startTime', '<=', $slot->startTime)
-		            ->orWhere('slot->endTime', '>=', $slot->endTime);
+		        $query->where('slot->startTime', '<=', $slotData->startTime)
+		            ->orWhere('slot->endTime', '>=', $slotData->endTime);
 		    })
 		    ->doesntExist();
 
