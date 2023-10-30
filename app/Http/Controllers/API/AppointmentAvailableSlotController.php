@@ -152,8 +152,8 @@ class AppointmentAvailableSlotController extends Controller {
 			    $numSlots = floor(($endTime - $startTime) / ($duration * 60));
 
 			    // Ensure there are slots and the duration is greater than 0
-			    if ($numSlots > 0 && $duration > 0) {
-			        $day['slotsduration'] = array();
+			    $day['slotsduration'] = array();
+			    if ($numSlots > 0 && $duration > 0) {		        
 
 			        for ($i = 0; $i < $numSlots; $i++) {
 			            $slotStartTime = date('H:i', $startTime + ($i * $duration * 60));
