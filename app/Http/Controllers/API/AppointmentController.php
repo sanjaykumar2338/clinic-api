@@ -99,7 +99,7 @@ class AppointmentController extends Controller {
 		$slotBooked = false;
 	    $isSlotAvailable->each(function ($appointment) use ($slotData, &$slotBooked) {
 		    $appointmentSlot = unserialize($appointment->slot);
-		    if($appointmentSlot['startTime']==$slotData['startTime'] && $appointmentSlot['endTime']==$slotData['endTime']){
+		    if($appointmentSlot['startTime']==$slotData['startTime']){
 		    	$slotBooked = true;
         		return false; // This will break out of the loop.
        		}
