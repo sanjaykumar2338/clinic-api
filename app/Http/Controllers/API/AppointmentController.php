@@ -86,8 +86,9 @@ class AppointmentController extends Controller {
 		//echo "<pre>"; print_r($slotData); die;
 
 		$isSlotAvailable = Appointment::where('clinic_id', $clinicId)
-		    ->where('doctor', $doctorId)
+		    //->where('doctor', $doctorId)
 		    ->where('room', $roomId)
+		    ->where('date', $request->date)
 		    ->where(function ($query) use ($slotData) {
 		        // Check for non-overlapping time slots.
 		        $query->where('slot->startTime', '<=', $slotData['startTime'])
