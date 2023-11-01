@@ -106,7 +106,7 @@ class AppointmentController extends Controller {
 	    });
 
 	    if ($slotBooked) {
-	    	return response()->json(['success'=>false,'message' => 'Slot is already taken'], 400);
+	    	return response()->json(['success'=>false,'message' => 'Slot is already taken'], 404);
     	}
 
 	    try{
