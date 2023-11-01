@@ -94,9 +94,9 @@ class AppointmentController extends Controller {
 		        $query->where('slot->startTime', '>', $slotData['startTime'])
 		            ->orWhere('slot->endTime', '<', $slotData['endTime']);
 		    })
-		    ->doesntExist();
+		    ->count();
 
-	    if (!$isSlotAvailable) {
+	    if ($isSlotAvailable) {
 	    	return response()->json(['message' => 'Slot is already taken'], 400);
     	}
 
