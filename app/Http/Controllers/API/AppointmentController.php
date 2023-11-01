@@ -83,20 +83,29 @@ class AppointmentController extends Controller {
 		$doctorId = $request->input('doctor');
 		$roomId = $request->input('room');
 		$slotData = $request->input('slot');
-		//echo "<pre>"; print_r($slotData); die;
+		//echo "<pre>"; print_r($slotData['startTime']); die;
 
 		$isSlotAvailable = Appointment::where('clinic_id', $clinicId)
 		    //->where('doctor', $doctorId)
 		    ->where('room', $roomId)
 		    ->where('date', $request->date)
-		    ->where(function ($query) use ($slotData) {
+		    //->where(function ($query) use ($slotData) {
 		        // Check for non-overlapping time slots.
-		        $query->where('slot->startTime', '>', $slotData['startTime'])
-		            ->orWhere('slot->endTime', '<', $slotData['endTime']);
-		    })
-		    ->count();
+		    //    $query->where('slot->startTime','>=', $slotData['startTime'])
+		    //        ->Where('slot->endTime','<=', $slotData['endTime']);
+		    //})
+		    ->get();
 
-	    if ($isSlotAvailable) {
+		$slotBooked = false;
+	    $isSlotAvailable->each(function ($appointment) use ($slotData, &$slotBooked) {
+		    $appointmentSlot = unserialize($appointment->slot);
+		    if($appointmentSlot['startTime']==$slotData['startTime'] && $appointmentSlot['endTime']==$slotData['endTime']){
+		    	$slotBooked = true;
+        		return false; // This will break out of the loop.
+       		}
+	    });
+
+	    if ($slotBooked) {
 	    	return response()->json(['message' => 'Slot is already taken'], 400);
     	}
 
