@@ -20,6 +20,7 @@ use App\Http\Controllers\API\CampaignController;
 use App\Http\Controllers\API\AppointmentAvailableSlotController;
 use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\AppointmentController;
+use App\Http\Controllers\API\NurseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -202,4 +203,12 @@ Route::prefix('appointment')->controller(AppointmentController::class)->middlewa
     Route::put('/{id}','update');
     Route::delete('/{id}','destroy');
     Route::get('/doctor/services/{id}','doctor_services');
+});
+
+Route::prefix('nurse')->controller(NurseController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}','show');
+    Route::put('/{id}','update');
+    Route::delete('/{id}','destroy');
 });
