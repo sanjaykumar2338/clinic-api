@@ -13,11 +13,16 @@ class NurseController extends Controller
     public function index(Request $request)
     {
         $url = url('/').Storage::url('images').'/';
-        $nurse = Nurse::where('is_deleted',0)->orderBy('created_at','desc')->get();
+        $nurse = Nurse::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
+        $nurse->each(function ($nurse) {
+            $nurse->permissions = unserialize($nurse->permissions);
+        });
+
         $response = [
                 'success'=>true,
                 'message'=>'nurse list',
-                'nurse'=>$nurse
+                'nurse'=>$nurse,
+                'image_path'=>url('/').Storage::url('images')
             ];
 
         return response()->json($response,200);
@@ -26,12 +31,13 @@ class NurseController extends Controller
     public function show($id)
     {
         // Fetch a single resource by ID
-        $resource = Provider::find($id);
-        if (!$resource) {
-            return response()->json(['success'=>false,'message' => 'provider not found'], 404);
+        $nurse = Nurse::find($id);
+        if (!$nurse) {
+            return response()->json(['success'=>false,'message' => 'nurse not found'], 404);
         }
 
-        return response()->json(['success'=>true,'provider' => $resource]);
+        $nurse->permissions = unserialize($nurse->permissions);
+        return response()->json(['success'=>true,'nurse' => $nurse,'image_path'=>url('/').Storage::url('images')]);
     }
 
     public function store(Request $request)
@@ -43,7 +49,7 @@ class NurseController extends Controller
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'required',
-            'permissions'=>'required|in:1,2,3,4',
+            'permissions'=>'required',
             'signature'=>'required',
             'officialId_front'=>'required',
             'officialId_back'=>'required'
@@ -91,7 +97,7 @@ class NurseController extends Controller
         $nurse->license_number = $request->license_number;
         $nurse->academic_degree = $request->academic_degree;
         $nurse->password = bcrypt(($request->password));
-        $nurse->permissions = $request->permissions;
+        $nurse->permissions = serialize($request->permissions);
         $nurse->signature = $signature;
         $nurse->officialId_front = $officialId_front;
         $nurse->officialId_back = $officialId_back;
@@ -99,6 +105,7 @@ class NurseController extends Controller
         $nurse->admin_id = $request->user()->id;
         $nurse->save();
 
+        $nurse->permissions = unserialize($nurse->permissions);
         $response = [
                 'success'=>true,
                 'message'=>'nurse add successfully',
@@ -123,7 +130,7 @@ class NurseController extends Controller
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'required',
-            'permissions'=>'required|in:1,2,3,4',
+            'permissions'=>'required',
             'signature'=>'',
             'officialId_front'=>'',
             'officialId_back'=>''
@@ -173,7 +180,7 @@ class NurseController extends Controller
         $nurse->email = $request->email;
         $nurse->license_number = $request->license_number;
         $nurse->academic_degree = $request->academic_degree;        
-        $nurse->permissions = $request->permissions;
+        $nurse->permissions = serialize($request->permissions);
         $nurse->signature = $signature;
         $nurse->officialId_front = $officialId_front;
         $nurse->officialId_back = $officialId_back;
@@ -181,6 +188,7 @@ class NurseController extends Controller
         $nurse->admin_id = $request->user()->id;
         $nurse->save();        
 
+        $nurse->permissions = unserialize($nurse->permissions);
         return response()->json(['nurse' => $nurse,'success'=>true,'message'=>'nurse updated successfully','image_path'=>url('/').Storage::url('images')]);
     }
 
