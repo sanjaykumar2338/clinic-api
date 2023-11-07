@@ -17,7 +17,9 @@ class NurseController extends Controller
         $url = url('/').Storage::url('images').'/';
         $nurse = Nurse::where('is_deleted',0)->where('clinic_id',$request->user()->clinic_id)->orderBy('created_at','desc')->get();
         $nurse->each(function ($nurse) {
-            $nurse->permissions = unserialize($nurse->permissions);
+            if($nurse->permissions){
+                $nurse->permissions = unserialize($nurse->permissions);
+            }
         });
 
         $response = [
@@ -38,7 +40,10 @@ class NurseController extends Controller
             return response()->json(['success'=>false,'message' => 'nurse not found'], 404);
         }
 
-        $nurse->permissions = unserialize($nurse->permissions);
+        if($nurse->permissions){
+            $nurse->permissions = unserialize($nurse->permissions);
+        }
+        
         return response()->json(['success'=>true,'nurse' => $nurse,'image_path'=>url('/').Storage::url('images')]);
     }
 
@@ -52,7 +57,7 @@ class NurseController extends Controller
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'required',
-            'permissions'=>'required',
+            'permissions'=>'',
             'signature'=>'required',
             'officialId_front'=>'required',
             'officialId_back'=>'required'
@@ -113,7 +118,11 @@ class NurseController extends Controller
         $nurse->license_number = $request->license_number;
         $nurse->academic_degree = $request->academic_degree;
         $nurse->password = bcrypt(($request->password));
-        $nurse->permissions = serialize($request->permissions);
+        
+        if($request->permissions){
+            $nurse->permissions = serialize($request->permissions);
+        }
+
         $nurse->signature = $signature;
         $nurse->officialId_front = $officialId_front;
         $nurse->officialId_back = $officialId_back;
@@ -195,7 +204,7 @@ class NurseController extends Controller
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'',
-            'permissions'=>'required',
+            'permissions'=>'',
             'signature'=>'',
             'officialId_front'=>'',
             'officialId_back'=>''
@@ -257,7 +266,11 @@ class NurseController extends Controller
         $nurse->email = $request->email;
         $nurse->license_number = $request->license_number;
         $nurse->academic_degree = $request->academic_degree;        
-        $nurse->permissions = serialize($request->permissions);
+        
+        if($request->permissions){
+            $nurse->permissions = serialize($request->permissions);
+        }
+
         $nurse->signature = $signature;
         $nurse->officialId_front = $officialId_front;
         $nurse->officialId_back = $officialId_back;
