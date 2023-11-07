@@ -25,7 +25,8 @@ class User extends Authenticatable
         'password',
         'slug',
         'clinic_id',
-        'secure'
+        'secure',
+        'nurse_id'
     ];
 
     /**

@@ -176,8 +176,6 @@ class ClinicController extends Controller
         ->get();
     }
 
-    
-
     public function upload_picture(Request $request){
         //Log::info('This is my log', ['request' => $request->all()]);
         //echo "<pre>"; print_r('test'); die;

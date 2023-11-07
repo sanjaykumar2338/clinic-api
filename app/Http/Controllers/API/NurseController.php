@@ -5,8 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\Paymentpurpose;
 use App\Models\Nurse;
 use App\Models\Provider;
+use App\Models\User;
 use Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class NurseController extends Controller
 {
@@ -45,7 +47,8 @@ class NurseController extends Controller
         // Create a new resource
         $validator = Validator::make($request->all(),[
             'name'=>'required|max:255',
-            'email'=>'required|max:255|unique:mcl_nurse,email',
+            'email'=>'required|max:255',
+            //'email'=>'required|max:255|unique:mcl_nurse,email',
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'required',
@@ -63,6 +66,19 @@ class NurseController extends Controller
 
             return response()->json($response,401);
         }
+
+        $exist_user = User::where('email',$request->email)->count();
+        $nurse_user = Nurse::where('email',$request->email)->count();
+
+        if($exist_user!=0 || $nurse_user!=0){
+            $response = [
+                'success'=>false,
+                'message'=>'email already exist'
+            ];
+
+            return response()->json($response,401);
+        }
+
 
         $signature = '';
         if($request->signature){
@@ -105,6 +121,26 @@ class NurseController extends Controller
         $nurse->admin_id = $request->user()->id;
         $nurse->save();
 
+        if($nurse){
+            $user = new User;
+            $user->first_name = $request->name;
+            $user->last_name = $request->name;
+            $user->user_type = 'nurse';
+            $user->email = $request->email;
+            $user->clinic_id = $request->user()->clinic_id;
+            $user->password = bcrypt(($request->password));
+            $user->secure = $request->password;
+            $user->nurse_id = $nurse->id;
+            $string = $request->name;
+            $user->slug = $this->createSlug($string);
+            $user->save();
+
+            if($user){
+                $nurse->user_id = $user->id;
+                $nurse->save();
+            }
+        }
+
         $nurse->permissions = unserialize($nurse->permissions);
         $response = [
                 'success'=>true,
@@ -114,6 +150,34 @@ class NurseController extends Controller
             ];
 
         return response()->json($response,200);
+    }
+
+
+    public function createSlug($title, $id = 0)
+    {
+        $slug = Str::slug($title);
+        $allSlugs = $this->getRelatedSlugs($slug, $id);
+        if (! $allSlugs->contains('slug', $slug)){
+            return $slug;
+        }
+
+        $i = 1;
+        $is_contain = true;
+        do {
+            $newSlug = $slug . '-' . $i;
+            if (!$allSlugs->contains('slug', $newSlug)) {
+                $is_contain = false;
+                return $newSlug;
+            }
+            $i++;
+        } while ($is_contain);
+    }
+
+    protected function getRelatedSlugs($slug, $id = 0)
+    {
+        return User::select('slug')->where('slug', 'like', $slug.'%')
+        ->where('id', '<>', $id)
+        ->get();
     }
 
     public function update(Request $request, $id)
@@ -126,7 +190,8 @@ class NurseController extends Controller
         // Update an existing resource
         $validator = Validator::make($request->all(),[
             'name'=>'required|max:255',
-            'email'=>'required|max:255|unique:mcl_nurse,email,'.$id,
+            'email'=>'required|max:255',
+            //'email'=>'required|max:255|unique:mcl_nurse,email,'.$id,
             'license_number'=>'required',
             'academic_degree'=>'required',
             'password'=>'',
@@ -135,6 +200,18 @@ class NurseController extends Controller
             'officialId_front'=>'',
             'officialId_back'=>''
         ]);
+
+        $exist_user = User::where('email',$request->email)->where('id','!=',$nurse->user_id)->count();
+        $nurse_user = Nurse::where('email',$request->email)->where('user_id','!=',$nurse->user_id)->count();
+
+        if($exist_user!=0 || $nurse_user!=0){
+            $response = [
+                'success'=>false,
+                'message'=>'email already exist'
+            ];
+
+            return response()->json($response,401);
+        }
 
         if($validator->fails()){
             $response = [
@@ -187,6 +264,22 @@ class NurseController extends Controller
         $nurse->clinic_id = $request->user()->clinic_id;
         $nurse->admin_id = $request->user()->id;
         $nurse->save();        
+
+        if($nurse){
+            $user = User::find($nurse->user_id);
+            $user->first_name = $request->name;
+            $user->last_name = $request->name;
+            $user->email = $request->email;
+            $user->clinic_id = $request->user()->clinic_id;                                  
+            $string = $request->name;
+            $user->slug = $this->createSlug($string);
+            if($request->password){
+                $user->secure = $request->password;  
+                $user->password = bcrypt(($request->password));
+            }
+
+            $user->save();
+        }
 
         $nurse->permissions = unserialize($nurse->permissions);
         return response()->json(['nurse' => $nurse,'success'=>true,'message'=>'nurse updated successfully','image_path'=>url('/').Storage::url('images')]);
