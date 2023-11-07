@@ -129,7 +129,7 @@ class NurseController extends Controller
             'email'=>'required|max:255|unique:mcl_nurse,email,'.$id,
             'license_number'=>'required',
             'academic_degree'=>'required',
-            'password'=>'required',
+            'password'=>'',
             'permissions'=>'required',
             'signature'=>'',
             'officialId_front'=>'',
