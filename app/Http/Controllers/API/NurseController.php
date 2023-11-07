@@ -265,7 +265,7 @@ class NurseController extends Controller
         $nurse->admin_id = $request->user()->id;
         $nurse->save();        
 
-        if($nurse){
+        if($nurse && $nurse->user_id){
             $user = User::find($nurse->user_id);
             $user->first_name = $request->name;
             $user->last_name = $request->name;
