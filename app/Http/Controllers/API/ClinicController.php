@@ -507,7 +507,7 @@ class ClinicController extends Controller
             
             $type = $request->user()->user_type;    
             $total = 0;       
-            if($type=='admin'){
+            if($type=='admin' || $type=='nurse'){
                 $clinic_doctor = Clinicdoctor::where('mcl_clinic_doctor.clinic_id',$request->user()->clinic_id)->get();
 
                 $doctor = [];
