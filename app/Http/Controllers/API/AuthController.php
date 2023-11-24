@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
+    public function insert_data(){
+        $data = \DB::table('v3_doctor_patient')->get();
+        foreach($data as $row){
+            $uniqueNumber = substr(uniqid(mt_rand(), true), 0, 6);
+            \DB::table('v3_doctor_patient')->where('id',$row->id)->update(['expedient_id'=>$uniqueNumber]);
+        }
+
+        //echo "<pre>"; print_r($data); 
+    }
+
     public function register(Request $request){
 
         $validator = Validator::make($request->all(),[
