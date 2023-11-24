@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('login','login');
-    Route::get('insert_data','insert_data');
+    /*Route::get('insert_data','insert_data');*/
     Route::post('register','register');
 	Route::get('check','check')->name('check');
 });
