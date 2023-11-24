@@ -53,6 +53,14 @@ class PatientFileController extends Controller
         //echo "<pre>"; print_r($patient_file); die;
         $address = $patient_file->number.' '.$patient_file->colony.' '.$patient_file->street.' '.$patient_file->city.' '.$patient_file->state.' '.$patient_file->country;
 
+        $age = '';
+        if($patient_file->birth_date){
+            $birthdate = $patient_file->birth_date;
+            $birthDate = new \DateTime($birthdate);
+            $currentDate = new \DateTime();
+            $age = $currentDate->diff($birthDate)->y;
+        }
+
         $data = [
             'fullname' => $patient_file->first_name.' '.$patient_file->last_name,
             'gender' => $patient_file->gender,
@@ -66,7 +74,7 @@ class PatientFileController extends Controller
                 'hasAllergy' => $patient_file->app_allergies !="" ? true:false,
                 'specificAllergy' => $patient_file->app_allergies,
             ],
-            'age' => '',
+            'age' => $age,
             'caregiver' => '',
             'vitalSignAssement' => [
                 'bloodPressure' => [
