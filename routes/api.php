@@ -218,4 +218,5 @@ Route::prefix('patientfile')->controller(PatientFileController::class)->middlewa
     Route::get('/', 'index');
     Route::get('/doctor/patient/list/{id?}', 'doctor_patient_list');
     Route::get('/doctor/patient/{id}', 'doctor_patient');
+    Route::post('/save', 'save');
 });

@@ -9,6 +9,7 @@ class Patient extends Model
 {
     use HasFactory;
     protected $table = 'v3_patients';
+    protected $guarded = [];
 
     public function User(){
         return $this->hasOne(User::class, 'id', 'user_id');
