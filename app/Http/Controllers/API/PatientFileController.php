@@ -45,7 +45,7 @@ class PatientFileController extends Controller
 
     public function doctor_patient(Request $request, $id){
 
-        $patient_file = DoctorPatient::where('expedient_id',$id)->first();
+        $patient_file = DoctorPatient::where('expedient_id',$id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*')->first();
         if(!$patient_file){
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
