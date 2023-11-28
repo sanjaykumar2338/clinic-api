@@ -120,7 +120,8 @@ class PatientFileController extends Controller
             'placeOrigin' => $patient_file->place_origin,
             'address' => $patient_file->address,
             'location' => $patient_file->location,
-            'doctor' => $patient_file->doctor,
+            'doctor_id' => $patient_file->doctor,
+            'patient_id' => $patient_file->id,
             'allergies' => [
                 'hasAllergy' => $patient_file->app_allergies,
                 'specificAllergy' => $patient_file->app_allergies,
