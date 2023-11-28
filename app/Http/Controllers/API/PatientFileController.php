@@ -25,7 +25,8 @@ class PatientFileController extends Controller
     public function doctor_patient_list(Request $request)
     {
         if(!$request->id){            
-            $doctor_patient = DoctorPatient::get();
+            $doctor_patient = DoctorPatient::join('mcl_clinic_doctor','mcl_clinic_doctor.doctor','=','v3_doctor_patient.doctor_id')->where('mcl_clinic_doctor.clinic_id',$request->user()->clinic_id)->select('v3_doctor_patient.*')->get();
+
             $response = [
                 'success'=>true,
                 'message'=>'doctor patient list',
