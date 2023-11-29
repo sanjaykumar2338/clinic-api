@@ -197,7 +197,7 @@ class PatientFileController extends Controller
         foreach($patient_files as $patient_file){
             $doctor_name = '';
             if($patient_file->doctor){
-                $doctor = Doctor::where('id',$patient_file->doctor)->join('users','users.id','=','v3_doctors.user_id')->first();
+                $doctor = Doctor::where('v3_doctors.id',$patient_file->doctor)->join('users','users.id','=','v3_doctors.user_id')->first();
                 $doctor_name = $doctor->first_name.' '.$doctor->last_name;
             }
 
