@@ -70,7 +70,7 @@ class PatientFileController extends Controller
             'patient_id' => $patient_file->patient_ids,
             'address' => $patient_file->address,
             'allergies' => [
-                'hasAllergy' => $patient_file->has_allergy,
+                'hasAllergy' => $patient_file->hasAllergy,
                 'specificAllergy' => $patient_file->app_allergies,
             ],
             'age' => $patient_file->age,
@@ -117,7 +117,7 @@ class PatientFileController extends Controller
         $allergies = $request->input('allergies');    
         $hasAllergy = $allergies['hasAllergy']; // true or false
         $specificAllergy = $allergies['specificAllergy']; // "Peanuts" or null if hasAllergy is false
-        
+
         $patient_file->update([
             'first_name' => $request->fullname,
             'gender' => $request->gender,
@@ -152,7 +152,7 @@ class PatientFileController extends Controller
             'doctor_id' => $patient_file->doctor,
             'patient_id' => $patient_file->id,
             'allergies' => [
-                'hasAllergy' => $patient_file->app_allergies,
+                'hasAllergy' => $patient_file->hasAllergy,
                 'specificAllergy' => $patient_file->app_allergies,
             ],
             'age' => $patient_file->age,
