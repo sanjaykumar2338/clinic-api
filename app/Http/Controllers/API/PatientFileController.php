@@ -242,8 +242,7 @@ class PatientFileController extends Controller
         $response = [
                 'success'=>true,
                 'message'=>'nurshing sheet information',
-                'nursingsheet'=>$output,
-                'data' => $data
+                'nursingsheet'=>$output
             ];
 
         return response()->json($response,200);
