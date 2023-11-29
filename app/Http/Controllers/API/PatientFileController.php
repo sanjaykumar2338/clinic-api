@@ -55,7 +55,8 @@ class PatientFileController extends Controller
         if(!$patient_file){
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
-
+     
+        $other = json_decode($patient_file->other_data);
         $data = [
             'fullname' => $patient_file->first_name.' '.$patient_file->last_name,
             'gender' => $patient_file->gender,
@@ -73,7 +74,20 @@ class PatientFileController extends Controller
             ],
             'age' => $patient_file->age,
             'caregiver' => $patient_file->caregiver,
-            'vitalSignAssement' => json_decode($patient_file->vital_sign_assement)
+            'location' => $patient_file->location,
+            'vitalSignAssement' => json_decode($patient_file->vital_sign_assement),
+            'medicalHistory'=>$other->medicalHistory,
+            'nutritionControl'=>$other->nutritionControl,
+            'chronicDiseases'=>$other->chronicDiseases,
+            'visitsConsultations'=>$other->visitsConsultations,
+            'diagnosisNursing'=>$other->diagnosisNursing,
+            'expectedResults'=>$other->expectedResults,
+            'interventionsRecommendations'=>$other->interventionsRecommendations,
+            'therapeuticPlan'=>$other->therapeuticPlan,
+            'appliedCodes'=>$other->appliedCodes,
+            'observations'=>$other->observations,
+            'signatures'=>$other->signatures,
+            'visitCount'=>$other->visitCount
         ];
 
         $response = [
@@ -97,6 +111,8 @@ class PatientFileController extends Controller
             return response()->json(['message' => 'no doctor found','success'=>false], 404);
         }
 
+        $other_data = array('medicalHistory'=>$request->medicalHistory,'nutritionControl'=>$request->nutritionControl,'chronicDiseases'=>$request->chronicDiseases,'visitsConsultations'=>$request->visitsConsultations,'diagnosisNursing'=>$request->diagnosisNursing,'expectedResults'=>$request->expectedResults,'interventionsRecommendations'=>$request->interventionsRecommendations,'therapeuticPlan'=>$request->therapeuticPlan,'appliedCodes'=>$request->appliedCodes,'observations'=>$request->observations,'signatures'=>$request->signatures,'visitCount'=>$request->visitCount);
+
         $patient_file->update([
             'first_name' => $request->fullname,
             'gender' => $request->gender,
@@ -112,7 +128,8 @@ class PatientFileController extends Controller
             'app_allergies' => $request->specificAllergy,
             'age' =>  $request->age,
             'caregiver' => $request->caregiver,
-            'vital_sign_assement' => json_encode($request->vitalSignAssement)
+            'vital_sign_assement' => json_encode($request->vitalSignAssement),
+            'other_data' => json_encode($other_data)
         ]);
 
         $data = [
