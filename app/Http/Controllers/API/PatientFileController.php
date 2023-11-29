@@ -202,7 +202,7 @@ class PatientFileController extends Controller
             }
 
             //$data = json_decode($patient_file->vital_sign_assement, true);
-            $data = json_decode($patient_file->other_data);
+            $data = json_decode($patient_file->other_data, true);
 
             $nurseValue ='';
             if (isset($data['signatures']) && is_array($data['signatures']) && count($data['signatures']) > 0) {
