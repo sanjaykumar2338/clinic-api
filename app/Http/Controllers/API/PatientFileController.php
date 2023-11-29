@@ -70,7 +70,7 @@ class PatientFileController extends Controller
             'patient_id' => $patient_file->patient_ids,
             'address' => $patient_file->address,
             'allergies' => [
-                'hasAllergy' => $patient_file->hasAllergy,
+                'hasAllergy' => $patient_file->has_allergy,
                 'specificAllergy' => $patient_file->app_allergies,
             ],
             'age' => $patient_file->age,
@@ -152,7 +152,7 @@ class PatientFileController extends Controller
             'doctor_id' => $patient_file->doctor,
             'patient_id' => $patient_file->id,
             'allergies' => [
-                'hasAllergy' => $patient_file->hasAllergy,
+                'hasAllergy' => $patient_file->has_allergy,
                 'specificAllergy' => $patient_file->app_allergies,
             ],
             'age' => $patient_file->age,
