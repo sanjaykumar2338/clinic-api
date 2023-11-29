@@ -92,7 +92,7 @@ class PatientFileController extends Controller
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
 
-        $doctor = Doctor::find($request->doctor);
+        $doctor = Doctor::find($request->doctor_id);
         if(!$doctor){
             return response()->json(['message' => 'no doctor found','success'=>false], 404);
         }
@@ -106,7 +106,7 @@ class PatientFileController extends Controller
             'occupation' => $request->occupation,
             'place_origin' => $request->placeOrigin,
             'address' => $request->address,
-            'doctor' => $request->doctor,
+            'doctor' => $request->doctor_id,
             'location' => $request->location,
             'has_allergy' => $request->hasAllergy,
             'app_allergies' => $request->specificAllergy,
