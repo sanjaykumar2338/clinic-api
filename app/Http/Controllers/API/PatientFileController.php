@@ -114,6 +114,10 @@ class PatientFileController extends Controller
 
         $other_data = array('medicalHistory'=>$request->medicalHistory,'nutritionControl'=>$request->nutritionControl,'chronicDiseases'=>$request->chronicDiseases,'visitsConsultations'=>$request->visitsConsultations,'diagnosisNursing'=>$request->diagnosisNursing,'expectedResults'=>$request->expectedResults,'interventionsRecommendations'=>$request->interventionsRecommendations,'therapeuticPlan'=>$request->therapeuticPlan,'appliedCodes'=>$request->appliedCodes,'observations'=>$request->observations,'signatures'=>$request->signatures,'visitCount'=>$request->visitCount);
 
+        $allergies = $request->input('allergies');    
+        $hasAllergy = $allergies['hasAllergy']; // true or false
+        $specificAllergy = $allergies['specificAllergy']; // "Peanuts" or null if hasAllergy is false
+        
         $patient_file->update([
             'first_name' => $request->fullname,
             'gender' => $request->gender,
@@ -125,8 +129,8 @@ class PatientFileController extends Controller
             'address' => $request->address,
             'doctor' => $request->doctor_id,
             'location' => $request->location,
-            'has_allergy' => $request->hasAllergy,
-            'app_allergies' => $request->specificAllergy,
+            'has_allergy' => $hasAllergy,
+            'app_allergies' => $specificAllergy,
             'age' =>  $request->age,
             'caregiver' => $request->caregiver,
             'vital_sign_assement' => json_encode($request->vitalSignAssement),
