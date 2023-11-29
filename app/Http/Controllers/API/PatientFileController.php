@@ -207,7 +207,7 @@ class PatientFileController extends Controller
             $nurseValue ='';
             if (isset($data['signatures']) && is_array($data['signatures']) && count($data['signatures']) > 0) {
                 $lastSignature = @end($data['signatures']); 
-                $nurseValue = @$lastSignature['nurse'];
+                $nurseValue = @$lastSignature['name'];
             }
 
             // Assuming $yourModel is your model instance or the object containing the data
