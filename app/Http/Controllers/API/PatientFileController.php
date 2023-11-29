@@ -58,6 +58,7 @@ class PatientFileController extends Controller
      
         $other = json_decode($patient_file->other_data);
         $data = [
+            'id' => $patient_file->id,
             'fullname' => $patient_file->first_name.' '.$patient_file->last_name,
             'gender' => $patient_file->gender,
             'dob' => $patient_file->birth_date,
@@ -134,6 +135,7 @@ class PatientFileController extends Controller
 
         $other = json_decode($patient_file->other_data);
         $data = [
+            'id' => $patient_file->id,
             'fullname' => $patient_file->first_name.' '.$patient_file->last_name,
             'gender' => $patient_file->gender,
             'dob' => $patient_file->birth_date,
