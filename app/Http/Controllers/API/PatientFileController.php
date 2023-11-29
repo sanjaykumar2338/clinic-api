@@ -132,6 +132,7 @@ class PatientFileController extends Controller
             'other_data' => json_encode($other_data)
         ]);
 
+        $other = json_decode($patient_file->other_data);
         $data = [
             'fullname' => $patient_file->first_name.' '.$patient_file->last_name,
             'gender' => $patient_file->gender,
@@ -149,8 +150,21 @@ class PatientFileController extends Controller
                 'specificAllergy' => $patient_file->app_allergies,
             ],
             'age' => $patient_file->age,
-            'caregiver' => $patient_file->caregiver,
-            'vitalSignAssement' => json_decode($patient_file->vital_sign_assement)
+            'caregiver' => $patient_file->caregiver,            
+            'location' => $patient_file->location,
+            'vitalSignAssement' => json_decode($patient_file->vital_sign_assement),
+            'medicalHistory'=>$other->medicalHistory,
+            'nutritionControl'=>$other->nutritionControl,
+            'chronicDiseases'=>$other->chronicDiseases,
+            'visitsConsultations'=>$other->visitsConsultations,
+            'diagnosisNursing'=>$other->diagnosisNursing,
+            'expectedResults'=>$other->expectedResults,
+            'interventionsRecommendations'=>$other->interventionsRecommendations,
+            'therapeuticPlan'=>$other->therapeuticPlan,
+            'appliedCodes'=>$other->appliedCodes,
+            'observations'=>$other->observations,
+            'signatures'=>$other->signatures,
+            'visitCount'=>$other->visitCount
         ];
 
         $response = [
