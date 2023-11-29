@@ -183,10 +183,10 @@ class PatientFileController extends Controller
         return response()->json($response,200);
     }
 
-    public function getnursingsheet(Request $request,$id){
+    public function getnursingsheet(Request $request){
         
         $patient_file = DoctorPatient::where('v3_patients.clinic_id',$request->user()->clinic_id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->first();
-        
+
         if(!$patient_file){
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
