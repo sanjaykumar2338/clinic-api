@@ -92,9 +92,9 @@ class PatientFileController extends Controller
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
 
-        $doctor = Doctor::where('id',$request->doctor_id)->first();
+        $doctor = Doctor::find($request->doctor_id);
         if(!$doctor){
-            return response()->json(['message' => 'no doctor found','success'=>false,'d'=>$request->all()], 404);
+            return response()->json(['message' => 'no doctor found','success'=>false], 404);
         }
 
         $patient_file->update([
