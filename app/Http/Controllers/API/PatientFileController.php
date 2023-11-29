@@ -119,6 +119,7 @@ class PatientFileController extends Controller
         $specificAllergy = $allergies['specificAllergy']; // "Peanuts" or null if hasAllergy is false
 
         $patient_file->update([
+            'clinic_id' => $request->user()->clinic_id,
             'first_name' => $request->fullname,
             'gender' => $request->gender,
             'birth_date' => $request->dob,
@@ -183,8 +184,9 @@ class PatientFileController extends Controller
     }
 
     public function getnursingsheet(Request $request,$id){
-
-        $patient_file = DoctorPatient::where('v3_doctor_patient.patient_id',$id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->first();
+        
+        $patient_file = DoctorPatient::where('v3_patients.clinic_id',$request->user()->clinic_id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->first();
+        
         if(!$patient_file){
             return response()->json(['message' => 'no patient found','success'=>false], 404);
         }
