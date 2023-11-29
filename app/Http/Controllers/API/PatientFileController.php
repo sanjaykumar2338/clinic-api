@@ -201,7 +201,9 @@ class PatientFileController extends Controller
                 $doctor_name = $doctor->first_name.' '.$doctor->last_name;
             }
 
-            $data = json_decode($patient_file->vital_sign_assement, true);
+            //$data = json_decode($patient_file->vital_sign_assement, true);
+            $data = json_decode($patient_file->other_data);
+
             $nurseValue ='';
             if (isset($data['signatures']) && is_array($data['signatures']) && count($data['signatures']) > 0) {
                 $lastSignature = end($data['signatures']); 
