@@ -22,6 +22,7 @@ use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\NurseController;
 use App\Http\Controllers\API\PatientFileController;
+use App\Http\Controllers\API\KardexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -220,4 +221,9 @@ Route::prefix('patientfile')->controller(PatientFileController::class)->middlewa
     Route::get('/doctor/patient/{id}', 'doctor_patient');
     Route::post('/save', 'save');
     Route::get('getnursingsheet','getnursingsheet');
+});
+
+Route::prefix('kardex')->controller(KardexController::class)->middleware('auth:sanctum')->group(function () {
+    Route::post('/save', 'save');
+    Route::get('/{id}', 'index');
 });

@@ -247,4 +247,35 @@ class PatientFileController extends Controller
 
         return response()->json($response,200);
     }
+
+
+    public function update_api(Request $request, $id) {
+        $patient = Patient::findOrFail($id); // Replace Patient with your actual model
+
+        $data = $request->only([
+            'old_field_name1', 'old_field_name2', 'old_field_name3' // Fields to update
+        ]);
+
+        // Define a mapping of old field names to new field names
+        $fieldMapping = [
+            'old_field_name1' => 'new_field_name1',
+            'old_field_name2' => 'new_field_name2',
+            // Add more mappings as needed
+        ];
+
+        // Map field names from request data according to the defined mapping
+        $mappedData = collect($data)->mapWithKeys(function ($value, $key) use ($fieldMapping) {
+            return [$fieldMapping[$key] ?? $key => $value];
+        })->toArray();
+
+        // Update the patient's data with modified field names but don't save yet
+        $patient->fill($mappedData);
+
+        // Optionally, you can check for conditions before saving
+        if ($patient->someCondition()) {
+            $patient->save(); // Save changes conditionally
+        }
+
+        return response()->json(['message' => 'Patient data updated', 'data' => $patient]);
+    }
 }
