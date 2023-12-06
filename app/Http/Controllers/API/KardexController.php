@@ -79,15 +79,21 @@ class KardexController extends Controller
 
             if (isset($data['medicines'])) {
                 $mappedData['medicines'] = json_encode($mappedData['medicines']);
+            }else{
+                $mappedData['medicines'] = json_encode(array());
             }
 
             if (isset($data['nursing_comment'])) {
                 $mappedData['nursingComment'] = json_encode($mappedData['nursingComment']);
+            }else{
+                $mappedData['nursingComment'] = json_encode(array());
             }
 
             if (isset($data['others'])) {
                 $mappedData['others_kardex'] = json_encode($mappedData['others']);
                 unset($mappedData['others']);
+            }else{
+                $mappedData['others_kardex'] = json_encode(array());
             }
 
             if (isset($mappedData['allergies']['hasAllergy'])) {
