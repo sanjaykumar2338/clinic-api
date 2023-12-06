@@ -88,7 +88,13 @@ class PatientFileController extends Controller
             'appliedCodes'=>$other->appliedCodes,
             'observations'=>$other->observations,
             'signatures'=>$other->signatures,
-            'visitCount'=>$other->visitCount
+            'visitCount'=>$other->visitCount,
+            'diagnosis' => $patient->diagnosis,            
+            'diet' => $patient->diet,
+            'formula' => $patient->formula,
+            'medicines' => json_decode($patient->medicines),
+            'nursingComment' => json_decode($patient->nursing_comment),
+            'others' => json_decode($patient->others_kardex)
         ];
 
         $response = [
@@ -171,7 +177,13 @@ class PatientFileController extends Controller
             'appliedCodes'=>$other->appliedCodes,
             'observations'=>$other->observations,
             'signatures'=>$other->signatures,
-            'visitCount'=>$other->visitCount
+            'visitCount'=>$other->visitCount,
+            'diagnosis' => $patient->diagnosis,            
+            'diet' => $patient->diet,
+            'formula' => $patient->formula,
+            'medicines' => json_decode($patient->medicines),
+            'nursingComment' => json_decode($patient->nursing_comment),
+            'others' => json_decode($patient->others_kardex)
         ];
 
         $response = [
