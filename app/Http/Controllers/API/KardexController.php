@@ -27,6 +27,22 @@ class KardexController extends Controller
             }
 
             $has_allergy = $patient->has_allergy ? true : false;
+            
+            $medicines = json_decode(json_encode(array()));
+            if($patient->medicines){
+                $medicines = json_decode($patient->medicines)
+            }
+
+            $nursing_comment = json_decode(json_encode(array()));
+            if($patient->nursing_comment){
+                $nursing_comment = json_decode($patient->nursing_comment)
+            }
+
+            $others = json_decode(json_encode(array()));
+            if($patient->others){
+                $others = json_decode($patient->others)
+            }
+
             $data = [
                 'patient_id' => $patient->id,
                 'expediente_id' => $request->id,
@@ -42,9 +58,9 @@ class KardexController extends Controller
                 'location' => $patient->location,
                 'diet' => $patient->diet,
                 'formula' => $patient->formula,
-                'medicines' => json_decode($patient->medicines),
-                'nursingComment' => json_decode($patient->nursing_comment),
-                'others' => json_decode($patient->others_kardex)
+                'medicines' => $medicines,
+                'nursingComment' => $nursing_comment,
+                'others' => $others
             ];
 
             
