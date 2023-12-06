@@ -26,16 +26,16 @@ class KardexController extends Controller
                 return response()->json(['message' => 'no patient found','success'=>false], 404);
             }
 
-
+            $has_allergy = $patient->has_allergy ? true : false;
             $data = [
                 'patient_id' => $patient->id,
-                'expediente_id' => $patient->expediente_id,
+                'expediente_id' => $request->id,
                 'doctor_id' => $patient->doctor,
                 'fullname' => $patient->first_name.' '.$patient->last_name,
                 'gender' => $patient->gender,
                 'dob' => $patient->birth_date,
                 'allergies' => [
-                    'hasAllergy' => $patient->has_allergy,
+                    'hasAllergy' => $has_allergy,
                     'specificAllergy' => $patient->app_allergies
                 ],
                 'diagnosis' => $patient->diagnosis,
