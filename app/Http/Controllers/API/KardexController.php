@@ -117,7 +117,7 @@ class KardexController extends Controller
 
             $patient->fill($mappedData);
             $patient->save();
-            return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$data],200);
+            return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$mappedData],200);
 
         }catch(\Exceptions $e){
             return response()->json(['message' => $e->getMessage(),'success'=>false], 404);
