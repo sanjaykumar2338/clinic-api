@@ -20,13 +20,11 @@ class KardexController extends Controller
     public function index(Request $request)
     {
         try{
-            
-            $patient = DoctorPatient::where('expedient_id',$id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.doctor_id as doctor_ids','v3_doctor_patient.patient_id as patient_ids')->first();
+            $patient = DoctorPatient::where('expedient_id',$request->id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.doctor_id as doctor_ids','v3_doctor_patient.patient_id as patient_ids')->first();
 
             if(!$patient){
                 return response()->json(['message' => 'no patient found','success'=>false], 404);
             }
-            
 
 
             $data = [
