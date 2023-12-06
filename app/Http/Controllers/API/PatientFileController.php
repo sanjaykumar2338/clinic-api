@@ -89,12 +89,12 @@ class PatientFileController extends Controller
             'observations'=>$other->observations,
             'signatures'=>$other->signatures,
             'visitCount'=>$other->visitCount,
-            'diagnosis' => $patient->diagnosis,            
-            'diet' => $patient->diet,
-            'formula' => $patient->formula,
-            'medicines' => json_decode($patient->medicines),
-            'nursingComment' => json_decode($patient->nursing_comment),
-            'others' => json_decode($patient->others_kardex)
+            'diagnosis' => $patient_file->diagnosis,            
+            'diet' => $patient_file->diet,
+            'formula' => $patient_file->formula,
+            'medicines' => json_decode($patient_file->medicines),
+            'nursingComment' => json_decode($patient_file->nursing_comment),
+            'others' => json_decode($patient_file->others_kardex)
         ];
 
         $response = [
@@ -178,12 +178,12 @@ class PatientFileController extends Controller
             'observations'=>$other->observations,
             'signatures'=>$other->signatures,
             'visitCount'=>$other->visitCount,
-            'diagnosis' => $patient->diagnosis,            
-            'diet' => $patient->diet,
-            'formula' => $patient->formula,
-            'medicines' => json_decode($patient->medicines),
-            'nursingComment' => json_decode($patient->nursing_comment),
-            'others' => json_decode($patient->others_kardex)
+            'diagnosis' => $patient_file->diagnosis,            
+            'diet' => $patient_file->diet,
+            'formula' => $patient_file->formula,
+            'medicines' => json_decode($patient_file->medicines),
+            'nursingComment' => json_decode($patient_file->nursing_comment),
+            'others' => json_decode($patient_file->others_kardex)
         ];
 
         $response = [
