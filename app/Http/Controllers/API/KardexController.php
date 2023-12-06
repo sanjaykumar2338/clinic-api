@@ -54,10 +54,10 @@ class KardexController extends Controller
         }  
     }
 
-    public function save(Request $request){
+    public function save(Request $request, $id){
 
         try{
-            $patient = Patient::findOrFail($request->patient_id);
+            $patient = Patient::findOrFail($id);
             if(!$patient){
                 return response()->json(['message' => 'no patient found','success'=>false], 404);
             }

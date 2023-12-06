@@ -224,6 +224,6 @@ Route::prefix('patientfile')->controller(PatientFileController::class)->middlewa
 });
 
 Route::prefix('kardex')->controller(KardexController::class)->middleware('auth:sanctum')->group(function () {
-    Route::patch('/save', 'save');
+    Route::patch('/save/{id}', 'save');
     Route::get('/{id}', 'index');
 });
