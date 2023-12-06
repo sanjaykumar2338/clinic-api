@@ -99,10 +99,10 @@ class KardexController extends Controller
                 $mappedData['medicines'] = json_encode(array());
             }
 
-            if (isset($data['nursing_comment'])) {
-                $mappedData['nursingComment'] = json_encode($mappedData['nursingComment']);
+            if (isset($data['nursingComment'])) {
+                $mappedData['nursing_comment'] = json_encode($mappedData['nursingComment']);
             }else{
-                $mappedData['nursingComment'] = json_encode(array());
+                $mappedData['nursing_comment'] = json_encode(array());
             }
 
             if (isset($data['others'])) {
