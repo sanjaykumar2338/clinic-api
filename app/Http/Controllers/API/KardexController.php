@@ -93,19 +93,19 @@ class KardexController extends Controller
                 return [$fieldMapping[$key] ?? $key => $value];
             })->toArray();
 
-            if (isset($data['medicines'])) {
+            if (isset($mappedData['medicines'])) {
                 $mappedData['medicines'] = json_encode($mappedData['medicines']);
             }else{
                 $mappedData['medicines'] = json_encode(array());
             }
 
-            if (isset($data['nursing_comment'])) {
+            if (isset($mappedData['nursing_comment'])) {
                 $mappedData['nursing_comment'] = json_encode($mappedData['nursing_comment']);
             }else{
                 $mappedData['nursing_comment'] = json_encode(array());
             }
 
-            if (isset($data['others'])) {
+            if (isset($mappedData['others'])) {
                 $mappedData['others_kardex'] = json_encode($mappedData['others']);
                 unset($mappedData['others']);
             }else{
