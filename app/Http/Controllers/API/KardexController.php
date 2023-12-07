@@ -140,34 +140,44 @@ class KardexController extends Controller
             $patient->fill($mappedData);
             $patient->save();
 
-            if (isset($mappedData['nursing_comment'])) {
-                $mappedData['nursingComment'] = json_decode($mappedData['nursing_comment']);
-            }else{
-                $mappedData['nursingComment'] = json_decode(array());
-            }  
+            $has_allergy = $patient->has_allergy ? true : false;
 
-            if (isset($mappedData['nursing_comment'])) {
-                $mappedData['nursingComment'] = json_decode($mappedData['nursing_comment']);
-            }else{
-                $mappedData['nursingComment'] = json_decode(array());
-            }  
+            $medicines = json_decode(json_encode(array()));
+            if($patient->medicines){
+                $medicines = json_decode($patient->medicines);
+            }
 
-            if (isset($mappedData['medicines'])) {
-                $mappedData['medicines'] = json_decode($mappedData['medicines']);
-            }else{
-                $mappedData['medicines'] = json_decode(array());
-            }  
+            $nursing_comment = json_decode(json_encode(array()));
+            if($patient->nursing_comment){
+                $nursing_comment = json_decode($patient->nursing_comment);
+            }
 
-            if (isset($mappedData['others_kardex'])) {
-                $mappedData['others'] = json_decode($mappedData['others_kardex']);
-            }else{
-                $mappedData['others'] = json_decode(array());
-            }    
+            $others = json_decode(json_encode(array()));
+            if($patient->others){
+                $others = json_decode($patient->others);
+            }
 
-            //@unset($mappedData['nursing_comment']);
-            //@unset($mappedData['others_kardex']);
-                
-            return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$mappedData],200);
+            $data = [
+                'patient_id' => $patient->id,
+                'expediente_id' => $request->id,
+                'doctor_id' => $patient->doctor,
+                'fullname' => $patient->first_name.' '.$patient->last_name,
+                'gender' => $patient->gender,
+                'dob' => $patient->birth_date,
+                'allergies' => [
+                    'hasAllergy' => $has_allergy,
+                    'specificAllergy' => $patient->app_allergies
+                ],
+                'diagnosis' => $patient->diagnosis,
+                'location' => $patient->location,
+                'diet' => $patient->diet,
+                'formula' => $patient->formula,
+                'medicines' => $medicines,
+                'nursingComment' => $nursing_comment,
+                'others' => $others
+            ];    
+
+            return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$data],200);
 
         }catch(\Exceptions $e){
             return response()->json(['message' => $e->getMessage(),'success'=>false], 404);
