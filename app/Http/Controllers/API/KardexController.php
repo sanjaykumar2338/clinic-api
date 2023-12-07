@@ -39,8 +39,8 @@ class KardexController extends Controller
             }
 
             $others = json_decode(json_encode(array()));
-            if($patient->others){
-                $others = json_decode($patient->others);
+            if($patient->others_kardex){
+                $others = json_decode($patient->others_kardex);
             }
 
             $data = [
