@@ -164,6 +164,9 @@ class KardexController extends Controller
                 $mappedData['others'] = json_decode(array());
             }    
 
+            @unset($mappedData['nursing_comment']);
+            @unset($mappedData['others_kardex']);
+                
             return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$mappedData],200);
 
         }catch(\Exceptions $e){
