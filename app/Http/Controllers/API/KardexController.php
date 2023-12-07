@@ -139,6 +139,31 @@ class KardexController extends Controller
 
             $patient->fill($mappedData);
             $patient->save();
+
+            if (isset($mappedData['nursing_comment'])) {
+                $mappedData['nursingComment'] = json_decode($mappedData['nursing_comment']);
+            }else{
+                $mappedData['nursingComment'] = json_decode(array());
+            }  
+
+            if (isset($mappedData['nursing_comment'])) {
+                $mappedData['nursingComment'] = json_decode($mappedData['nursing_comment']);
+            }else{
+                $mappedData['nursingComment'] = json_decode(array());
+            }  
+
+            if (isset($mappedData['medicines'])) {
+                $mappedData['medicines'] = json_decode($mappedData['medicines']);
+            }else{
+                $mappedData['medicines'] = json_decode(array());
+            }  
+
+            if (isset($mappedData['others_kardex'])) {
+                $mappedData['others'] = json_decode($mappedData['others_kardex']);
+            }else{
+                $mappedData['others'] = json_decode(array());
+            }    
+
             return response()->json(['success'=>true,'message' => 'information saved successfully! ','patient'=>$mappedData],200);
 
         }catch(\Exceptions $e){
