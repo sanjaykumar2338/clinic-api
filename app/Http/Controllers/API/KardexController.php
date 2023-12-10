@@ -183,4 +183,61 @@ class KardexController extends Controller
             return response()->json(['message' => $e->getMessage(),'success'=>false], 404);
         }        
     }
+
+    public function getnursingsheet(Request $request){
+        
+        //$patient_file = DoctorPatient::where('v3_patients.clinic_id',$request->user()->clinic_id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->first();
+
+        $patient_files = Patient::where('v3_patients.clinic_id',$request->user()->clinic_id)->join('v3_doctor_patient','v3_doctor_patient.patient_id','=','v3_patients.id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->get();
+
+        if(!$patient_files){
+            return response()->json(['message' => 'no patient found','success'=>false], 404);
+        }
+
+        $output = array();
+        foreach($patient_files as $patient_file){
+            $doctor_name = '';
+            if($patient_file->doctor){
+                $doctor = Doctor::where('v3_doctors.id',$patient_file->doctor)->join('users','users.id','=','v3_doctors.user_id')->first();
+                $doctor_name = $doctor->first_name.' '.$doctor->last_name;
+            }
+
+            //$data = json_decode($patient_file->vital_sign_assement, true);
+            $data = json_decode($patient_file->other_data, true);
+
+            $nurseValue ='';
+            if (isset($data['signatures']) && is_array($data['signatures']) && count($data['signatures']) > 0) {
+                $lastSignature = @end($data['signatures']); 
+                $nurseValue = @$lastSignature['name'];
+            }
+
+            // Assuming $yourModel is your model instance or the object containing the data
+            $updatedDate = $patient_file->updated_at; // Assuming 'updated_at' is the field name
+
+            $currentDate = Carbon::now();
+            $thirtyDaysAgo = Carbon::now()->subDays(30);
+
+            // Check if the updated_at date is within the last 30 days
+            $isUpdatedWithin30Days = $updatedDate->greaterThanOrEqualTo($thirtyDaysAgo) && $updatedDate->lessThanOrEqualTo($currentDate);
+
+            // Store the result in a variable
+            $result = $isUpdatedWithin30Days ? true : false;
+
+            // You can use $result as needed in your application
+            $active = false;
+            if ($result) {
+                $active = true;
+            }
+
+            $output[] = array(
+                'expedient_id' => $patient_file->expedient_id,
+                'patientName' => $patient_file->first_name.' '.$patient_file->last_name,
+                'doctorName' => $doctor_name,
+                'location' => $patient_file->location,
+                'lastUpdate' => $patient_file->updated_at,
+                'updatedNurse' => $nurseValue,
+                'active' => $active
+            );
+        }
+    }
 }
