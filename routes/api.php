@@ -226,5 +226,5 @@ Route::prefix('patientfile')->controller(PatientFileController::class)->middlewa
 Route::prefix('kardex')->controller(KardexController::class)->middleware('auth:sanctum')->group(function () {
     Route::patch('/save/{id}', 'save');
     Route::get('/{id}', 'index');
-    Route::get('/nursingsheet/list/data','nursingsheetlist');
+    Route::get('/nursingsheet/list','nursingsheetlist');
 });
