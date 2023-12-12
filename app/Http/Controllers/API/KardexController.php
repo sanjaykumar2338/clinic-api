@@ -184,7 +184,7 @@ class KardexController extends Controller
         }        
     }
 
-    public function getnursingsheet(Request $request){
+    public function nursingsheetlist(Request $request){
         
         //$patient_file = DoctorPatient::where('v3_patients.clinic_id',$request->user()->clinic_id)->join('v3_patients','v3_patients.id','=','v3_doctor_patient.patient_id')->select('v3_patients.*','v3_doctor_patient.expedient_id')->first();
 
