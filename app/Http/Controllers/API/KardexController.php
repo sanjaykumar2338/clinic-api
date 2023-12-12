@@ -241,9 +241,9 @@ class KardexController extends Controller
                 );
             
                 return response()->json(['success'=>true,'message' => 'All kardex list! ','kardex'=>$output],200);
-            } catch(\Exceptions $e){
+            } 
+        } catch(\Exceptions $e){
                 return response()->json(['message' => $e->getMessage(),'success'=>false], 404);
-            }  
-        }
+        }  
     }
 }
